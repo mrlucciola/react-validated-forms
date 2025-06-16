@@ -1,16 +1,7 @@
 // interfaces
-import type { ZObj } from "@utils/index";
-import type { CvCbFromCalc, EvOut, FormOut } from "./interfaces";
+import type { FieldCbValueProp, FormOut, ZObj } from "@utils/index";
+import type { CvCbFromCalc, EvOut } from "./interfaces";
 import type { AnyFormCfgObj, FormCfgReturnObj } from "./returnTypes";
-
-export type FieldCbValueProp<TForm extends FormOut, TCalc, TExt extends EvOut> = Omit<
-  {
-    form: TForm;
-    calculated: TCalc;
-    external: TExt;
-  },
-  TExt extends undefined ? "external" : never | (TCalc extends undefined ? "calculated" : never)
->;
 
 export type FormConfigCbReturnInferred<T extends AnyFormCfgObj> = T extends FormCfgReturnObj<
   infer TForm,

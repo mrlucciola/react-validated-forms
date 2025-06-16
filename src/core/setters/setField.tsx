@@ -3,9 +3,8 @@ import type { z } from "zod";
 // utils
 import getFormConfigField from "../getters/getFormConfigField";
 // interfaces
-import type { FormOut } from "@fieldConfig/interfaces";
 import type { FormConfigProp, FormConfigValues } from "../interfaces";
-import type { SetState, ZObj } from "@utils/index";
+import type { FormOut, SetState, ZObj } from "@utils/index";
 
 /** @todo annotate */
 const useSetField = <TSchema extends ZObj, TConfig extends FormConfigProp<TSchema>>(

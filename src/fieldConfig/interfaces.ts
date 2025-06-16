@@ -1,5 +1,5 @@
 // interfaces
-import type { AppliedFieldOutput, EvSchema, OptionalAppliedFieldOutput, ZObj } from "@utils/index";
+import type { EvSchema, FormOut, OptionalAppliedFieldOutput } from "@utils/index";
 
 /** Represents "Calculated Values Callback"
  * Input form values + (optional) external values and returns `calculated` values */
@@ -14,8 +14,6 @@ export type CvCb_<TCv, TFv extends FormOut = any, TEv extends EvOut = any> = (
 
 export type CvCbFromCalc<TCv> = TCv extends never | undefined ? never : CvCb<any, any, TCv>;
 
-/** "Form Values" output */
-export type FormOut<TSchema extends ZObj = ZObj> = AppliedFieldOutput<TSchema>;
 /** "External Values" output */
 export type EvOut<TEvSchema extends EvSchema = EvSchema> = OptionalAppliedFieldOutput<TEvSchema>;
 

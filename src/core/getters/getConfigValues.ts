@@ -1,7 +1,6 @@
 import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
-import type { FormOut } from "@fieldConfig/interfaces";
 import type { AnyFormCfgObj, FormCfgRtnObjGeneric } from "@fieldConfig/returnTypes";
-import type { ZObj } from "@utils/index";
+import type { FormOut, ZObj } from "@utils/index";
 import type { UserInputFormFields } from "../interfaces";
 
 type TConfig<TBase extends ZObj> = AnyFormCfgObj<FormOut<TBase>>;

@@ -11,10 +11,10 @@ import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
 import useResetToDefault from "./setters/useResetToDefault";
 // interfaces
-import type { FormOut, ZObj } from "@fieldConfig/interfaces";
 import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
 import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
+import type { FormOut, ZObj } from "@utils/index";
 
 /** ### Stateful form with validation, based on `zod`.
  *

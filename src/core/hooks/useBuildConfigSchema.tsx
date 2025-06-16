@@ -4,9 +4,8 @@ import { z } from "zod";
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
-import type { FormOut } from "@fieldConfig/interfaces";
 import type { FieldConfig } from "@fieldConfig/input";
-import type { ZObj } from "@utils/index";
+import type { FormOut, ZObj } from "@utils/index";
 
 const applyFieldConfigValidationRefinements = <
   TBase extends ZObj,

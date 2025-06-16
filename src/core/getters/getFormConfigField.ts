@@ -1,6 +1,5 @@
-import type { FormOut } from "@fieldConfig/interfaces";
+import type { FormOut, ZObj } from "@utils/index";
 import type { FormConfigProp } from "../interfaces";
-import type { ZObj } from "@utils/interfaces";
 
 /**
  * @todo add description

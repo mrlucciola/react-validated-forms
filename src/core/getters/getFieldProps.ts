@@ -3,12 +3,11 @@ import type { z } from "zod";
 // utils
 import { getValueFromEvent } from "@utils/utils";
 import getFormConfigField from "./getFormConfigField";
-import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
 import type useSetField from "../setters/setField";
 // interfaces
+import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
+import type { FormOut, OnChangeEventUnionNew, ZObj } from "@utils/index";
 import type { Nullable } from "@utils/utilityTypes";
-import type { OnChangeEventUnionNew, ZObj } from "@utils/index";
-import type { FormOut } from "@fieldConfig/interfaces";
 import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
 import type { SchemaParseErrors, UserInputFormFields } from "../interfaces";
 
