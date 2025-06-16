@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "outDir": "../../dist/core",
+    "rootDir": "./",
+    "module": "ESNext",
+    "target": "ESNext"
+  },
+  "include": ["./"],
+  "references": [
+    { "path": "../fieldConfig" },
+    { "path": "../types" },
+    { "path": "../utils" },
+    { "path": "../validationSchema" }
+  ]
+}

@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
+    "composite": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "outDir": "dist",
     // Enable latest features
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
+    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "module": "ESNext",
     "moduleDetection": "force",
@@ -24,9 +25,14 @@
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
   },
-  "exclude": [
-    "node_modules",
-    "**/*/local.*",
-    "**/*/*.local.*",
-  ]
+  "references": [
+    { "path": "./src/configDsl" },
+    { "path": "./src/core" },
+    { "path": "./src/fieldConfig" },
+    { "path": "./src/types" },
+    { "path": "./src/utils" },
+    { "path": "./src/validationSchema" }
+  ],
+  // "include": [],
+  "exclude": ["node_modules", "**/*/local.*", "**/*/*.local.*"]
 }
