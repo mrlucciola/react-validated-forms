@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { z } from "zod";
 // utils
-import { zAddRulesIssue } from "../../common/zod";
+import { zAddRulesIssue } from "../../DEPREC-common/zod";
 // interfaces
 import type { FormConfigCbReturnInferred } from "../../fieldConfig/callbacks";
 import type { AnyFormCfgObj } from "../../fieldConfig/returnTypes";

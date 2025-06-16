@@ -1,6 +1,9 @@
-import type { Nullish } from "../../common/interfaces";
-import type { FormOut, ZObj } from "../../fieldConfig/interfaces";
+import { z } from "zod";
+// utils
 import setForm from "../functions/setForm";
+// interfaces
+import type { Nullish } from "../../utils/utilityTypes";
+import type { FormOut, ZObj } from "../../fieldConfig/interfaces";
 
 const resetToDefault = <TBase extends ZObj>(
   newDefaultValues?: Nullish<z.input<TBase>> | null,

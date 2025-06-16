@@ -6,7 +6,7 @@ import resetToDefault from "../setters/resetToDefault";
 // interfaces
 import type { ZObj } from "../../fieldConfig/interfaces";
 import type { AppliedFieldSchema } from "../../interfaces";
-import type { Nullish } from "../../common/interfaces";
+import type { Nullish } from "../../utils/utilityTypes";
 import type { UserInputFormFields } from "../interfaces";
 
 const useInitStates = <TBase extends ZObj>(

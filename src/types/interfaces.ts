@@ -2,7 +2,7 @@ import type { ChangeEvent } from "react";
 import type { z } from "zod";
 import type dayjs from "dayjs";
 // interfaces
-import type { ZObj, EvSchema } from "./fieldConfig/interfaces";
+import type { ZObj, EvSchema } from "../fieldConfig/interfaces";
 
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }

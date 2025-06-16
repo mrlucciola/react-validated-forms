@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { z } from "zod";
 // utils
-import { buildDefaultSchema } from "../../utils";
+import { buildDefaultSchema } from "../../utils/utils";
 // interfaces
 import type { ZObj } from "../../fieldConfig/interfaces";
 import type { AppliedFieldSchema } from "../../interfaces";

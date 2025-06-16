@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { isEqual } from "lodash";
 // utils
-import { Nullish } from "./common/interfaces";
+import { Nullish } from "./utils/utilityTypes";
 import useBuildConfigSchema from "./core/hooks/useBuildConfigSchema";
 import useSetField from "./core/setters/setField";
 import getConfigValues from "./core/getters/getConfigValues";

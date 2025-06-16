@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import type { z } from "zod";
 // utils
-import { getValueFromEvent } from "../../utils";
+import { getValueFromEvent } from "../../utils/utils";
 import getFormConfigField from "./getFormConfigField";
 import type { FormConfigCbReturnInferred } from "../../fieldConfig/callbacks";
 import type useSetField from "../setters/setField";
 // interfaces
-import type { Nullable } from "../../common/interfaces";
+import type { Nullable } from "../../utils/utilityTypes";
 import type { OnChangeEventUnionNew } from "../../interfaces";
 import type { FormOut, ZObj } from "../../fieldConfig/interfaces";
 import type { AnyFormCfgObj } from "../../fieldConfig/returnTypes";

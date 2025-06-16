@@ -3,7 +3,7 @@ import type { z } from "zod";
 // utils
 import getFormConfigField from "../getters/getFormConfigField";
 // interfaces
-import type { SetState } from "../../common/interfaces";
+import type { SetState } from "../../utils/utilityTypes";
 import type { FormOut, ZObj } from "../../fieldConfig/interfaces";
 import type { FormConfigProp, FormConfigValues } from "../interfaces";
 
