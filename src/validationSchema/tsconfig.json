@@ -7,5 +7,5 @@
     "rootDir": "./"
   },
   "include": ["./"],
-  "references": [{ "path": "../fieldConfig" }, { "path": "../types" }, { "path": "../utils" }]
+  "references": [{ "path": "../fieldConfig" }, { "path": "../utils" }]
 }

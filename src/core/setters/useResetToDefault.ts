@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { z } from "zod";
 // interfaces
-import type { Nullish, SetState } from "@utils/utilityTypes";
-import type { FormOut, ZObj } from "@fieldConfig/interfaces";
+import type { Nullish, SetState, ZObj } from "@utils/index";
+import type { FormOut } from "@fieldConfig/interfaces";
 import type { UserInputFormFields } from "@core/interfaces";
 
 /**

@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from "react";
 import { z } from "zod";
 // utils
-import { zAddRulesIssue } from "../../DEPREC-common/zod";
+import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { FormConfigCbReturnInferred } from "../../fieldConfig/callbacks";
-import type { AnyFormCfgObj } from "../../fieldConfig/returnTypes";
-import type { FormOut, ZObj } from "../../fieldConfig/interfaces";
-import type { FieldConfig } from "../../fieldConfig/input";
+import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
+import type { FormOut } from "@fieldConfig/interfaces";
+import type { FieldConfig } from "@fieldConfig/input";
+import type { ZObj } from "@utils/index";
 
 const applyFieldConfigValidationRefinements = <
   TBase extends ZObj,
@@ -31,7 +31,7 @@ const applyFieldConfigValidationRefinements = <
  */
 const useBuildConfigSchema = <
   TBase extends ZObj,
-  TConfig extends AnyFormCfgObj<FormOut<TBase>> | undefined
+  TConfig extends AnyFormCfgObj<FormOut<TBase>> | null
 >(
   baseSchema: TBase,
   config: TConfig

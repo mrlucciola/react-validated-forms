@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { FieldCbValueProp } from "./callbacks";
-import { CfgKey, EvOut, EvSchema, FormOut, ZObj } from "./interfaces";
-import { Nullish } from "../utils/utilityTypes";
+// interfaces
+import { CfgKey, EvOut, FormOut } from "./interfaces";
+import { Nullish } from "@utils/index";
 
 export type ConfigFieldsProp<
   TForm extends FormOut,

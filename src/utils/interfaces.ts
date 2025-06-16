@@ -1,8 +1,11 @@
 import type { ChangeEvent } from "react";
 import type { z } from "zod";
 import type dayjs from "dayjs";
-// interfaces
-import type { ZObj, EvSchema } from "@fieldConfig/interfaces";
+
+/** Convenience type for z.ZodObject schema */
+export type ZObj = z.ZodObject<z.ZodRawShape>;
+/** Represents "External Values" schema */
+export type EvSchema = ZObj | undefined;
 
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }

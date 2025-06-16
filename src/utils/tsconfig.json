@@ -6,6 +6,6 @@
     "outDir": "../../dist/utils",
     "rootDir": "./"
   },
-  "include": ["./"],
-  "references": [{ "path": "../types" }]
+  "include": ["./"]
+  // "references": [{ "path": "../utils" }]
 }

@@ -2,17 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import type { z } from "zod";
 import { isEqual } from "lodash";
 // utils
-import resetToDefault from "../setters/resetToDefault";
+import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { ZObj } from "../../fieldConfig/interfaces";
-import type { AppliedFieldSchema } from "../../interfaces";
-import type { Nullish } from "../../utils/utilityTypes";
+import type { AppliedFieldSchema, ZObj } from "@utils/index";
+import type { Nullish } from "@utils/utilityTypes";
 import type { UserInputFormFields } from "../interfaces";
 
 const useInitStates = <TBase extends ZObj>(
   /** Should this be the catch schema? */
   userInputSchema: AppliedFieldSchema<TBase>,
-  defaultFormValues: Nullish<z.input<TBase>> | null | undefined
+  defaultFormValues: Nullish<z.input<TBase>> | null | undefined,
+  baseSchema: TBase
 ) => {
   /** Used for dependency array updates */
   const defaultValuesRef = JSON.stringify(defaultFormValues);
@@ -29,6 +29,13 @@ const useInitStates = <TBase extends ZObj>(
   const [referenceFormValues, setReferenceFormValues] =
     useState<UserInputFormFields<TBase>>(initializedForm);
   const [form, setForm] = useState<UserInputFormFields<TBase>>(initializedForm);
+
+  const resetToDefault = useResetToDefault<TBase>(
+    form,
+    setForm,
+    baseSchema,
+    setReferenceFormValues
+  );
 
   /** When `defaultValues` is updated (i.e. from request), set those fields on the `form` state
    * @todo update init-logic (see 'todo's)
@@ -61,6 +68,9 @@ const useInitStates = <TBase extends ZObj>(
     /** Form initialized with `defaultValues` */
     referenceFormValues,
     setReferenceFormValues,
+
+    // Utils
+    resetToDefault,
   };
 };
 

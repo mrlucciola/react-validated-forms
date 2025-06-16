@@ -7,5 +7,5 @@
     "rootDir": "./"
   },
   "include": ["./"],
-  "references": [{ "path": "../types" }]
+  "references": [{ "path": "../configDsl" }, { "path": "../utils" }]
 }

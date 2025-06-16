@@ -1,6 +1,6 @@
-import type { Nullish } from "../utils/utilityTypes";
-import type { EvOut, EvSchema, FormOut, ZObj } from "./interfaces";
-import type { DefinedFormConfigCb } from "../configDsl/interfaces";
+import type { EvSchema, Nullish, ZObj } from "@utils/index";
+import type { EvOut, FormOut } from "./interfaces";
+import type { DefinedFormConfigCb } from "@configDsl/interfaces";
 
 // export type ExternalValuesCbProps
 export type ExternalValuesCb<TEv extends EvOut> = (

@@ -1,7 +1,8 @@
 // interfaces
-import type { EvOut, EvSchema, FormOut, ZObj } from "../fieldConfig/interfaces";
-import type { EvProp } from "../fieldConfig/returnTypes";
+import type { EvOut, FormOut } from "@fieldConfig/interfaces";
+import type { EvProp } from "@fieldConfig/returnTypes";
 import type { DefinedFormConfigCb, FormConfigDefinition } from "./interfaces";
+import type { EvSchema, ZObj } from "@utils/index";
 
 // export type EvOut<TEvSchema extends EvSchema = EvSchema> = OptionalAppliedFieldOutput<TEvSchema>;
 /** Only for use in `useValidatedForm`

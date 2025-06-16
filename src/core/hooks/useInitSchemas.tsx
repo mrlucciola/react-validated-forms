@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { z } from "zod";
 // utils
-import { buildDefaultSchema } from "../../utils/utils";
+import { buildDefaultSchema } from "@utils/utils";
 // interfaces
-import type { ZObj } from "../../fieldConfig/interfaces";
-import type { AppliedFieldSchema } from "../../interfaces";
+import type { UiFormSchema, ZObj } from "@utils/index";
 
 /**
  * @todo Annotate
@@ -30,7 +29,7 @@ const useInitSchemas = <TBase extends ZObj>(originalSchema: TBase) => {
   /** Schema used for validating user input - any fields without a `catch` have `.catch()` schema applied.
    * @note The output values of this schema should only be used within the form components.
    */
-  const baseUserInputSchema: AppliedFieldSchema<TBase> = useMemo(
+  const baseUserInputSchema: UiFormSchema<TBase> = useMemo(
     () => buildDefaultSchema(baseSchema),
     []
   );

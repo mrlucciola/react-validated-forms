@@ -1,20 +1,20 @@
 import { z } from "zod";
 import { isEqual } from "lodash";
 // utils
-import { Nullish } from "./utils/utilityTypes";
-import useBuildConfigSchema from "./core/hooks/useBuildConfigSchema";
-import useSetField from "./core/setters/setField";
-import getConfigValues from "./core/getters/getConfigValues";
-import resetToDefault from "./core/setters/resetToDefault";
+import { Nullish } from "@utils/utilityTypes";
+import useBuildConfigSchema from "./hooks/useBuildConfigSchema";
+import useSetField from "./setters/setField";
+import getConfigValues from "./getters/getConfigValues";
 // hooks
-import useGetFieldProps from "./core/getters/getFieldProps";
-import useInitSchemas from "./core/hooks/useInitSchemas";
-import useInitStates from "./core/hooks/useInitStates";
+import useGetFieldProps from "./getters/getFieldProps";
+import useInitSchemas from "./hooks/useInitSchemas";
+import useInitStates from "./hooks/useInitStates";
+import useResetToDefault from "./setters/useResetToDefault";
 // interfaces
-import type { FormOut, ZObj } from "./fieldConfig/interfaces";
-import type { AnyFormCfgObj } from "./fieldConfig/returnTypes";
-import type { FormConfigCbReturnInferred } from "./fieldConfig/callbacks";
-import type { SchemaParseErrors, SchemaSpaReturn } from "./core/interfaces";
+import type { FormOut, ZObj } from "@fieldConfig/interfaces";
+import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
+import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
+import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -43,16 +43,11 @@ const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<FormOut<TBase
 ) => {
   const { baseSchema, baseUserInputSchema } = useInitSchemas(originalSchema);
 
-  const { form, setForm, referenceFormValues } = useInitStates(
-    baseUserInputSchema,
-    defaultFormValues
-  ); // Other props: setReferenceFormValues, uninitializedForm, initializedForm,
+  const { form, setForm, referenceFormValues, setReferenceFormValues, resetToDefault } =
+    useInitStates(baseUserInputSchema, defaultFormValues, baseSchema); // Other props: setReferenceFormValues, uninitializedForm, initializedForm,
 
   // @todo Fix type
-  const configValues = getConfigValues(
-    form,
-    formConfig
-  ) as unknown as FormConfigCbReturnInferred<TConfig>;
+  const configValues = getConfigValues<TBase>(form, formConfig);
 
   // @todo rename
   const appliedSchema = useBuildConfigSchema(baseSchema, formConfig, configValues);

@@ -29,7 +29,6 @@
     { "path": "./src/configDsl" },
     { "path": "./src/core" },
     { "path": "./src/fieldConfig" },
-    { "path": "./src/types" },
     { "path": "./src/utils" },
     { "path": "./src/validationSchema" }
   ],

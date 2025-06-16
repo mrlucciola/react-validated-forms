@@ -1,5 +1,6 @@
 // interfaces
-import type { CvCbFromCalc, EvOut, FormOut, ZObj } from "./interfaces";
+import type { ZObj } from "@utils/index";
+import type { CvCbFromCalc, EvOut, FormOut } from "./interfaces";
 import type { AnyFormCfgObj, FormCfgReturnObj } from "./returnTypes";
 
 export type FieldCbValueProp<TForm extends FormOut, TCalc, TExt extends EvOut> = Omit<

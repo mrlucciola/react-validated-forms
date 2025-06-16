@@ -6,8 +6,8 @@ import type {
   CatchFieldSchema,
   CatchSchemaShape,
   OnChangeEventUnionNew,
-} from "../interfaces";
-import type { ZObj } from "../fieldConfig/interfaces";
+  ZObj,
+} from "./interfaces";
 
 const getFieldDefaultValue = <TVal, TField extends z.ZodType<TVal>, TInput>(
   origFieldSchema: TInput extends z.ZodDefault<TField> ? z.ZodDefault<TField> : TField

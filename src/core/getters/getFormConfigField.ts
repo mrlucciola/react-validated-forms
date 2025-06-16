@@ -1,5 +1,6 @@
-import { FormOut, type ZObj } from "../../fieldConfig/interfaces";
+import type { FormOut } from "@fieldConfig/interfaces";
 import type { FormConfigProp } from "../interfaces";
+import type { ZObj } from "@utils/interfaces";
 
 /**
  * @todo add description
@@ -8,18 +9,18 @@ import type { FormConfigProp } from "../interfaces";
  * @param fieldKey
  * @returns
  */
-const getFormConfigField = <TConfig extends FormConfigProp<TSchema>, TSchema extends ZObj>(
-  config: TConfig,
-  fieldKey: keyof FormOut<TSchema>
+const getFormConfigField = <TBase extends ZObj>(
+  config: FormConfigProp<TBase>,
+  fieldKey: keyof FormOut<TBase>
 ) => config?.fields && config.fields[fieldKey];
 
 // const getFormConfigField = <
-//   TSchema extends ZObj,
-//   TForm extends FormOut<TSchema>,
+//   TBase extends ZObj,
+//   TForm extends FormOut<TBase>,
 //   TCalc,
 //   TExt extends ExtOut
 // >(
-//   config: FormCfgReturnObj<TForm, TCalc, TExt> | undefined, // FormConfigProp<TSchema>
+//   config: FormCfgReturnObj<TForm, TCalc, TExt> | undefined, // FormConfigProp<TBase>
 //   fieldKey: keyof TForm
 // ) => config?.fields && config.fields[fieldKey];
 

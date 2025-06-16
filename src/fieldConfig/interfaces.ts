@@ -1,11 +1,5 @@
-import { z } from "zod";
 // interfaces
-import { AppliedFieldOutput, OptionalAppliedFieldOutput } from "../interfaces";
-
-/** Convenience type for z.ZodObject schema */
-export type ZObj = z.ZodObject<z.ZodRawShape>;
-/** Represents "External Values" schema */
-export type EvSchema = ZObj | undefined;
+import type { AppliedFieldOutput, EvSchema, OptionalAppliedFieldOutput, ZObj } from "@utils/index";
 
 /** Represents "Calculated Values Callback"
  * Input form values + (optional) external values and returns `calculated` values */

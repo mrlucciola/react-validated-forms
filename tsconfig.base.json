@@ -6,13 +6,13 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "jsx": "react-jsx",
 
     "baseUrl": "./src",
     "paths": {
       "@configDsl/*": ["configDsl/*"],
       "@core/*": ["core/*"],
       "@fieldConfig/*": ["fieldConfig/*"],
-      "@types/*": ["types/*"],
       "@utils/*": ["utils/*"],
       "@validationSchema/*": ["validationSchema/*"]
     }
