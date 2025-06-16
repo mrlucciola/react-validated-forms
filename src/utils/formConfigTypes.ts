@@ -1,4 +1,4 @@
-import type { FormOut } from "./formTypes";
+import type { EvOut, FormOut } from "./formTypes";
 
 export type FieldCbValueProp<TForm extends FormOut, TCalc, TExt extends EvOut> = Omit<
   {

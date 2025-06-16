@@ -1,7 +1,7 @@
 import type { ConfigFieldsProp } from "@fieldConfig/input";
-import type { CvCbFromCalc, EvOut } from "@fieldConfig/interfaces";
+import type { CvCbFromCalc } from "@fieldConfig/interfaces";
 import type { EvProp } from "@fieldConfig/returnTypes";
-import type { EvSchema, FormOut, ZObj } from "@utils/index";
+import type { EvOut, EvSchema, FormOut, ZObj } from "@utils/index";
 
 export type FormConfigDefinition<
   TFormSchema extends ZObj,

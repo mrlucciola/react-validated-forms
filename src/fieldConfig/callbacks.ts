@@ -1,6 +1,6 @@
 // interfaces
-import type { FieldCbValueProp, FormOut, ZObj } from "@utils/index";
-import type { CvCbFromCalc, EvOut } from "./interfaces";
+import type { EvOut, FieldCbValueProp, FormOut, ZObj } from "@utils/index";
+import type { CvCbFromCalc } from "./interfaces";
 import type { AnyFormCfgObj, FormCfgReturnObj } from "./returnTypes";
 
 export type FormConfigCbReturnInferred<T extends AnyFormCfgObj> = T extends FormCfgReturnObj<

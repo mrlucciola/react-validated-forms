@@ -1,5 +1,4 @@
-import type { EvSchema, FormOut, Nullish, ZObj } from "@utils/index";
-import type { EvOut } from "./interfaces";
+import type { EvOut, EvSchema, FormOut, Nullish, ZObj } from "@utils/index";
 import type { DefinedFormConfigCb } from "@configDsl/interfaces";
 
 // export type ExternalValuesCbProps

@@ -1,5 +1,5 @@
 // interfaces
-import type { EvSchema, FormOut, OptionalAppliedFieldOutput } from "@utils/index";
+import type { EvOut, FormOut } from "@utils/index";
 
 /** Represents "Calculated Values Callback"
  * Input form values + (optional) external values and returns `calculated` values */
@@ -13,9 +13,6 @@ export type CvCb_<TCv, TFv extends FormOut = any, TEv extends EvOut = any> = (
 ) => TCv;
 
 export type CvCbFromCalc<TCv> = TCv extends never | undefined ? never : CvCb<any, any, TCv>;
-
-/** "External Values" output */
-export type EvOut<TEvSchema extends EvSchema = EvSchema> = OptionalAppliedFieldOutput<TEvSchema>;
 
 /** Key-type used for accessing the config */
 export type CfgKey<TForm extends FormOut> = keyof TForm;
