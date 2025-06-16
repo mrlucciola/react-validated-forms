@@ -4,9 +4,7 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/validationSchema",
-    "rootDir": "./",
-    "module": "ESNext",
-    "target": "ESNext"
+    "rootDir": "./"
   },
   "include": ["./"],
   "references": [{ "path": "../fieldConfig" }, { "path": "../types" }, { "path": "../utils" }]

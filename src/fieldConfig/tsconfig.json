@@ -4,9 +4,7 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/fieldConfig",
-    "rootDir": "./",
-    "module": "ESNext",
-    "target": "ESNext"
+    "rootDir": "./"
   },
   "include": ["./"],
   "references": [{ "path": "../types" }]

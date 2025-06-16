@@ -1,11 +1,20 @@
-// tsconfig.base.json
 {
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "baseUrl": "./src",
+    "paths": {
+      "@configDsl/*": ["configDsl/*"],
+      "@core/*": ["core/*"],
+      "@fieldConfig/*": ["fieldConfig/*"],
+      "@types/*": ["types/*"],
+      "@utils/*": ["utils/*"],
+      "@validationSchema/*": ["validationSchema/*"]
+    }
   }
 }

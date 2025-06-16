@@ -4,9 +4,7 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/configDsl",
-    "rootDir": "./",
-    "module": "ESNext",
-    "target": "ESNext"
+    "rootDir": "./"
   },
   "include": ["./"],
   "references": [{ "path": "../fieldConfig" }, { "path": "../types" }]

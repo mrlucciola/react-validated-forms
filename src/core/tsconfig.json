@@ -4,9 +4,7 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/core",
-    "rootDir": "./",
-    "module": "ESNext",
-    "target": "ESNext"
+    "rootDir": "./"
   },
   "include": ["./"],
   "references": [
