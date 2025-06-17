@@ -1,7 +1,4 @@
-import type { z } from "zod";
-
-/** Convenience type for z.ZodObject schema */
-export type ZObj = z.ZodObject<z.ZodRawShape>;
+import type { ZObj } from "@utils/zodTypes";
 
 /** "Form" zod-validation-schema */
 export type ZFormSchema = ZObj;
