@@ -9,4 +9,4 @@ export type CvCb<TFv extends FormOut, TEv extends EvOut, TCv> = (
 ) => TCv;
 
 /** "Calculated Values Callback" type, derived from "calculatedValues" */
-export type CvCbFromCalc<TCv> = TCv extends never | undefined ? never : CvCb<any, any, TCv>;
+export type CvCbFromCv<TCv> = TCv extends never | undefined ? never : CvCb<any, any, TCv>;

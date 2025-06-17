@@ -5,7 +5,7 @@ import { zDayjs } from "@utils/zod";
 import type { ZEvSchema, ZFormSchema, ZObj } from "@utils/schemaTypes";
 import type { EvOut, FormOut } from "@utils/formOutputTypes";
 import type { Nullish } from "@utils/utilityTypes";
-import type { CvCb, CvCbFromCalc } from "@utils/formConfigTypes";
+import type { CvCb, CvCbFromCv } from "@utils/formConfigTypes";
 
 type DefCalcValues<
   TFormSchema extends ZFormSchema = ZFormSchema,
@@ -73,7 +73,7 @@ type TestReturn = ReturnType<typeof testFormConfig>;
 type InferredFieldConfigs = ReturnType<typeof testFormConfig>["fields"];
 type InferredCv = ReturnType<typeof testFormConfig>["calcValues"];
 const calcValuesCallback: CvCb<TestForm, TestCv, TestEv> =
-  testFormConfigOutput.calcValues satisfies CvCbFromCalc<TestCv>;
+  testFormConfigOutput.calcValues satisfies CvCbFromCv<TestCv>;
 
 const asdf = calcValuesCallback({} as TestForm, {} as TestEv);
 

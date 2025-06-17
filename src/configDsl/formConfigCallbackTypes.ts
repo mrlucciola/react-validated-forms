@@ -1,4 +1,4 @@
-import type { CvCbFromCalc, EvOut, FormOut, Nullish } from "@utils/index";
+import type { CvCbFromCv, EvOut, FormOut, Nullish } from "@utils/index";
 import type { AnyFormCfgObj } from "./interfaces";
 import type { FormConfig } from "./formConfigTypes";
 
@@ -18,7 +18,7 @@ export type FormConfigReturn<TFv extends FormOut, TCv, TEv extends EvOut> = (
 ) => {
   fields: FormConfig<TFv, TCv, TEv>; // prev: ConfigFieldsProp
   /** @deprecated fix type - should be CvCb<TFv, TCv, TEv> */
-  calcValues?: CvCbFromCalc<TCv>;
+  calcValues?: CvCbFromCv<TCv>;
   externalValues?: TEv;
 };
 
@@ -31,7 +31,7 @@ export type CalcValuesCbFromConfig<T extends AnyFormCfgObj> = T extends FormConf
   infer TCv,
   infer _Ext
 >
-  ? CvCbFromCalc<TCv>
+  ? CvCbFromCv<TCv>
   : never;
 
 // @todo derive this type more effectively

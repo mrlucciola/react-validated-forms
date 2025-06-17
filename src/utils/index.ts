@@ -1,4 +1,3 @@
-export * from "./formConfigDerivedTypes";
 export * from "./formConfigTypes";
 export * from "./formOutputTypes";
 export * from "./interfaces";

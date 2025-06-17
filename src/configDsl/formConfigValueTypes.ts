@@ -1,4 +1,4 @@
-import type { CvCbFromCalc, EvOut, FormOut } from "@utils/index";
+import type { CvCbFromCv, EvOut, FormOut } from "@utils/index";
 import type { FormConfigReturn } from "./formConfigCallbackTypes";
 
 type PartialOrOmit<T, U> = T extends undefined
@@ -54,7 +54,7 @@ export type FormConfigValues<TFv extends FormOut, TCv, TEv extends EvOut> = Omit
 
 export type FormConfigCbReturnInferred<T extends AnyFormCfgObj> = T extends FormCfgReturnObj<
   infer TForm,
-  infer TCvCb extends CvCbFromCalc<any>,
+  infer TCvCb extends CvCbFromCv<any>,
   infer TExt
 >
   ? FormConfigValues<TForm, ReturnType<TCvCb>, TExt>
