@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type { FormOut, ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj } from "@configDsl/interfaces";
+import type { AnyFormCfgObj, AnyFormConfigValues } from "@configDsl/interfaces";
 import type { FieldConfig } from "@configDsl/fieldConfigTypes";
 
 /**
@@ -32,18 +32,15 @@ const applyFieldConfigValidationRefinements = <
  * @param configValues
  * @returns
  */
-const useBuildConfigSchema = <
-  TBase extends ZFormSchema,
-  TConfig extends AnyFormCfgObj<FormOut<TBase>> | null
->(
+const useBuildConfigSchema = <TBase extends ZFormSchema, TConfig extends AnyFormCfgObj<TBase>>(
   baseSchema: TBase,
-  config: TConfig
+  config?: TConfig
 ) => {
   // if no config provided: Early return `baseUserInputSchema`
   if (!config || !config.fields) return baseSchema;
 
   // Convert field schemas to array
-  type FieldKey = keyof NonNullable<TConfig>["fields"];
+  type FieldKey = keyof z.output<TBase>;
   type FieldCfg = FieldConfig<any, any, any, FieldKey>;
   const configFieldsArr = useMemo(() => Object.entries(config.fields), []) as [
     FieldKey,
@@ -81,14 +78,14 @@ const useBuildConfigSchema = <
 
       // IF `.registerOn()` IS DEFINED: Run `.registerOn()`, otherwise `registered = true`
       // If no `registerOn` is set for a given field, then the field is always registered
-      const testFieldCfgValues = !fieldCfg.registerOn || fieldCfg.registerOn(configValues);
+      // const testFieldCfgValues = !fieldCfg.registerOn || fieldCfg.registerOn(configValues);
 
       // IF (FIELD IS REGISTERED) & (FIELD IS NULL): THROW VALIDATION ERROR
       if (!!fieldCfg.registerOn && form[fieldKey] === null) {
         zAddRulesIssue([ctx, fieldKey]);
       } else {
         // IF `isRegistered === true` & `.rules()` IS DEFINED: Run rules
-        !!fieldCfg.rules && fieldCfg.rules({ ...configValues, form }, ctx, fieldKey);
+        !!fieldCfg.rules && fieldCfg.rules({ ...configValues, fields: form }, ctx, fieldKey);
       }
     };
   });

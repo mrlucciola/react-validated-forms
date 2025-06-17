@@ -11,7 +11,7 @@ import useInitStates from "./hooks/useInitStates";
 // interfaces
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
 import type { FormOut, Nullish, ZObj } from "@utils/index";
-import type { AnyFormCfgObj } from "@configDsl/interfaces";
+import type { AnyFormCfgObj, AnyFormConfigValues, FormCfgReturnObj } from "@configDsl/interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -33,7 +33,7 @@ import type { AnyFormCfgObj } from "@configDsl/interfaces";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<FormOut<TBase>>>(
+const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<TBase>>(
   originalSchema: TBase,
   defaultFormValues?: Nullish<z.input<TBase>> | null,
   formConfig?: TConfig // @todo use AppliedFormCfgReturnCb - prev: config
@@ -47,10 +47,10 @@ const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<FormOut<TBase
   ); // Other props: setReferenceFormValues, uninitializedForm, initializedForm,
 
   // @todo Fix type
-  const configValues = getConfigValues<TBase>(form, formConfig);
+  const configValues = getConfigValues(form, formConfig);
 
   // @todo rename
-  const appliedSchema = useBuildConfigSchema(baseSchema, formConfig, configValues);
+  const appliedSchema = useBuildConfigSchema(baseSchema, formConfig);
 
   // ----------------- Getters (below) -----------------
   const validation: SchemaSpaReturn<TBase> = appliedSchema.safeParse(form);
@@ -60,7 +60,7 @@ const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<FormOut<TBase
   const isDirty = !isEqual(referenceFormValues, form);
 
   const setField = useSetField(setForm, formConfig, configValues);
-  const getFieldProps = useGetFieldProps(setField, formConfig, configValues, form, errors);
+  const getFieldProps = useGetFieldProps(setField, form, errors, formConfig, configValues);
 
   return {
     form,

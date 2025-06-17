@@ -8,7 +8,12 @@ import type { UiFormSchema, ZObj } from "@utils/index";
 /**
  * @todo Annotate
  */
-const useInitSchemas = <TBase extends ZObj>(originalSchema: TBase) => {
+const useInitSchemas = <TBase extends ZObj>(
+  originalSchema: TBase
+): {
+  baseSchema: TBase;
+  baseUserInputSchema: UiFormSchema<TBase>;
+} => {
   /** @note This object is memoized because:
    *   - Updates frequently (on each field change)
    *   - Can be expensive to recalculate (affects performance as # of fields (and the amount of nesting) increases

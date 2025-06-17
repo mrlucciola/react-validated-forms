@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { z } from "zod";
 // interfaces
-import type { FormOut, Nullish, SetState, ZObj } from "@utils/index";
-import type { UserInputFormFields } from "@core/interfaces";
+import type { FormOut, Nullish, SetState, UiFormSchema, ZObj } from "@utils/index";
+import type { UiValues } from "../interfaces";
 
 /**
  * @todo add description
@@ -14,11 +14,11 @@ import type { UserInputFormFields } from "@core/interfaces";
  * @returns
  */
 const useResetToDefault = <TBase extends ZObj>(
-  form: UserInputFormFields<TBase>,
-  setForm: SetState<UserInputFormFields<TBase>>,
-  // formSchema:UiFormSchema<TBase>,
-  formSchema: TBase,
-  setReferenceFormValues: SetState<UserInputFormFields<TBase>>
+  form: UiValues<TBase>,
+  setForm: SetState<UiValues<TBase>>,
+  formSchema: UiFormSchema<TBase>,
+  // formSchema: TBase,
+  setReferenceFormValues: SetState<UiValues<TBase>>
 ) => {
   const resetToDefault = useCallback(
     (

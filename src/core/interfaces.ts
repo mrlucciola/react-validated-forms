@@ -4,7 +4,7 @@ import type { AppliedFieldOutput, ZObj } from "@utils/index";
 import type { AnyFormCfgObj, FormConfigCbReturnInferred } from "@configDsl/formConfigValueTypes";
 
 /** Same as FormOut<TSchema> */
-export type UserInputFormFields<TBaseSchema extends ZObj> = AppliedFieldOutput<TBaseSchema>;
+export type UiValues<TBaseSchema extends ZObj> = AppliedFieldOutput<TBaseSchema>;
 
 /** The error-object type from an object schema's `safeParse`. */
 export type SchemaParseErrors<TSchema extends ZObj> = z.typeToFlattenedError<

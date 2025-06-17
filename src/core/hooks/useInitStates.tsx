@@ -4,35 +4,30 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { AppliedFieldSchema, Nullish, ZObj } from "@utils/index";
-import type { UserInputFormFields } from "../interfaces";
+import type { Nullish, UiFormSchema, ZObj } from "@utils/index";
+import type { UiValues } from "../interfaces";
 
 const useInitStates = <TBase extends ZObj>(
-  /** Should this be the catch schema? */
-  userInputSchema: AppliedFieldSchema<TBase>,
+  userInputSchema: UiFormSchema<TBase>,
   defaultFormValues: Nullish<z.input<TBase>> | null | undefined,
   baseSchema: TBase
 ) => {
   /** Used for dependency array updates */
   const defaultValuesRef = JSON.stringify(defaultFormValues);
 
-  const initializedForm: UserInputFormFields<TBase> = useMemo(
+  const initializedForm: UiValues<TBase> = useMemo(
     () => userInputSchema.parse(defaultFormValues ?? {}),
     [defaultValuesRef]
   );
-  const uninitializedForm: UserInputFormFields<TBase> = useMemo(
-    () => userInputSchema.parse({}),
-    []
-  );
+  const uninitializedForm: UiValues<TBase> = useMemo(() => userInputSchema.parse({}), []);
 
-  const [referenceFormValues, setReferenceFormValues] =
-    useState<UserInputFormFields<TBase>>(initializedForm);
-  const [form, setForm] = useState<UserInputFormFields<TBase>>(initializedForm);
+  const [referenceFormValues, setReferenceFormValues] = useState<UiValues<TBase>>(initializedForm);
+  const [form, setForm] = useState<UiValues<TBase>>(initializedForm);
 
   const resetToDefault = useResetToDefault<TBase>(
     form,
     setForm,
-    baseSchema,
+    userInputSchema,
     setReferenceFormValues
   );
 

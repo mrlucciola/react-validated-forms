@@ -5,21 +5,21 @@ import { getValueFromEvent } from "@utils/utils";
 import getFormConfigField from "./getFormConfigField";
 import type useSetField from "../setters/setField";
 // interfaces
-import type { FormOut, Nullable, OnChangeEventUnionNew, ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj, FormConfigCbReturnInferred } from "@configDsl/interfaces";
-import type { SchemaParseErrors, UserInputFormFields } from "../interfaces";
+import type { Nullable, OnChangeEventUnionNew, ZFormSchema } from "@utils/index";
+import type { AnyFormCfgObj, AnyFormConfigValues } from "@configDsl/interfaces";
+import type { SchemaParseErrors, UiValues } from "../interfaces";
 
 type UseSetFieldReturn<
   TBase extends ZFormSchema,
-  TConfig extends AnyFormCfgObj<FormOut<TBase>>
+  TConfig extends AnyFormCfgObj<TBase>
 > = ReturnType<typeof useSetField<TBase, TConfig>>;
 
-const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends AnyFormCfgObj<FormOut<TBase>>>(
+const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends AnyFormCfgObj<TBase>>(
   setField: UseSetFieldReturn<TBase, TConfig>,
-  config: AnyFormCfgObj<FormOut<TBase>> | undefined,
-  configValues: FormConfigCbReturnInferred<TConfig> | undefined,
-  form: UserInputFormFields<TBase>,
-  errors: SchemaParseErrors<TBase> | undefined
+  form: UiValues<TBase>,
+  errors: SchemaParseErrors<TBase> | undefined,
+  config?: AnyFormCfgObj<TBase>,
+  configValues?: AnyFormConfigValues<TBase>
 ) =>
   useCallback(
     <TField extends keyof z.input<TBase>, TInValue extends Nullable<z.input<TBase>>[TField]>(
@@ -30,7 +30,7 @@ const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends AnyFormCfgO
         setField(fieldKey, newFieldValue);
       };
 
-      const registerOn = getFormConfigField<TBase>(config, fieldKey)?.registerOn;
+      const registerOn = config && getFormConfigField(config, fieldKey)?.registerOn;
 
       const shouldDisplay =
         // @ts-ignore

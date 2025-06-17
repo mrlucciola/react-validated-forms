@@ -23,13 +23,13 @@ const externalSchema = z.object({
 const testFormConfig = defineFormConfig({
   fields: {
     name: {
-      changeEvent: ({ form, external, calculated }) => {
+      changeEvent: ({ fields, external, calculated }) => {
         return {};
       },
-      registerOn: ({ form, external, calculated }) => {
+      registerOn: ({ fields, external, calculated }) => {
         return true;
       },
-      rules: ({ form, external, calculated }) => {},
+      rules: ({ fields, external, calculated }) => {},
     },
   },
   formSchema,
@@ -49,3 +49,7 @@ const testFormConfig = defineFormConfig({
   },
   externalSchema,
 });
+const asdf = testFormConfig();
+
+asdf.fields.name.changeEvent; // this should be available
+asdf.fields.date.changeEvent; // this should throw a type error, because the `changeEvent` for field `date` is not defined

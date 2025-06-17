@@ -12,7 +12,9 @@ import type { ZFormSchema } from "@utils/schemaTypes";
 const getFieldDefaultValue = <TVal, TField extends z.ZodType<TVal>, TInput>(
   origFieldSchema: TInput extends z.ZodDefault<TField> ? z.ZodDefault<TField> : TField
 ): TField extends z.ZodDefault<infer U> ? U : null =>
-  origFieldSchema instanceof z.ZodDefault ? origFieldSchema._def.defaultValue() : null;
+  (origFieldSchema instanceof z.ZodDefault
+    ? origFieldSchema._def.defaultValue()
+    : null) as TField extends z.ZodDefault<infer U> ? U : null;
 
 /**
  * - If field already has a catch, early exit
