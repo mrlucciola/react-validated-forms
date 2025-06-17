@@ -3,8 +3,12 @@ import type { z } from "zod";
 /** Convenience type for z.ZodObject schema */
 export type ZObj = z.ZodObject<z.ZodRawShape>;
 
-/** Represents "Form" schema */
+/** "Form" zod-validation-schema */
 export type ZFormSchema = ZObj;
 
-/** Represents "External Values" schema */
-export type EvSchema = ZObj | undefined;
+/**
+ * @deprecated use ZEvSchema
+ */
+export type EvSchema = ZEvSchema;
+/** Represents "External Values" zod-validation-schema */
+export type ZEvSchema = ZObj | undefined;

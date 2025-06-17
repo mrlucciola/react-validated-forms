@@ -9,10 +9,15 @@ type EvProp<TEv extends EvOut> = TEv extends undefined | never
   ? never
   : Parameters<ExternalValuesCb<TEv>>;
 
+/**
+ * @deprecated fix type - should omit fields that are undefined
+ * @deprecated add additional support type - `AnyFormConfigReturn` for `unknown` values on `Partial<...>` fields
+ */
 export type FormConfigReturn<TFv extends FormOut, TCv, TEv extends EvOut> = (
   ...args: EvProp<TEv>
 ) => {
   fields: FormConfig<TFv, TCv, TEv>; // prev: ConfigFieldsProp
+  /** @deprecated fix type - should be CvCb<TFv, TCv, TEv> */
   calcValues?: CvCbFromCalc<TCv>;
   externalValues?: TEv;
 };

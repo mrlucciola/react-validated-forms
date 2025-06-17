@@ -10,6 +10,10 @@ type FormConfigDefinition<
 > = {
   /** Used only for providing types */
   formSchema: TFormSchema;
+  /**
+   * @deprecated rename to `fieldConfigs` (or similar name)
+   * @deprecated create type for this field
+   */
   fields: Partial<FormConfig<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
 
   // Optional parameters
