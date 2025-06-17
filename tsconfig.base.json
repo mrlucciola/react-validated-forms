@@ -12,8 +12,7 @@
     "paths": {
       "@configDsl/*": ["configDsl/*"],
       "@core/*": ["core/*"],
-      "@utils/*": ["utils/*"],
-      "@validationSchema/*": ["validationSchema/*"]
+      "@utils/*": ["utils/*"]
     }
   }
 }

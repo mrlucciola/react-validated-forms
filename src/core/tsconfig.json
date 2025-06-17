@@ -7,9 +7,5 @@
     "rootDir": "./"
   },
   "include": ["./"],
-  "references": [
-    { "path": "../configDsl" },
-    { "path": "../utils" },
-    { "path": "../validationSchema" }
-  ]
+  "references": [{ "path": "../configDsl" }, { "path": "../utils" }]
 }

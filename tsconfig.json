@@ -28,8 +28,7 @@
   "references": [
     { "path": "./src/configDsl" },
     { "path": "./src/core" },
-    { "path": "./src/utils" },
-    { "path": "./src/validationSchema" }
+    { "path": "./src/utils" }
   ],
   // "include": [],
   "exclude": ["node_modules", "**/*/local.*", "**/*/*.local.*"]
