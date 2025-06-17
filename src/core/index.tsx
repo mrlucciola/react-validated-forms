@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { isEqual } from "lodash";
 // utils
-import { Nullish } from "@utils/utilityTypes";
 import useBuildConfigSchema from "./hooks/useBuildConfigSchema";
 import useSetField from "./setters/setField";
 import getConfigValues from "./getters/getConfigValues";
@@ -9,12 +8,10 @@ import getConfigValues from "./getters/getConfigValues";
 import useGetFieldProps from "./getters/getFieldProps";
 import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
-import useResetToDefault from "./setters/useResetToDefault";
 // interfaces
-import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
-import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
-import type { FormOut, ZObj } from "@utils/index";
+import type { FormOut, Nullish, ZObj } from "@utils/index";
+import type { AnyFormCfgObj } from "@configDsl/interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -43,8 +40,11 @@ const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<FormOut<TBase
 ) => {
   const { baseSchema, baseUserInputSchema } = useInitSchemas(originalSchema);
 
-  const { form, setForm, referenceFormValues, setReferenceFormValues, resetToDefault } =
-    useInitStates(baseUserInputSchema, defaultFormValues, baseSchema); // Other props: setReferenceFormValues, uninitializedForm, initializedForm,
+  const { form, setForm, referenceFormValues, resetToDefault } = useInitStates(
+    baseUserInputSchema,
+    defaultFormValues,
+    baseSchema
+  ); // Other props: setReferenceFormValues, uninitializedForm, initializedForm,
 
   // @todo Fix type
   const configValues = getConfigValues<TBase>(form, formConfig);

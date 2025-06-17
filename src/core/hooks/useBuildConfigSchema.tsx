@@ -3,17 +3,21 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
-import type { FieldConfig } from "@fieldConfig/input";
-import type { FormOut, ZObj } from "@utils/index";
+import type { FormOut, ZFormSchema } from "@utils/index";
+import type { AnyFormCfgObj } from "@configDsl/interfaces";
+import type { FieldConfig } from "@configDsl/fieldConfigTypes";
 
+/**
+ * 
+ * @deprecated needs to be completed
 const applyFieldConfigValidationRefinements = <
-  TBase extends ZObj,
+  TBase extends ZFormSchema,
   TConfig extends AnyFormCfgObj<FormOut<TBase>>,
   FieldKey extends keyof TConfig["fields"] = keyof TConfig["fields"]
 >(
   fieldTuple: [FieldKey, FieldConfig<any, any, any, FieldKey>] // [FieldKey, FieldCfg]
 ): ((form: z.output<TBase>, ctx: z.RefinementCtx) => void) => {};
+ */
 
 /**
  * Iterates through each field in the form-schema (object-schema):
@@ -29,7 +33,7 @@ const applyFieldConfigValidationRefinements = <
  * @returns
  */
 const useBuildConfigSchema = <
-  TBase extends ZObj,
+  TBase extends ZFormSchema,
   TConfig extends AnyFormCfgObj<FormOut<TBase>> | null
 >(
   baseSchema: TBase,

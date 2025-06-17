@@ -1,4 +1,4 @@
-import type { FormOut, ZObj } from "@utils/index";
+import type { FormOut, ZFormSchema } from "@utils/index";
 import type { FormConfigProp } from "../interfaces";
 
 /**
@@ -8,7 +8,7 @@ import type { FormConfigProp } from "../interfaces";
  * @param fieldKey
  * @returns
  */
-const getFormConfigField = <TBase extends ZObj>(
+const getFormConfigField = <TBase extends ZFormSchema>(
   config: FormConfigProp<TBase>,
   fieldKey: keyof FormOut<TBase>
 ) => config?.fields && config.fields[fieldKey];

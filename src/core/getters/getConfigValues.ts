@@ -1,9 +1,20 @@
-import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
-import type { AnyFormCfgObj, FormCfgRtnObjGeneric } from "@fieldConfig/returnTypes";
 import type { FormOut, ZObj } from "@utils/index";
+import type {
+  AnyFormCfgObj,
+  DefinedFormConfigCb,
+  FormCfgReturnObj,
+  FormConfigCbReturnInferred,
+} from "@configDsl/interfaces";
 import type { UserInputFormFields } from "../interfaces";
 
+type FormCfgRtnObjGeneric<T> = T extends DefinedFormConfigCb<infer TForm, infer TCalc, infer TExt>
+  ? ReturnType<DefinedFormConfigCb<TForm, TCalc, TExt>>
+  : T extends FormCfgReturnObj<infer TForm, infer TCalc, infer TExt>
+  ? FormCfgReturnObj<TForm, TCalc, TExt>
+  : never;
+
 type TConfig<TBase extends ZObj> = AnyFormCfgObj<FormOut<TBase>>;
+
 /** @todo abstract this logic out to `FormCfgRtnObjGeneric` */
 type ConfigParam<TBase extends ZObj> = FormCfgRtnObjGeneric<TConfig<TBase>> | undefined;
 

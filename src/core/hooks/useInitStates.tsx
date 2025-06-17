@@ -4,8 +4,7 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { AppliedFieldSchema, ZObj } from "@utils/index";
-import type { Nullish } from "@utils/utilityTypes";
+import type { AppliedFieldSchema, Nullish, ZObj } from "@utils/index";
 import type { UserInputFormFields } from "../interfaces";
 
 const useInitStates = <TBase extends ZObj>(

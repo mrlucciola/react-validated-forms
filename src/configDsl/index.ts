@@ -1,7 +1,21 @@
 // interfaces
-import type { EvProp } from "@fieldConfig/returnTypes";
-import type { DefinedFormConfigCb, FormConfigDefinition } from "./interfaces";
-import type { EvOut, EvSchema, FormOut, ZObj } from "@utils/index";
+import type { EvOut, EvProp, EvSchema, FormOut, ZObj } from "@utils/index";
+import type { FormConfig } from "./formConfigTypes";
+import type { DefinedFormConfigCb } from "./interfaces";
+
+type FormConfigDefinition<
+  TFormSchema extends ZObj,
+  TCv extends Record<string, any>,
+  TEvSchema extends EvSchema
+> = {
+  /** Used only for providing types */
+  formSchema: TFormSchema;
+  fields: Partial<FormConfig<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
+
+  // Optional parameters
+  calcValues?: (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
+  externalSchema?: TEvSchema;
+};
 
 /** Only for use in `useValidatedForm`
  * For fields on `externalSchema`, `null` is applied to fields where a catch is not provided

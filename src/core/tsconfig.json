@@ -8,6 +8,7 @@
   },
   "include": ["./"],
   "references": [
+    { "path": "../configDsl" },
     { "path": "../fieldConfig" },
     { "path": "../utils" },
     { "path": "../validationSchema" }

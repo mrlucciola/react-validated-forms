@@ -1,11 +1,7 @@
 import type { ChangeEvent } from "react";
 import type { z } from "zod";
 import type dayjs from "dayjs";
-
-/** Convenience type for z.ZodObject schema */
-export type ZObj = z.ZodObject<z.ZodRawShape>;
-/** Represents "External Values" schema */
-export type EvSchema = ZObj | undefined;
+import type { EvSchema, ZFormSchema, ZObj } from "@utils/schemaTypes";
 
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }
@@ -25,22 +21,23 @@ export type CatchFieldSchema<TField extends z.ZodTypeAny> = TField extends z.Zod
     >;
 
 /** Derive the **shape** of the provided Zod (object) schema's `catch` type (adding catches, nullability and/or defaults) */
-export type CatchSchemaShape<TSchema extends ZObj> = {
+export type CatchSchemaShape<TSchema extends ZFormSchema> = {
   [FieldKey in keyof TSchema["shape"]]: CatchFieldSchema<TSchema["shape"][FieldKey]>;
 };
 
-/** Derive the schema applied to form fields.
- * Issue this addresses:
+/** ### "User Input" Form Schema
+ * Derive the schema applied to form fields.
+ * The issue this addresses:
  * - Values used in the form components come from `.safeParse().data`
  * - If validation on a single field fails, all field values evaluate to `undefined`, since `.data` field from `.safeParse()` return is `undefined` on failed validation.
  * To address this, a second schema is derived from the true validation schema, which allows returns either the passed-in value or defaults.
  *
- * Prev: `SchemaFallback`
+ * Prev: `SchemaFallback`, `AppliedFieldSchema`
  */
-export type UiFormSchema<TSchema extends ZObj> = z.ZodObject<CatchSchemaShape<TSchema>>;
+export type UiFormSchema<TSchema extends ZFormSchema> = z.ZodObject<CatchSchemaShape<TSchema>>;
 
 /** @deprecated renamed to `UiFormSchema` */
-export type AppliedFieldSchema<TSchema extends ZObj> = z.ZodObject<CatchSchemaShape<TSchema>>;
+export type AppliedFieldSchema<TSchema extends ZFormSchema> = UiFormSchema<TSchema>;
 
 /** The type used to the output fields within `form` and getFieldProps('...').
  * The object that contains these values should always exist,
@@ -52,12 +49,13 @@ export type AppliedFieldSchema<TSchema extends ZObj> = z.ZodObject<CatchSchemaSh
  *
  * With the fallback schema, invalid fields will return the value applied to the `.catch()`.
  *
- * @deprecated use `OptionalAppliedFieldOutput` (to be renamed to AppliedFieldOutput)
+ * @deprecated renamed to `UiFormOutput`
  */
-export type AppliedFieldOutput<TFormSchema extends ZObj> = z.output<
-  AppliedFieldSchema<TFormSchema>
+export type AppliedFieldOutput<TFormSchema extends ZFormSchema> = z.output<
+  UiFormSchema<TFormSchema>
 >;
-/** @todo rename to `AppliedFieldOutput` after removing */
+
+/** @deprecated rename to `UiFormOutputOptional` - potentially remove */
 export type OptionalAppliedFieldOutput<TEvSchema extends EvSchema> = TEvSchema extends ZObj
   ? AppliedFieldOutput<NonNullable<TEvSchema>>
   : undefined;

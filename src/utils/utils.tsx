@@ -6,8 +6,8 @@ import type {
   CatchFieldSchema,
   CatchSchemaShape,
   OnChangeEventUnionNew,
-  ZObj,
 } from "./interfaces";
+import type { ZFormSchema } from "@utils/schemaTypes";
 
 const getFieldDefaultValue = <TVal, TField extends z.ZodType<TVal>, TInput>(
   origFieldSchema: TInput extends z.ZodDefault<TField> ? z.ZodDefault<TField> : TField
@@ -34,7 +34,7 @@ const getFieldCatchSchema = <
 };
 
 /** Inspired by this [StackOverflow answer](https://stackoverflow.com/a/77720528) */
-export const buildDefaultSchema = <TOrigSchema extends ZObj>(
+export const buildDefaultSchema = <TOrigSchema extends ZFormSchema>(
   schema: TOrigSchema
 ): AppliedFieldSchema<TOrigSchema> => {
   type FieldKey = keyof CatchSchemaShape<TOrigSchema>;

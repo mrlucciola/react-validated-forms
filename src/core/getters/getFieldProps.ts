@@ -5,18 +5,16 @@ import { getValueFromEvent } from "@utils/utils";
 import getFormConfigField from "./getFormConfigField";
 import type useSetField from "../setters/setField";
 // interfaces
-import type { FormConfigCbReturnInferred } from "@fieldConfig/callbacks";
-import type { FormOut, OnChangeEventUnionNew, ZObj } from "@utils/index";
-import type { Nullable } from "@utils/utilityTypes";
-import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
+import type { FormOut, Nullable, OnChangeEventUnionNew, ZFormSchema } from "@utils/index";
+import type { AnyFormCfgObj, FormConfigCbReturnInferred } from "@configDsl/interfaces";
 import type { SchemaParseErrors, UserInputFormFields } from "../interfaces";
 
 type UseSetFieldReturn<
-  TBase extends ZObj,
+  TBase extends ZFormSchema,
   TConfig extends AnyFormCfgObj<FormOut<TBase>>
 > = ReturnType<typeof useSetField<TBase, TConfig>>;
 
-const useGetFieldProps = <TBase extends ZObj, TConfig extends AnyFormCfgObj<FormOut<TBase>>>(
+const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends AnyFormCfgObj<FormOut<TBase>>>(
   setField: UseSetFieldReturn<TBase, TConfig>,
   config: AnyFormCfgObj<FormOut<TBase>> | undefined,
   configValues: FormConfigCbReturnInferred<TConfig> | undefined,
