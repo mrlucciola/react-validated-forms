@@ -13,3 +13,14 @@ export type Nullish<T, U extends keyof T = keyof T> = Omit<T, U> & {
 };
 
 export type SetState<T> = Dispatch<SetStateAction<T>>;
+
+export type OptionalKeys<T> = {
+  [K in keyof T]-?: undefined extends T[K] ? K : never;
+}[keyof T];
+export type OmitOptionalKeys<T> = Omit<T, OptionalKeys<T>>;
+
+export type PartialOrOmit<T, U> = T extends undefined
+  ? {}
+  : T extends unknown
+  ? Partial<U>
+  : NonNullable<U>;
