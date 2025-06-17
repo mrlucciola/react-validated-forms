@@ -1,7 +1,7 @@
 {
   "name": "react-validated-forms",
   "version": "0.1.0",
-  "module": "src/index.tsx",
+  "module": "src/core/index.tsx",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
@@ -20,6 +20,7 @@
   },
   "scripts": {
     "typecheck": "bunx tsc --noEmit",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "bun run --hot tests"
   }
 }

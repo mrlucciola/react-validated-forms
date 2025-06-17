@@ -23,13 +23,23 @@
     // Some stricter flags (disabled by default)
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false
+    "noPropertyAccessFromIndexSignature": false,
+    "types": ["bun-types"]
   },
   "references": [
     { "path": "./src/configDsl" },
     { "path": "./src/core" },
     { "path": "./src/utils" }
   ],
-  // "include": [],
-  "exclude": ["node_modules", "**/*/local.*", "**/*/*.local.*"]
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "tests",
+    "**/local",
+    "**/*/local.*",
+    "**/*/*.local.*",
+    "**/hidden",
+    "**/*/hidden.*",
+    "**/*/*.hidden.*"
+  ]
 }

@@ -1,5 +1,6 @@
-import { defineFormConfig } from "@configDsl/index";
 import { z } from "zod";
+// local
+import { defineFormConfig } from "@configDsl/index";
 import { zDayjs } from "@utils/zod";
 
 const TestObj = z.object({ name: z.string(), date: zDayjs, num: z.number() });

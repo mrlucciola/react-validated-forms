@@ -7,5 +7,4 @@
     "rootDir": "./"
   },
   "include": ["./"]
-  // "references": [{ "path": "../utils" }]
 }

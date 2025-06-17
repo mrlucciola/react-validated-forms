@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    // Avoid building non-source files.
+    "noEmit": true,
+    // Necessary for path-references to work.
+    "baseUrl": "../src"
+  },
+  "include": ["./**/*"],
+  "references": [
+    { "path": "../src/configDsl" },
+    { "path": "../src/core" },
+    { "path": "../src/utils" }
+  ]
+}
