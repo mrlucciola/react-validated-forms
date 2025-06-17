@@ -1,7 +1,7 @@
 // interfaces
-import type { EvOut, EvProp, EvSchema, FormOut, ZObj } from "@utils/index";
-import type { FormConfig } from "./formConfigTypes";
-import type { DefinedFormConfigCb } from "./interfaces";
+import type { EvOut, EvSchema, FormOut, ZObj } from "@utils/index";
+import type { EvProp, FormConfig } from "./formConfigTypes";
+import type { FormConfigReturn } from "./formConfigCallbackTypes";
 
 type FormConfigDefinition<
   TFormSchema extends ZObj,
@@ -33,7 +33,7 @@ export const defineFormConfig = <
     const externalValues = externalSchema?.parse(ev ?? {});
 
     return { fields, calcValues, externalValues };
-  }) as DefinedFormConfigCb<
+  }) as FormConfigReturn<
     FormOut<TFormSchema>,
     typeof formConfigDefinition.calcValues, // @note having issues propagating return type throughout config
     EvOut<TEvSchema>

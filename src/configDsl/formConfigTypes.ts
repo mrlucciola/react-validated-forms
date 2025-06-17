@@ -1,5 +1,5 @@
-import type { CfgKey, FieldConfig } from "@configDsl/fieldConfigTypes";
-import type { EvOut, FormOut } from "@utils/index";
+import type { EvOut, FormOut, Nullish } from "@utils/index";
+import type { CfgKey, FieldConfig } from "./fieldConfigTypes";
 
 /** Defines the configuration for all form fields
  *
@@ -29,6 +29,15 @@ import type { EvOut, FormOut } from "@utils/index";
  * });
  * ```
  */
-export type FormConfig<TForm extends FormOut, TCalc, TExt extends EvOut> = {
-  [FieldKey in CfgKey<TForm>]: FieldConfig<TForm, NonNullable<TCalc>, TExt, FieldKey>;
+export type FormConfig<TFv extends FormOut, TCv, TEv extends EvOut> = {
+  [FieldKey in CfgKey<TFv>]: FieldConfig<TFv, NonNullable<TCv>, TEv, FieldKey>;
 };
+
+type ExternalValuesCb<TEv extends EvOut> = (
+  externalValues?: Nullish<NonNullable<TEv>> | null
+) => void;
+
+/** Parameters for `ExternalValuesCb` */
+export type EvProp<TEv extends EvOut> = TEv extends undefined | never
+  ? never
+  : Parameters<ExternalValuesCb<TEv>>;

@@ -1,7 +1,7 @@
 import type { z } from "zod";
 // interfaces
-import type { AppliedFieldOutput, FormConfigCbReturnInferred, ZObj } from "@utils/index";
-import type { AnyFormCfgObj } from "@fieldConfig/returnTypes";
+import type { AppliedFieldOutput, ZObj } from "@utils/index";
+import type { AnyFormCfgObj, FormConfigCbReturnInferred } from "@configDsl/formConfigValueTypes";
 
 /** Same as FormOut<TSchema> */
 export type UserInputFormFields<TBaseSchema extends ZObj> = AppliedFieldOutput<TBaseSchema>;

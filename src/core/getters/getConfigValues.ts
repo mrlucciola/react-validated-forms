@@ -1,25 +1,25 @@
-import type { FormOut, ZObj } from "@utils/index";
+import type { FormOut, ZFormSchema, ZObj } from "@utils/index";
 import type {
   AnyFormCfgObj,
-  DefinedFormConfigCb,
   FormCfgReturnObj,
   FormConfigCbReturnInferred,
 } from "@configDsl/interfaces";
 import type { UserInputFormFields } from "../interfaces";
+import type { FormConfigReturn } from "@configDsl/formConfigCallbackTypes";
 
-type FormCfgRtnObjGeneric<T> = T extends DefinedFormConfigCb<infer TForm, infer TCalc, infer TExt>
-  ? ReturnType<DefinedFormConfigCb<TForm, TCalc, TExt>>
-  : T extends FormCfgReturnObj<infer TForm, infer TCalc, infer TExt>
-  ? FormCfgReturnObj<TForm, TCalc, TExt>
+type FormCfgRtnObjGeneric<T> = T extends FormConfigReturn<infer TFv, infer TCv, infer TEv>
+  ? ReturnType<FormConfigReturn<TFv, TCv, TEv>>
+  : T extends FormCfgReturnObj<infer TFv, infer TCv, infer TEv>
+  ? FormCfgReturnObj<TFv, TCv, TEv>
   : never;
 
-type TConfig<TBase extends ZObj> = AnyFormCfgObj<FormOut<TBase>>;
+type TConfig<TBase extends ZFormSchema> = AnyFormCfgObj<FormOut<TBase>>;
 
 /** @todo abstract this logic out to `FormCfgRtnObjGeneric` */
-type ConfigParam<TBase extends ZObj> = FormCfgRtnObjGeneric<TConfig<TBase>> | undefined;
+type ConfigParam<TBase extends ZFormSchema> = FormCfgRtnObjGeneric<TConfig<TBase>> | undefined;
 
 type OutType<
-  TBase extends ZObj,
+  TBase extends ZFormSchema,
   TConfigParam extends ConfigParam<TBase>
 > = TConfigParam extends NonNullable<AnyFormCfgObj>
   ? FormConfigCbReturnInferred<TConfig<TBase>>

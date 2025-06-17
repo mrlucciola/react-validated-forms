@@ -28,7 +28,6 @@
   "references": [
     { "path": "./src/configDsl" },
     { "path": "./src/core" },
-    { "path": "./src/fieldConfig" },
     { "path": "./src/utils" },
     { "path": "./src/validationSchema" }
   ],
