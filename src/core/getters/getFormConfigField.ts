@@ -1,5 +1,5 @@
 import type { ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj } from "@configDsl/interfaces";
+import type { AnyFormCfgObj } from "src/configDsl/deprecatedInterfaces/interfaces";
 
 /**
  * @todo add description

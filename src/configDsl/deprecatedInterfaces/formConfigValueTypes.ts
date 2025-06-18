@@ -1,19 +1,11 @@
-import type { CvCbFromCv, EvOut, FormOut } from "@utils/index";
-import type { FormConfigReturn } from "./formConfigCallbackTypes";
-
-type PartialOrOmit<T, U> = T extends undefined
-  ? {}
-  : T extends unknown
-  ? Partial<U>
-  : NonNullable<U>;
+import type { CvCbFromCv, EvOut, FormOut, PartialOrOmit } from "@utils/index";
+import type { FormConfigReturnDEPREC } from "./formConfigCallbackTypes";
 
 /** Atomic context slice of Form-Config-Values */
 type FormValuesCtx<T extends FormOut> = { fields: T };
 /** Atomic context slice of Form-Config-Values */
 type CalcValuesCtx<T extends any> = PartialOrOmit<T, { calculated: T }>;
-
 /** Atomic context slice of Form-Config-Values */
-
 type ExtValuesCtx<T extends EvOut | unknown> = PartialOrOmit<T, { external: T }>;
 
 export type AnyFormConfigValues<
@@ -61,12 +53,12 @@ export type FormConfigCbReturnInferred<T extends AnyFormCfgObj> = T extends Form
   : never;
 
 export type FormCfgReturnObj<TFv extends FormOut, TCv, TEv extends EvOut> = ReturnType<
-  FormConfigReturn<TFv, TCv, TEv>
+  FormConfigReturnDEPREC<TFv, TCv, TEv>
 >;
 
+/** @deprecated move to correct scope. this type does not support unknowns */
 export type AnyFormCfgObj<
   TForm extends FormOut = any,
   TCalc = any,
   TExt extends EvOut = any
 > = FormCfgReturnObj<TForm, TCalc, TExt>;
-const zxcv = {} as AnyFormCfgObj;

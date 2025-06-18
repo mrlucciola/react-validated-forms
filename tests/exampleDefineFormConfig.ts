@@ -2,10 +2,16 @@ import { z } from "zod";
 // local
 import { defineFormConfig } from "@configDsl/index";
 import { zDayjs } from "@utils/zod";
-import type { ZEvSchema, ZFormSchema, ZObj } from "@utils/schemaTypes";
-import type { EvOut, FormOut } from "@utils/formOutputTypes";
-import type { Nullish } from "@utils/utilityTypes";
-import type { CvCb, CvCbFromCv } from "@utils/formConfigTypes";
+import type {
+  Nullish,
+  ZEvSchema,
+  ZFormSchema,
+  ZObj,
+  EvOut,
+  FormOut,
+  CvCb_,
+  CvCbFromCv,
+} from "@utils/index";
 
 type DefCalcValues<
   TFormSchema extends ZFormSchema = ZFormSchema,
@@ -72,12 +78,59 @@ type TestEv = EvOut<TestExternalSchema>;
 type TestReturn = ReturnType<typeof testFormConfig>;
 type InferredFieldConfigs = ReturnType<typeof testFormConfig>["fields"];
 type InferredCv = ReturnType<typeof testFormConfig>["calcValues"];
-const calcValuesCallback: CvCb<TestForm, TestCv, TestEv> =
+const calcValuesCallback: CvCb_<TestForm, TestEv, TestCv> =
   testFormConfigOutput.calcValues satisfies CvCbFromCv<TestCv>;
 
 const asdf = calcValuesCallback({} as TestForm, {} as TestEv);
 
 type InferredEv = ReturnType<typeof testFormConfig>["calcValues"];
+
+{
+  const testExternalValues = {} as NonNullable<EvOut<TestExternalSchema>>;
+  const testFxnCbInput = <TEvSchema extends ZEvSchema | unknown>(
+    input?: FormConfigCbInput<TEvSchema>
+  ) => {
+    return input;
+  };
+  const testCbInput = testFxnCbInput(externalSchema); // ERROR: this should show an error - `externalSchema` is `ZEvSchema` type NOT `FormConfigCbInput<TEvSchema>`
+  const testCbInputTyped = testFxnCbInput<TestExternalSchema>(testExternalValues); // no error
+  const testCbInputUndefined = testFxnCbInput(undefined); // no error
+  const testCbInputUndefinedTyped = testFxnCbInput<undefined>(undefined); // no error
+  const testCbInputUndefined2 = testFxnCbInput(); // no error
+  const testCbInputUndefined2Typed = testFxnCbInput<undefined>(); // no error
+  const testCbInputUnknown = testFxnCbInput({} as unknown);
+  const testCbInputUnknownTyped = testFxnCbInput<unknown>({} as unknown); // this gives error when it shouldnt
+  const testCbInputUnknown2 = testFxnCbInput<unknown>();
+
+  // Adding another layer: Function Props
+  const testFxnCbProps = <TEvSchema extends ZEvSchema>(input?: FormConfigCbProps<TEvSchema>) => {
+    return input;
+  };
+  const testCbProps = testFxnCbProps(testCbInput);
+  const testCbProps2 = testFxnCbProps<TestExternalSchema>([testCbInput]);
+  const testCbPropsUndefined = testFxnCbProps();
+  const testCbPropsUndefined2 = testFxnCbProps<undefined>([]);
+  const testCbPropsUnknown = testFxnCbProps([{} as unknown]);
+  const testCbPropsUnknown2 = testFxnCbProps<unknown>({} as unknown);
+
+  // Adding another layer: Function ReturnType
+  const testFxnCbReturnType = <TFcProps extends FormConfigCbProps>(input: TFcProps) => {
+    return input;
+  };
+  const testCbReturnType = testFxnCbReturnType((_: typeof externalSchema) => {});
+  const testCbReturnTypeUndefined = testFxnCbReturnType((_: undefined) => {});
+  const testCbReturnTypeUnknown = testFxnCbReturnType((_: unknown) => {});
+  const testCbReturnTypeUnknown2 = testFxnCbReturnType();
+
+  // // Adding another layer: Function definition
+  // const testFxnCb = <TFcProps extends FormConfigCbProps>(input: TFcProps) => {
+  //   return input;
+  // };
+  // const testCb = testFxnCb((_: typeof externalSchema) => {});
+  // const testCbUndefined = testFxnCb((_: undefined) => {});
+  // const testCbUnknown = testFxnCb((_: unknown) => {});
+  // const testCbUnknown2 = testFxnCb();
+}
 
 // Type-check tests: config variables
 {

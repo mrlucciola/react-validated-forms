@@ -4,8 +4,8 @@ import { z } from "zod";
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type { FormOut, ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj, AnyFormConfigValues } from "@configDsl/interfaces";
-import type { FieldConfig } from "@configDsl/fieldConfigTypes";
+import type { AnyFormCfgObj, AnyFormConfigValues } from "src/configDsl/deprecatedInterfaces/interfaces";
+import type { FieldConfig } from "src/configDsl/deprecatedInterfaces/fieldConfigTypes";
 
 /**
  * 

@@ -11,7 +11,7 @@ import useInitStates from "./hooks/useInitStates";
 // interfaces
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
 import type { FormOut, Nullish, ZObj } from "@utils/index";
-import type { AnyFormCfgObj, AnyFormConfigValues, FormCfgReturnObj } from "@configDsl/interfaces";
+import type { FormConfig } from "@configDsl/interfaces/formConfig";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -33,7 +33,7 @@ import type { AnyFormCfgObj, AnyFormConfigValues, FormCfgReturnObj } from "@conf
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TBase extends ZObj, TConfig extends AnyFormCfgObj<TBase>>(
+const useForm = <TBase extends ZObj, TConfig extends FormConfig<TBase, any, any>>(
   originalSchema: TBase,
   defaultFormValues?: Nullish<z.input<TBase>> | null,
   formConfig?: TConfig // @todo use AppliedFormCfgReturnCb - prev: config

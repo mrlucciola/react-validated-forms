@@ -1,12 +1,16 @@
 // interfaces
-import type { EvOut, EvSchema, FormOut, ZObj } from "@utils/index";
-import type { EvProp, FormConfig } from "./formConfigTypes";
-import type { FormConfigReturn } from "./formConfigCallbackTypes";
+import type { CvCb, CvCbFromCv, EvOut, EvSchema, FormOut, ZEvSchema, ZObj } from "@utils/index";
+import type { EvProp, FormConfig } from "./deprecatedInterfaces/formConfigTypes";
+import type {
+  FormConfigCb,
+  FormConfigCbReturn,
+  FormConfigReturnDEPREC,
+} from "./deprecatedInterfaces/formConfigCallbackTypes";
 
 type FormConfigDefinition<
   TFormSchema extends ZObj,
   TCv extends Record<string, any>,
-  TEvSchema extends EvSchema
+  TEvSchema extends ZEvSchema
 > = {
   /** Used only for providing types */
   formSchema: TFormSchema;
@@ -17,7 +21,8 @@ type FormConfigDefinition<
   fields: Partial<FormConfig<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
 
   // Optional parameters
-  calcValues?: (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
+  // calcValuesCallback?: (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
+  calcValuesCallback?: CvCb<TFormSchema, TEvSchema, TCv>;
   externalSchema?: TEvSchema;
 };
 
@@ -26,20 +31,34 @@ type FormConfigDefinition<
  */
 export const defineFormConfig = <
   TFormSchema extends ZObj,
-  TEvSchema extends EvSchema,
+  TEvSchema extends ZEvSchema,
   TCv extends Record<string, any>
 >(
   formConfigDefinition: FormConfigDefinition<TFormSchema, TCv, TEvSchema>
 ) => {
-  const { fields, calcValues, externalSchema } = formConfigDefinition;
+  type TCvCb = CvCbFromCv<TCv>;
+  const { fields, calcValuesCallback, externalSchema } = formConfigDefinition;
+
+  const testOutput: FormConfigCb<TFormSchema, TCvCb, TEvSchema> = (ev) => {
+    const externalValues = externalSchema?.parse(ev ?? {});
+
+    const test = {} as FormConfigCbReturn<TFormSchema, TCvCb, TEvSchema>;
+
+    return { fields, calcValuesCallback, externalValues };
+  };
 
   return ((ev?: EvProp<EvOut<TEvSchema>>) => {
     const externalValues = externalSchema?.parse(ev ?? {});
 
-    return { fields, calcValues, externalValues };
-  }) as FormConfigReturn<
+    return { fields, calcValuesCallback, externalValues };
+  }) as FormConfigReturnDEPREC<
     FormOut<TFormSchema>,
-    typeof formConfigDefinition.calcValues, // @note having issues propagating return type throughout config
+    typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
     EvOut<TEvSchema>
   >;
+  // }) as FormConfigReturnDEPREC<
+  //   FormOut<TFormSchema>,
+  //   typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
+  //   EvOut<TEvSchema>
+  // >;
 };

@@ -6,7 +6,7 @@ import getFormConfigField from "./getFormConfigField";
 import type useSetField from "../setters/setField";
 // interfaces
 import type { Nullable, OnChangeEventUnionNew, ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj, AnyFormConfigValues } from "@configDsl/interfaces";
+import type { AnyFormCfgObj, AnyFormConfigValues } from "src/configDsl/deprecatedInterfaces/interfaces";
 import type { SchemaParseErrors, UiValues } from "../interfaces";
 
 type UseSetFieldReturn<

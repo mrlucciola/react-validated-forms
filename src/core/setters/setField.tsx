@@ -4,7 +4,7 @@ import type { z } from "zod";
 import getFormConfigField from "../getters/getFormConfigField";
 // interfaces
 import type { FormOut, SetState, ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj, AnyFormConfigValues } from "@configDsl/interfaces";
+import type { AnyFormCfgObj, AnyFormConfigValues } from "src/configDsl/deprecatedInterfaces/interfaces";
 
 /** @todo annotate */
 const useSetField = <
