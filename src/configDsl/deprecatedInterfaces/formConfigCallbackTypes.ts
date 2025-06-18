@@ -1,7 +1,7 @@
 import type {
   AnyCvCb,
   EvOut,
-  FormConfigFields,
+  FormConfig,
   OmitOptionalKeys,
   PartialOrOmit,
   ZEvSchema,
@@ -25,7 +25,7 @@ export type FormConfigCbArgs<TEs extends ZEvSchema | unknown> = [TEs] extends [Z
 ////////////////////////////////////////////////////////////////////////////////
 
 /** Atomic context slice of Form-Field-Configs */
-type FieldConfigsCtx<T extends ZFormSchema> = { fields: FormConfigFields<T, any, any> };
+type FieldConfigsCtx<TFs extends ZObj> = FormConfig<TFs>["fields"];
 /** Atomic context slice of Calculated-Values-Callback */
 type CvCbCtx<T extends AnyCvCb | undefined | unknown> = PartialOrOmit<T, { calcValuesCallback: T }>;
 type ExtValues_<T extends ZEvSchema | unknown> = T extends ZEvSchema ? EvOut<T> : unknown;
