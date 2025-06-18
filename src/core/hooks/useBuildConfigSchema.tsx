@@ -3,9 +3,7 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { FormOut, ZFormSchema } from "@utils/index";
-import type { FormConfig } from "@configDsl/interfaces";
-import type { FieldConfig } from "@configDsl/deprecatedInterfaces";
+import type { FieldConfig, FormConfig, UiValues, ZFormSchema } from "@utils/index";
 
 /**
  * @deprecated needs to be completed
@@ -58,7 +56,7 @@ const useBuildConfigSchema = <TBase extends ZFormSchema, TConfig extends FormCon
   // @todo memoize
   // For each field: Apply schema refinements defined in config to the baseSchema
   const getCalculatedValues = useCallback(
-    (form: FormOut<TBase>, config: TConfig) =>
+    (form: UiValues<TBase>, config: TConfig) =>
       /**
        * # Error: `config?.calcValues ?` @ calcValues
        * Property 'calcValues' does not exist on type 'TConfig'.ts(2339)

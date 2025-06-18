@@ -1,5 +1,5 @@
 import type { ZEvSchema, ZFormSchema } from "@utils/index";
-import type { EvOut, FormOut } from "./formOutputTypes";
+import type { EvOut, UiValues } from "./formOutputTypes";
 
 /** This is always required */
 type FormCvCbArg<TFs extends ZFormSchema> = [form: TFs];
@@ -60,12 +60,12 @@ export type InferCalcValuesFromCvCb<TCvCb extends AnyCvCb | undefined> = TCvCb e
 /** Represents "Calculated Values Callback"
  * Input form values + (optional) external values and returns `calculated` values
  */
-export type CvCb_<TFv extends FormOut, TCv, TEv extends EvOut> = (
+export type CvCb_<TFv extends UiValues, TCv, TEv extends EvOut> = (
   form: TFv,
   externalValues?: TEv
 ) => TCv;
 
-export type AnyCvCb_<TFv extends FormOut = FormOut, TCv = any, TEv extends EvOut = any> = CvCb_<
+export type AnyCvCb_<TFv extends UiValues = UiValues, TCv = any, TEv extends EvOut = any> = CvCb_<
   TFv,
   TCv,
   TEv

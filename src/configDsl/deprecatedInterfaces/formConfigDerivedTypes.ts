@@ -1,9 +1,8 @@
-import type { AnyCvCb, ZObj, FormOut } from "@utils/index";
-import type { FormConfig } from "@configDsl/interfaces";
+import type { AnyCvCb, FormConfig, UiValues, ZObj } from "@utils/index";
 
 export type InferFormValuesFromConfig<TConfig extends FormConfig<ZObj>> =
   InferExtSchemaFromConfig<TConfig> extends ZObj
-    ? FormOut<InferExtSchemaFromConfig<TConfig>>
+    ? UiValues<InferExtSchemaFromConfig<TConfig>>
     : undefined;
 
 export type InferCvCbFromConfig_<TConfig extends FormConfig<ZObj>> = TConfig extends FormConfig<
@@ -36,4 +35,4 @@ export type InferExtSchemaFromConfig<TConfig extends FormConfig<ZObj>> = TConfig
   ? TEvSchema
   : never;
 export type InferExternalValuesFromConfig<TConfig extends FormConfig<ZObj>> =
-  InferExtSchemaFromConfig<TConfig> extends infer T extends ZObj ? FormOut<T> : undefined;
+  InferExtSchemaFromConfig<TConfig> extends infer T extends ZObj ? UiValues<T> : undefined;

@@ -1,19 +1,15 @@
+import type { FormConfig, ZObj } from "@utils/index";
 import type {
   AnyFormConfigValues,
   InferCalcValuesFromConfig,
   InferCvCbFromConfig,
-  InferExternalValuesFromConfig,
-  InferExtSchemaFromConfig,
   InferFormSchemaFromConfig,
-  InferFormValuesFromConfig,
 } from "@configDsl/interfaces";
 import type { UiValues } from "../interfaces";
-import type { FormConfig } from "@configDsl/interfaces";
-import type { ZObj } from "@utils/zodTypes";
 
-type OutType<TConfig extends AnyFormConfigValues> = TConfig extends AnyFormConfigValues
+type OutType<TConfigValues extends AnyFormConfigValues> = TConfigValues extends AnyFormConfigValues
   ? // Cannot find name 'FormConfigCbReturnInferred'.ts(2304)
-    FormConfigCbReturnInferred<TConfig>
+    FormConfigCbReturnInferred<TConfigValues>
   : null;
 
 /** @todo Add annotation

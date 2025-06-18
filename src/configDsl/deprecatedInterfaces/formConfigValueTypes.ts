@@ -1,16 +1,9 @@
-import type { EvOut, FormOut, PartialOrOmit } from "@utils/index";
-
-/** Atomic context slice of Form-Config-Values */
-type FormValuesCtx<T extends FormOut> = { fields: T };
-/** Atomic context slice of Form-Config-Values */
-type CalcValuesCtx<T extends any> = PartialOrOmit<T, { calculated: T }>;
-/** Atomic context slice of Form-Config-Values */
-type ExtValuesCtx<T extends EvOut | unknown> = PartialOrOmit<T, { external: T }>;
+import type { EvOut, FormConfigCtx, UiValues } from "@utils/index";
 
 export type AnyFormConfigValues<
-  TFv extends FormOut = FormOut,
+  TFv extends UiValues = UiValues,
   TCv = unknown,
-  TEv extends EvOut | unknown = unknown
+  TEv extends EvOut = any
 > = FormConfigCtx<TFv, TCv, TEv>;
 
 export type InferFormValues<T extends AnyFormConfigValues> = T["fields"];
@@ -23,22 +16,3 @@ export type InferExtValues<T extends AnyFormConfigValues> = T extends { external
 
 export type WithCalcValues<T> = T extends { calculated: any } ? T : never;
 export type WithExtValues<T> = T extends { external: any } ? T : never;
-
-export type FormConfigCtx<TFv extends FormOut, TCv = unknown, TEv = unknown> = FormValuesCtx<TFv> &
-  CalcValuesCtx<TCv> &
-  ExtValuesCtx<TEv>;
-
-/**
- * 'Values' property for the callback function.
- * This value is an object that may have 1-3 fields.
- */
-export type FormConfigValuesBase<TFv extends FormOut, TCv, TEv extends EvOut> = FormValuesCtx<TFv> &
-  CalcValuesCtx<TCv> &
-  ExtValuesCtx<TEv>;
-
-/** */
-export type FormConfigValues<TFv extends FormOut, TCv, TEv extends EvOut> = Omit<
-  FormConfigValuesBase<TFv, TCv, TEv>,
-  // @note 'Opposite' condition due to `Omit`
-  (TCv extends undefined ? "calculated" : never) | (TEv extends undefined ? "external" : never)
->;

@@ -9,9 +9,8 @@ import useGetFieldProps from "./getters/getFieldProps";
 import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
 // interfaces
+import type { FormConfig, Nullish, ZObj } from "@utils/index";
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
-import type { Nullish, ZObj } from "@utils/index";
-import type { FormConfig } from "@configDsl/interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
  *

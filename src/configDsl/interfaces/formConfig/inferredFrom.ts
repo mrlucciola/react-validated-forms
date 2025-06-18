@@ -1,5 +1,4 @@
-import type { FormConfig } from "@configDsl/interfaces";
-import type { ZObj } from "@utils/zodTypes";
+import type { FormConfig, ZObj } from "@utils/index";
 
 export type InferFormSchemaFromConfig<TConfig extends FormConfig<ZObj>> =
   TConfig extends FormConfig<infer TFormSchema, infer _TCvCb, infer _TEvSchema>

@@ -1,26 +1,13 @@
 // interfaces
-import type { CvCb, CvCbFromCv, EvOut, FormOut, ZEvSchema, ZObj } from "@utils/index";
-import type { FormConfigFields } from "./deprecatedInterfaces/formConfigTypes";
-import type { FormConfig } from "./interfaces";
-
-type FormConfigDefinition<
-  TFormSchema extends ZObj,
-  TCv extends Record<string, any>,
-  TEvSchema extends ZEvSchema
-> = {
-  /** Used only for providing types */
-  formSchema: TFormSchema;
-  /**
-   * @deprecated rename to `fieldConfigs` (or similar name)
-   * @deprecated create type for this field
-   */
-  fields: Partial<FormConfigFields<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
-
-  // Optional parameters
-  // calcValuesCallback?: (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
-  calcValuesCallback?: CvCb<TFormSchema, TEvSchema, TCv>;
-  externalSchema?: TEvSchema;
-};
+import type {
+  CvCbFromCv,
+  EvOut,
+  FormConfig,
+  FormConfigDefinition,
+  UiValues,
+  ZEvSchema,
+  ZObj,
+} from "@utils/index";
 
 /** Only for use in `useValidatedForm`
  * For fields on `externalSchema`, `null` is applied to fields where a catch is not provided
@@ -57,7 +44,7 @@ export const defineFormConfig = <
      * - Type '{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>]: addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>[k]; }' is missing the following properties from type 'ZodObject<ZodRawShape, UnknownKeysParam, ZodTypeAny, { [x: string]: any; }, { [x: string]: any; }>': _cached, _getCached, _parse, shape, and 52 more.ts(2344)
      * - (type parameter) TFormSchema in <TFormSchema extends ZObj, TEvSchema extends ZEvSchema, TCv extends Record<string, any>>(formConfigDefinition: FormConfigDefinition<TFormSchema, TCv, TEvSchema>): FormConfig<TFormSchema, CvCbFromCv<TCv>, TEvSchema>
      */
-    FormOut<TFormSchema>,
+    UiValues<TFormSchema>,
     typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
     EvOut<TEvSchema>
   >;
@@ -68,7 +55,7 @@ export const defineFormConfig = <
 
   //   return { fields, calcValuesCallback, externalValues };
   // }) as FormConfig<
-  //   FormOut<TFormSchema>,
+  //   UiValues<TFormSchema>,
   //   typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
   //   EvOut<TEvSchema>
   // >;

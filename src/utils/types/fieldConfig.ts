@@ -1,23 +1,18 @@
 import type { z } from "zod";
-// local
-import type { EvOut, FormOut, Nullish } from "@utils/index";
-import type { FormConfigValues } from "@configDsl/interfaces";
-
-/** Key-type used for accessing the config */
-export type CfgKey<TForm extends FormOut> = keyof TForm;
+import type { CfgKey, FormConfigValues, Nullish, UiValues, ZObj, ZObjOpt } from "@utils/index";
 
 /** Validation-schema configuration for a single form-field */
 export type FieldConfig<
-  TForm extends FormOut,
-  TCalcVal,
-  TExt extends EvOut,
-  TField extends CfgKey<TForm>
+  TFs extends ZObj,
+  TCvCb,
+  TEs extends ZObjOpt,
+  TField extends CfgKey<UiValues<TFs>>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &
    * Field Effect: when a field is updated, all fields defined in the return object are updated when the specified field is changed by the user
    */
-  changeEvent?: (values: FormConfigValues<TForm, TCalcVal, TExt>) => Partial<Nullish<TForm>>;
+  changeEvent?: (values: FormConfigValues<TFs, TCvCb, TEs>) => Partial<Nullish<TFs>>;
 
   /** @todo add `generalEffect`
    * General Effect: **any time** a field in the array is changed, all fields defined in its callback's return object are updated
@@ -27,7 +22,7 @@ export type FieldConfig<
   /** Conditionally include/ignore field validation by providing a callback.
    * For default validation, leave this field `undefined`.
    * See `buildCatchSchema` for how this method is applied. */
-  registerOn?: (values: FormConfigValues<TForm, TCalcVal, TExt>) => boolean;
+  registerOn?: (values: FormConfigValues<TFs, TCvCb, TEs>) => boolean;
 
   /** this gets passed into a refinement
    * Rules/refinement logic will run if:
@@ -41,7 +36,7 @@ export type FieldConfig<
    * See: ZTransformEffect, ZRefinementEffect
    */
   rules?: (
-    values: FormConfigValues<TForm, TCalcVal, TExt>,
+    values: FormConfigValues<TFs, TCvCb, TEs>,
     ctx: z.RefinementCtx,
     fieldKey: TField
   ) => void | undefined | never;

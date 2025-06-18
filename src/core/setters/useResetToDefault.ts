@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { z } from "zod";
 // interfaces
-import type { FormOut, Nullish, SetState, UiFormSchema, ZObj } from "@utils/index";
-import type { UiValues } from "../interfaces";
+import type { UiValues, Nullish, SetState, UiFormSchema, ZObj } from "@utils/index";
 
 /**
  * @todo add description
@@ -29,7 +28,7 @@ const useResetToDefault = <TBase extends ZObj>(
         ...(overwriteExistingFormValues ? {} : form),
         ...(newDefaultValues ?? {}),
       };
-      const parsed: FormOut<TBase> = formSchema.parse(updatedDefaultForm);
+      const parsed: UiValues<TBase> = formSchema.parse(updatedDefaultForm);
       setReferenceFormValues(parsed);
       setForm(parsed);
     },

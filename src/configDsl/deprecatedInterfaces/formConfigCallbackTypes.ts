@@ -1,18 +1,18 @@
 import type {
   AnyCvCb,
   EvOut,
+  FormConfigFields,
   OmitOptionalKeys,
   PartialOrOmit,
   ZEvSchema,
   ZFormSchema,
   ZObj,
 } from "@utils/index";
-import type { FormConfigFields } from "./formConfigTypes";
 
 /** See: FormConfigDefinition<TFormSchema extends ZObj, TCv extends Record<string, any>, TEvSchema extends EvSchema> = {
   formSchema: TFormSchema;
-  fields: Partial<FormConfigFields<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
-  calcValuesCallback?: (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
+  fields: Partial<FormConfigFields<UiValues<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
+  calcValuesCallback?: (form: UiValues<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
   externalSchema?: TEvSchema;
 };
  */

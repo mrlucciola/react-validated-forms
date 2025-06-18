@@ -2,22 +2,13 @@ import { z } from "zod";
 // local
 import { defineFormConfig } from "@configDsl/index";
 import { zDayjs } from "@utils/zod";
-import type {
-  Nullish,
-  ZEvSchema,
-  ZFormSchema,
-  ZObj,
-  EvOut,
-  FormOut,
-  CvCb_,
-  CvCbFromCv,
-} from "@utils/index";
+import type { ZEvSchema, ZFormSchema, EvOut, UiValues, CvCb_, CvCbFromCv } from "@utils/index";
 
 type DefCalcValues<
   TFormSchema extends ZFormSchema = ZFormSchema,
   TCv = any,
   TEvSchema extends ZEvSchema = ZEvSchema
-> = (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
+> = (form: UiValues<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
 
 const TestObj = z.object({ name: z.string(), date: zDayjs, num: z.number() });
 
@@ -70,7 +61,7 @@ const testFormConfigOutput = testFormConfig({});
 type TestFormSchema = typeof formSchema;
 type TestExternalSchema = typeof externalSchema;
 type TestCalculatedValues = typeof defCalcValues;
-type TestForm = FormOut<TestFormSchema>;
+type TestForm = UiValues<TestFormSchema>;
 type TestCv = ReturnType<TestCalculatedValues>;
 type TestEv = EvOut<TestExternalSchema>;
 
