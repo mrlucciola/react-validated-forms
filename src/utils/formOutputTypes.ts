@@ -1,4 +1,4 @@
-import type { AppliedFieldOutput, OptionalAppliedFieldOutput } from "./interfaces";
+import type { AppliedFieldOutput, OptionalAppliedFieldOutput } from "./fxnTypes";
 import type { ZEvSchema, ZFormSchema } from "./schemaTypes";
 
 /** "Form Values" output

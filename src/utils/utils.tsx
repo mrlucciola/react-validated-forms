@@ -6,7 +6,7 @@ import type {
   CatchFieldSchema,
   CatchSchemaShape,
   OnChangeEventUnionNew,
-} from "./interfaces";
+} from "./fxnTypes";
 import type { ZFormSchema } from "@utils/schemaTypes";
 
 const getFieldDefaultValue = <TVal, TField extends z.ZodType<TVal>, TInput>(
