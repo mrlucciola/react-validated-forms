@@ -25,18 +25,14 @@ type AnyFormConfig<
 };
  */
 export type FormConfig<
-  TSchema extends ZObj,
-  /** Error:
-   * Generic type 'CvCb' requires 3 type argument(s).ts(2314)
-   * - (alias) type CvCb<TFs extends ZFormSchema, TEs extends ZEvSchema, TCv extends Record<string, any> | undefined> = TCv extends undefined ? never : CvCbBase<TFs, TEs, NonNullable<TCv>>
-   */
-  TCvCb extends CvCb | undefined = undefined,
-  TEvSchema extends ZObjOpt = undefined
+  TFs extends ZObj,
+  TCvCb extends CvCb<TFs, any, any> | undefined = undefined,
+  TEs extends ZObjOpt = undefined
 > = {
   /** Field-level behaviour & validation */
-  fields: Partial<FormConfigFields<TSchema, ReturnType<TCvCb>, TEvSchema>>;
+  fields: Partial<FormConfigFields<TFs, TCvCb, TEs>>;
   /** Derived values callback (optional) */
   calcValuesCallback?: TCvCb;
   /** Runtime external values (optional) */
-  externalValues?: EvOut<TEvSchema>;
+  externalValues?: EvOut<TEs>;
 };

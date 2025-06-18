@@ -6,6 +6,7 @@ import type {
   PartialOrOmit,
   ZObj,
   ZObjOpt,
+  CvCb,
 } from "@utils/index";
 
 /** Atomic context slice of Form-Config-Values */
@@ -39,6 +40,8 @@ export type InferFormConfigValues<TConfig extends FormConfig<ZObj>> = TConfig ex
   ? FormConfigValues<TFs, TCvCb, TEs>
   : never;
 
-export type FormConfigValues<TFs extends ZObj, TCvCb, TEs extends ZObjOpt> = OmitOptionalKeys<
-  FormConfigValuesBase<TFs, TCvCb, TEs>
->;
+export type FormConfigValues<
+  TFs extends ZObj,
+  TCvCb extends CvCb<TFs, any, any> | undefined,
+  TEs extends ZObjOpt
+> = OmitOptionalKeys<FormConfigValuesBase<TFs, TCvCb, TEs>>;

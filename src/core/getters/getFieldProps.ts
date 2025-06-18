@@ -5,10 +5,15 @@ import { getValueFromEvent } from "@utils/utils";
 import getFormConfigField from "./getFormConfigField";
 import type useSetField from "../setters/setField";
 // interfaces
-import type { Nullable, OnChangeEventUnionNew, ZFormSchema } from "@utils/index";
+import type {
+  FormConfig,
+  Nullable,
+  OnChangeEventUnionNew,
+  UiValues,
+  ZFormSchema,
+} from "@utils/index";
 import type { AnyFormConfigValues } from "@configDsl/deprecatedInterfaces";
-import type { SchemaParseErrors, UiValues } from "../interfaces";
-import type { FormConfig } from "@configDsl/interfaces";
+import type { SchemaParseErrors } from "../interfaces";
 
 type UseSetFieldReturn<TBase extends ZFormSchema, TConfig extends FormConfig<TBase>> = ReturnType<
   typeof useSetField<TBase, TConfig>

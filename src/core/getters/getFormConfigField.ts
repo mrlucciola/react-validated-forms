@@ -1,5 +1,4 @@
-import type { ZFormSchema } from "@utils/index";
-import type { FormConfig } from "@configDsl/interfaces";
+import type { FormConfig, ZFormSchema } from "@utils/index";
 
 /** @todo add description */
 const getFormConfigField = <TBase extends ZFormSchema>(

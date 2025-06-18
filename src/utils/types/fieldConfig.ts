@@ -4,9 +4,11 @@ import type { CfgKey, CvCb, FormConfigValues, Nullish, UiValues, ZObj } from "@u
 /** Validation-schema configuration for a single form-field */
 export type FieldConfig<
   TFs extends ZObj,
-  TCvCb extends CvCb<TFs, any, any> | void,
-  TEs extends ZObj | void,
-  TField extends CfgKey<UiValues<TFs>>
+  TCvCb_ extends CvCb<TFs, any, any> | void,
+  TEs_ extends ZObj | void,
+  TField extends CfgKey<UiValues<TFs>>,
+  TCvCb extends TCvCb_ extends void ? undefined : TCvCb_,
+  TEs extends TEs_ extends void ? undefined : TEs_
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &
