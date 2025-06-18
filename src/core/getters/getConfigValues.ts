@@ -1,62 +1,60 @@
 import type {
   AnyFormConfigValues,
-  FormConfigCbReturnInferred,
   InferCalcValuesFromConfig,
   InferCvCbFromConfig,
   InferExternalValuesFromConfig,
   InferExtSchemaFromConfig,
   InferFormSchemaFromConfig,
   InferFormValuesFromConfig,
-  AnyFormConfig,
-} from "src/configDsl/deprecatedInterfaces/interfaces";
+} from "@configDsl/interfaces";
 import type { UiValues } from "../interfaces";
-import type { AnyCvCb } from "@utils/cvCbTypes";
-
-// type FormCfgRtnObjGeneric<T> = T extends FormConfigReturnDEPREC<infer TFv, infer TCv, infer TEv>
-//   ? ReturnType<FormConfigReturnDEPREC<TFv, TCv, TEv>>
-//   : T extends FormCfgReturnObj<infer TFv, infer TCv, infer TEv>
-//   ? FormCfgReturnObj<TFv, TCv, TEv>
-//   : never;
-
-// type TConfig<TBase extends ZFormSchema> = AnyFormCfgObj<FormOut<TBase>>;
-
-/** @todo abstract this logic out to `FormCfgRtnObjGeneric` */
-// type ConfigParam<TBase extends ZFormSchema> = FormCfgRtnObjGeneric<TConfig<TBase>> | undefined;
+import type { FormConfig } from "@configDsl/interfaces";
+import type { ZObj } from "@utils/zodTypes";
 
 type OutType<TConfig extends AnyFormConfigValues> = TConfig extends AnyFormConfigValues
-  ? FormConfigCbReturnInferred<TConfig>
+  ? // Cannot find name 'FormConfigCbReturnInferred'.ts(2304)
+    FormConfigCbReturnInferred<TConfig>
   : null;
 
 /** @todo Add annotation
  * @todo Fix output type
  */
-const getConfigValues = <TConfig extends AnyFormConfig>(
+const getConfigValues = <TConfig extends FormConfig<ZObj>>(
   uiValues: UiValues<InferFormSchemaFromConfig<TConfig>>,
   config?: TConfig
 ) => {
   if (config === undefined) return null as OutType<TConfig>;
-
-  type FormSchema = InferFormSchemaFromConfig<TConfig>;
-  // AnyFormConfigDEPREC<_, TCvCb, _>
-  type CvCb = InferCvCbFromConfig<TConfig>;
-  type EvSchema = InferExtSchemaFromConfig<TConfig>;
-  type FormValues = InferFormValuesFromConfig<TConfig>;
-  type CalcValues = InferCalcValuesFromConfig<TConfig>;
-  type ExtValues = InferExternalValuesFromConfig<TConfig>;
-  // UiValues<InferFormSchemaFromConfig<TConfig>>
-  // const calculated: CvCbStrict<FormSchema, CvCb, EvSchema> =
-  const cvcb: InferCvCbFromConfig<TConfig> = config.calcValuesCallback; // this is throwing an error
+  /** Error
+   * Type 'undefined' is not assignable to type 'InferCvCbFromConfig<TConfig>'.ts(2322)
+   * - const cvcb: InferCvCbFromConfig<TConfig>
+   */
+  const cvcb: InferCvCbFromConfig<TConfig> = config.calcValuesCallback;
+  /** Error:
+   * Cannot invoke an object which is possibly 'undefined'.ts(2722)
+   * - 'cvcb' is possibly 'undefined'.ts(18048)
+   * - const cvcb: undefined
+   */
   const asdf = cvcb({} as any, {} as any);
 
   if (!!cvcb) {
     // const cvcb = config.calcValuesCallback; // als
+    /** Error
+     * This expression is not callable.
+     * - Type 'never' has no call signatures.ts(2349)
+     * - const cvcb: never
+     */
     const asdf = cvcb({} as any, {} as any);
   }
 
   const calculated: InferCalcValuesFromConfig<TConfig> =
     config.calcValuesCallback === undefined
       ? undefined
-      : config.calcValuesCallback(uiValues, config.externalValues);
+      : /** Error at .calcValuesCallback
+         * This expression is not callable.
+         * - Type 'never' has no call signatures.ts(2349)
+         * - (property) calcValuesCallback?: never
+         */
+        config.calcValuesCallback(uiValues, config.externalValues);
 
   return {
     form: uiValues,

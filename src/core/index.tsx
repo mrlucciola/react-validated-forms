@@ -10,8 +10,8 @@ import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
 // interfaces
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
-import type { FormOut, Nullish, ZObj } from "@utils/index";
-import type { FormConfig } from "@configDsl/interfaces/formConfig";
+import type { Nullish, ZObj } from "@utils/index";
+import type { FormConfig } from "@configDsl/interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -58,8 +58,29 @@ const useForm = <TBase extends ZObj, TConfig extends FormConfig<TBase, any, any>
 
   const isValid = validation.success;
   const isDirty = !isEqual(referenceFormValues, form);
-
+  /** Error @ `configValues`
+   * Argument of type 'OutType<TConfig> | { form: { [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: addQuestionMarks<...>[k]; }; external: {} | undefined; calculated: InferCalcValuesFromConfig<...>; }' is not assignable to parameter of type 'AnyFormConfigValues<TBase> | undefined'.
+   * Type '{ form: { [k in keyof objectUtil.addQuestionMarks<baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: objectUtil.addQuestionMarks<...>[k]; }; external: {} | undefined; calculated: InferCalcValuesFromConfig<...>; }' is not assignable to type 'AnyFormConfigValues<TBase>'.
+   *      Property 'fields' is missing in type '{ form: { [k in keyof objectUtil.addQuestionMarks<baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: objectUtil.addQuestionMarks<...>[k]; }; external: {} | undefined; calculated: InferCalcValuesFromConfig<...>; }' but required in type 'FormValuesCtx<TBase>'.ts(2345)
+   * - formConfigValueTypes.ts(4, 43): 'fields' is declared here.
+   * - const configValues: OutType<TConfig> | {
+   *      form: { [k in keyof z.objectUtil.addQuestionMarks<z.baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: z.objectUtil.addQuestionMarks<...>[k]; };
+   *      external: {} | undefined;
+   *      calculated: InferCalcValuesFromConfig<...>;
+   *  }
+   */
   const setField = useSetField(setForm, formConfig, configValues);
+  /** Error @ `configValues`
+   * - Argument of type 'OutType<TConfig> | { form: { [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: addQuestionMarks<...>[k]; }; external: {} | undefined; calculated: InferCalcValuesFromConfig<...>; }' is not assignable to parameter of type 'AnyFormConfigValues<TBase> | undefined'.
+   * - Type '{ form: { [k in keyof objectUtil.addQuestionMarks<baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: objectUtil.addQuestionMarks<...>[k]; }; external: {} | undefined; calculated: InferCalcValuesFromConfig<...>; }' is not assignable to type 'AnyFormConfigValues<TBase>'.
+   * - Property 'fields' is missing in type '{ form: { [k in keyof objectUtil.addQuestionMarks<baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: objectUtil.addQuestionMarks<...>[k]; }; external: {} | undefined; calculated: InferCalcValuesFromConfig<...>; }' but required in type 'FormValuesCtx<TBase>'.ts(2345)
+   * - formConfigValueTypes.ts(4, 43): 'fields' is declared here.
+   * - const configValues: OutType<TConfig> | {
+   *     form: { [k in keyof z.objectUtil.addQuestionMarks<z.baseObjectOutputType<CatchSchemaShape<InferFormSchemaFromConfig<TConfig>>>, any>]: z.objectUtil.addQuestionMarks<...>[k]; };
+   *     external: {} | undefined;
+   *     calculated: InferCalcValuesFromConfig<...>;
+   * }
+   */
   const getFieldProps = useGetFieldProps(setField, form, errors, formConfig, configValues);
 
   return {

@@ -1,7 +1,7 @@
 import type { z } from "zod";
 // interfaces
 import type { AppliedFieldOutput, ZObj } from "@utils/index";
-import type { AnyFormCfgObj, FormConfigCbReturnInferred } from "src/configDsl/deprecatedInterfaces/formConfigValueTypes";
+import type { FormConfig } from "@configDsl/interfaces";
 
 /** Same as FormOut<TSchema> */
 export type UiValues<TBaseSchema extends ZObj> = AppliedFieldOutput<TBaseSchema>;
@@ -18,9 +18,7 @@ export type SchemaSpaReturn<TSchema extends ZObj> = z.SafeParseReturnType<
   z.output<TSchema>
 >;
 
-export type FormConfigProp<TSchema extends ZObj> =
-  | AnyFormCfgObj<AppliedFieldOutput<TSchema>>
-  | undefined;
+export type FormConfigProp<TSchema extends ZObj> = FormConfig<TSchema> | undefined;
 
 export type FormConfigValues<
   TConfig extends FormConfigProp<TSchema>,

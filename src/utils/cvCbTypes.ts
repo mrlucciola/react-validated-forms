@@ -1,4 +1,4 @@
-import type { OmitPartialParams, ZEvSchema, ZFormSchema, ZObj } from "@utils/index";
+import type { ZEvSchema, ZFormSchema } from "@utils/index";
 import type { EvOut, FormOut } from "./formOutputTypes";
 
 /** This is always required */

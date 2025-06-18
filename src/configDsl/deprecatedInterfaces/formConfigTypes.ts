@@ -29,7 +29,7 @@ import type { CfgKey, FieldConfig } from "./fieldConfigTypes";
  * });
  * ```
  */
-export type FormConfig<TFv extends FormOut, TCv, TEv extends EvOut> = {
+export type FormConfigFields<TFv extends FormOut, TCv, TEv extends EvOut> = {
   [FieldKey in CfgKey<TFv>]: FieldConfig<TFv, NonNullable<TCv>, TEv, FieldKey>;
 };
 

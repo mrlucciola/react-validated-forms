@@ -1,11 +1,7 @@
 // interfaces
-import type { CvCb, CvCbFromCv, EvOut, EvSchema, FormOut, ZEvSchema, ZObj } from "@utils/index";
-import type { EvProp, FormConfig } from "./deprecatedInterfaces/formConfigTypes";
-import type {
-  FormConfigCb,
-  FormConfigCbReturn,
-  FormConfigReturnDEPREC,
-} from "./deprecatedInterfaces/formConfigCallbackTypes";
+import type { CvCb, CvCbFromCv, EvOut, FormOut, ZEvSchema, ZObj } from "@utils/index";
+import type { FormConfigFields } from "./deprecatedInterfaces/formConfigTypes";
+import type { FormConfig } from "./interfaces";
 
 type FormConfigDefinition<
   TFormSchema extends ZObj,
@@ -18,7 +14,7 @@ type FormConfigDefinition<
    * @deprecated rename to `fieldConfigs` (or similar name)
    * @deprecated create type for this field
    */
-  fields: Partial<FormConfig<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
+  fields: Partial<FormConfigFields<FormOut<TFormSchema>, TCv, EvOut<TEvSchema>>>; // prev: ConfigFieldsProp
 
   // Optional parameters
   // calcValuesCallback?: (form: FormOut<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
@@ -39,24 +35,39 @@ export const defineFormConfig = <
   type TCvCb = CvCbFromCv<TCv>;
   const { fields, calcValuesCallback, externalSchema } = formConfigDefinition;
 
-  const testOutput: FormConfigCb<TFormSchema, TCvCb, TEvSchema> = (ev) => {
+  /**
+   * # Error at `const formConfigCb:`:
+   * 'formConfigCb' is declared but its value is never read.ts(6133)
+   * - Type '(ev: any) => { fields: Partial<FormConfigFields<{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>]: addQuestionMarks<...>[k]; }, TCv, OptionalAppliedFieldOutput<...>>>; calcValuesCallback: CvCb<...> | undefined; externalValues: { ...; } | undefined; }' is not assignable to type 'FormConfig<TFormSchema, CvCbFromCv<TCv>, TEvSchema>'.ts(2322)
+   * - const formConfigCb: FormConfig<TFormSchema, CvCbFromCv<TCv>, TEvSchema>
+   *
+   * # Error at `= (ev) =>`:
+   * Parameter 'ev' implicitly has an 'any' type.ts(7006)
+   * - (parameter) ev: any
+   */
+  const formConfigCb: FormConfig<TFormSchema, TCvCb, TEvSchema> = (ev) => {
     const externalValues = externalSchema?.parse(ev ?? {});
-
-    const test = {} as FormConfigCbReturn<TFormSchema, TCvCb, TEvSchema>;
 
     return { fields, calcValuesCallback, externalValues };
   };
 
-  return ((ev?: EvProp<EvOut<TEvSchema>>) => {
-    const externalValues = externalSchema?.parse(ev ?? {});
-
-    return { fields, calcValuesCallback, externalValues };
-  }) as FormConfigReturnDEPREC<
+  return formConfigCb satisfies FormConfig<
+    /** Error:
+     * Type '{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>]: addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>[k]; }' does not satisfy the constraint 'ZObj'.
+     * - Type '{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>]: addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFormSchema>>, any>[k]; }' is missing the following properties from type 'ZodObject<ZodRawShape, UnknownKeysParam, ZodTypeAny, { [x: string]: any; }, { [x: string]: any; }>': _cached, _getCached, _parse, shape, and 52 more.ts(2344)
+     * - (type parameter) TFormSchema in <TFormSchema extends ZObj, TEvSchema extends ZEvSchema, TCv extends Record<string, any>>(formConfigDefinition: FormConfigDefinition<TFormSchema, TCv, TEvSchema>): FormConfig<TFormSchema, CvCbFromCv<TCv>, TEvSchema>
+     */
     FormOut<TFormSchema>,
     typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
     EvOut<TEvSchema>
   >;
-  // }) as FormConfigReturnDEPREC<
+
+  // PROBLEMATIC - keeping for reference
+  // return ((ev?: EvProp<EvOut<TEvSchema>>) => {
+  //   const externalValues = externalSchema?.parse(ev ?? {});
+
+  //   return { fields, calcValuesCallback, externalValues };
+  // }) as FormConfig<
   //   FormOut<TFormSchema>,
   //   typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
   //   EvOut<TEvSchema>

@@ -1,7 +1,7 @@
 import type { z } from "zod";
 // local
 import type { EvOut, FormOut, Nullish } from "@utils/index";
-import type { FormConfigValues } from "./formConfigValueTypescopy";
+import type { FormConfigValues } from "@configDsl/interfaces";
 
 /** Key-type used for accessing the config */
 export type CfgKey<TForm extends FormOut> = keyof TForm;

@@ -6,19 +6,19 @@ import getFormConfigField from "./getFormConfigField";
 import type useSetField from "../setters/setField";
 // interfaces
 import type { Nullable, OnChangeEventUnionNew, ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj, AnyFormConfigValues } from "src/configDsl/deprecatedInterfaces/interfaces";
+import type { AnyFormConfigValues } from "@configDsl/deprecatedInterfaces";
 import type { SchemaParseErrors, UiValues } from "../interfaces";
+import type { FormConfig } from "@configDsl/interfaces";
 
-type UseSetFieldReturn<
-  TBase extends ZFormSchema,
-  TConfig extends AnyFormCfgObj<TBase>
-> = ReturnType<typeof useSetField<TBase, TConfig>>;
+type UseSetFieldReturn<TBase extends ZFormSchema, TConfig extends FormConfig<TBase>> = ReturnType<
+  typeof useSetField<TBase, TConfig>
+>;
 
-const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends AnyFormCfgObj<TBase>>(
+const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends FormConfig<TBase>>(
   setField: UseSetFieldReturn<TBase, TConfig>,
   form: UiValues<TBase>,
   errors: SchemaParseErrors<TBase> | undefined,
-  config?: AnyFormCfgObj<TBase>,
+  config?: FormConfig<TBase>,
   configValues?: AnyFormConfigValues<TBase>
 ) =>
   useCallback(

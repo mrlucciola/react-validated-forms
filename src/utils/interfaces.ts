@@ -1,7 +1,7 @@
 import type { ChangeEvent } from "react";
 import type { z } from "zod";
 import type dayjs from "dayjs";
-import type { EvSchema, ZFormSchema, ZObj } from "@utils/schemaTypes";
+import type { ZEvSchema, ZFormSchema, ZObj } from "@utils/index";
 
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }
@@ -56,6 +56,6 @@ export type AppliedFieldOutput<TFormSchema extends ZFormSchema> = z.output<
 >;
 
 /** @deprecated rename to `UiFormOutputOptional` - potentially remove */
-export type OptionalAppliedFieldOutput<TEvSchema extends EvSchema> = TEvSchema extends ZObj
+export type OptionalAppliedFieldOutput<TEvSchema extends ZEvSchema> = TEvSchema extends ZObj
   ? AppliedFieldOutput<NonNullable<TEvSchema>>
   : undefined;

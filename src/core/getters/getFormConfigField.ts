@@ -1,26 +1,14 @@
 import type { ZFormSchema } from "@utils/index";
-import type { AnyFormCfgObj } from "src/configDsl/deprecatedInterfaces/interfaces";
+import type { FormConfig } from "@configDsl/interfaces";
 
-/**
- * @todo add description
- *
- * @param config
- * @param fieldKey
- * @returns
- */
+/** @todo add description */
 const getFormConfigField = <TBase extends ZFormSchema>(
-  config: AnyFormCfgObj<TBase>,
+  config: FormConfig<TBase> | undefined,
   fieldKey: keyof TBase
-) => config.fields[fieldKey];
-
-// const getFormConfigField = <
-//   TBase extends ZObj,
-//   TForm extends FormOut<TBase>,
-//   TCalc,
-//   TExt extends ExtOut
-// >(
-//   config: FormCfgReturnObj<TForm, TCalc, TExt> | undefined, // FormConfigProp<TBase>
-//   fieldKey: keyof TForm
-// ) => config?.fields && config.fields[fieldKey];
+  /** Error: `config?.fields[fieldKey]`
+   * Type 'keyof TBase' cannot be used to index type 'Partial<FormConfigFields<{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TBase>>, any>]: addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TBase>>, any>[k]; }, any, {}>>'.ts(2536)
+   * - (property) fields: Partial<FormConfigFields<{ [k in keyof objectUtil.addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TBase>>, any>]: objectUtil.addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TBase>>, any>[k]; }, any, {}>>
+   */
+) => config?.fields[fieldKey];
 
 export default getFormConfigField;

@@ -1,5 +1,4 @@
-import type { CvCbFromCv, EvOut, FormOut, PartialOrOmit } from "@utils/index";
-import type { FormConfigReturnDEPREC } from "./formConfigCallbackTypes";
+import type { EvOut, FormOut, PartialOrOmit } from "@utils/index";
 
 /** Atomic context slice of Form-Config-Values */
 type FormValuesCtx<T extends FormOut> = { fields: T };
@@ -43,22 +42,3 @@ export type FormConfigValues<TFv extends FormOut, TCv, TEv extends EvOut> = Omit
   // @note 'Opposite' condition due to `Omit`
   (TCv extends undefined ? "calculated" : never) | (TEv extends undefined ? "external" : never)
 >;
-
-export type FormConfigCbReturnInferred<T extends AnyFormCfgObj> = T extends FormCfgReturnObj<
-  infer TForm,
-  infer TCvCb extends CvCbFromCv<any>,
-  infer TExt
->
-  ? FormConfigValues<TForm, ReturnType<TCvCb>, TExt>
-  : never;
-
-export type FormCfgReturnObj<TFv extends FormOut, TCv, TEv extends EvOut> = ReturnType<
-  FormConfigReturnDEPREC<TFv, TCv, TEv>
->;
-
-/** @deprecated move to correct scope. this type does not support unknowns */
-export type AnyFormCfgObj<
-  TForm extends FormOut = any,
-  TCalc = any,
-  TExt extends EvOut = any
-> = FormCfgReturnObj<TForm, TCalc, TExt>;
