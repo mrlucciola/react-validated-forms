@@ -1,4 +1,4 @@
-import type { FieldConfig, UiValues, ZObj, ZObjOpt } from "@utils/index";
+import type { CvCb, FieldConfig, UiValues, ZObj, ZObjOpt } from "@utils/index";
 
 /** Defines the configuration for all form fields
  *
@@ -28,8 +28,12 @@ import type { FieldConfig, UiValues, ZObj, ZObjOpt } from "@utils/index";
  * });
  * ```
  */
-export type FormConfigFields<TFs extends ZObj, TCvCb, TEs extends ZObjOpt> = {
-  [FieldKey in CfgKey<UiValues<TFs>>]: FieldConfig<TFs, NonNullable<TCvCb>, TEs, FieldKey>;
+export type FormConfigFields<
+  TFs extends ZObj,
+  TCvCb extends CvCb<TFs, any, any> | void,
+  TEs extends ZObj | void
+> = {
+  [FieldKey in CfgKey<UiValues<TFs>>]: FieldConfig<TFs, TCvCb, TEs, FieldKey>;
 };
 
 /** Key-type used for accessing the config */
