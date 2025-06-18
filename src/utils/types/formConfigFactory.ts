@@ -12,6 +12,7 @@ export type FormConfigInstance<
 } & TEs extends undefined
   ? {}
   : { externalValues: UiValues<NonNullable<TEs>> };
+export type InferInstance<F extends FormConfigFactory<any, any, any>> = ReturnType<F>;
 
 /**
  * Produced by `defineFormConfig`.  Accepts *current* external values
