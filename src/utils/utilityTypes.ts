@@ -24,3 +24,19 @@ export type PartialOrOmit<T, U> = T extends undefined
   : T extends unknown
   ? Partial<U>
   : NonNullable<U>;
+
+/**
+ * type Example1 = OmitPartialParams<[form: string, externalValues?: undefined]>;
+ * // Result: [form: string]
+ *
+ * type Example2 = OmitPartialParams<[externalValues?: undefined]>;
+ * // Result: []
+ *
+ * type Example3 = OmitPartialParams<[a: number, b?: string, c?: undefined, d: boolean]>;
+ * // Result: [a: number, d: boolean]
+ */
+export type OmitPartialParams<T extends any[]> = T extends [infer Head, ...infer Tail]
+  ? undefined extends Head
+    ? OmitPartialParams<Tail>
+    : [Head, ...OmitPartialParams<Tail>]
+  : [];

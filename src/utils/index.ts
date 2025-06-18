@@ -1,4 +1,4 @@
-export * from "./formConfigTypes";
+export * from "./cvCbTypes";
 export * from "./formOutputTypes";
 export * from "./interfaces";
 export * from "./schemaTypes";

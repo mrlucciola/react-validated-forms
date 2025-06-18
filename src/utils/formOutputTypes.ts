@@ -1,5 +1,5 @@
 import type { AppliedFieldOutput, OptionalAppliedFieldOutput } from "./interfaces";
-import type { EvSchema, ZFormSchema } from "./schemaTypes";
+import type { ZEvSchema, ZFormSchema } from "./schemaTypes";
 
 /** "Form Values" output
  * @todo differentiate between:
@@ -13,4 +13,4 @@ export type FormOut<TSchema extends ZFormSchema = ZFormSchema> = AppliedFieldOut
  * - display form values; and,
  * - "Actual" form values
  */
-export type EvOut<TEvSchema extends EvSchema = EvSchema> = OptionalAppliedFieldOutput<TEvSchema>;
+export type EvOut<TEvSchema extends ZEvSchema = ZEvSchema> = OptionalAppliedFieldOutput<TEvSchema>;
