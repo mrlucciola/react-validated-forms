@@ -31,12 +31,13 @@ type FormConfigValuesBase<TFs extends ZObj, TCvCb, TEs extends ZObjOpt> = FormVa
   CalcValuesCtx<TCvCb> &
   ExtValuesCtx<EvOut<TEs>>;
 
-export type InferredFormConfigValues<
-  TConfig extends FormConfig<TSchema>,
-  TSchema extends ZObj
-> = TConfig extends NonNullable<FormConfig<ZObj>>
-  ? FormConfigCbReturnInferred<NonNullable<TConfig>>
-  : undefined;
+export type InferFormConfigValues<TConfig extends FormConfig<ZObj>> = TConfig extends FormConfig<
+  infer TFs,
+  infer TCvCb,
+  infer TEs
+>
+  ? FormConfigValues<TFs, TCvCb, TEs>
+  : never;
 
 export type FormConfigValues<TFs extends ZObj, TCvCb, TEs extends ZObjOpt> = OmitOptionalKeys<
   FormConfigValuesBase<TFs, TCvCb, TEs>
