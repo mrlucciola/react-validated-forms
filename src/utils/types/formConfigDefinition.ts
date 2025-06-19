@@ -1,5 +1,5 @@
 // interfaces
-import type { CvCb, CvCbOpt, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
+import type { CvCbOpt, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
 
 /**
  * What the schema author writes once, usually in a separate file.

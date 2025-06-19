@@ -1,4 +1,12 @@
-import type { CvCbOpt, FieldConfig, InferFormKeys, UiValues, ZObj, ZObjOpt } from "@utils/index";
+import type {
+  CvCbOpt,
+  FieldConfig,
+  InferFormKeys,
+  ResolvePartial,
+  UiValues,
+  ZObj,
+  ZObjOpt,
+} from "@utils/index";
 
 /** Defines the configuration for all form fields
  *
@@ -32,6 +40,6 @@ export type FormConfigFields<
   TFs extends ZObj,
   TCvCb extends CvCbOpt<TFs, TEs>,
   TEs extends ZObjOpt
-> = {
+> = ResolvePartial<{
   [FieldKey in InferFormKeys<TFs>]: FieldConfig<TFs, TCvCb, TEs, FieldKey>;
-};
+}>;
