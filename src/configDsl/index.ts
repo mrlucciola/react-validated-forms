@@ -21,7 +21,7 @@ export const defineFormConfig = <
   calcValuesCallback,
   externalSchema,
   ...other
-}: FormConfigDefinition<TFs, TCvCb, TEs>): FormConfigFactory<TFs, TCvCb, TEs> => {
+}: FormConfigDefinition<TFs, TEs, TCvCb>): FormConfigFactory<TFs, TCvCb, TEs> => {
   if (!externalSchema) {
     const formConfigCb = ((...args: any[]): FormConfigInstance<TFs, TCvCb, TEs> => {
       const configInstance: FormConfigInstance<TFs, TCvCb, TEs> = {

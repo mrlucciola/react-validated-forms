@@ -1,7 +1,11 @@
 import type {
+  AnyCfgDef,
   CvCbOpt,
   EvOut,
   FormConfig,
+  InferCfgDefCvCb,
+  InferCfgDefExternalSchema,
+  InferCfgDefFormSchema,
   InferCv,
   OmitOptionalKeys,
   PartialOrOmit,
@@ -11,35 +15,38 @@ import type {
 } from "@utils/index";
 
 /** Atomic context slice of Form-Config-Values */
-type FormValuesCtx<TFs extends ZObj> = { fields: UiValues<TFs> };
+type FormValuesCtx<TCfgDef extends AnyCfgDef> = {
+  fields: UiValues<InferCfgDefFormSchema<TCfgDef>>;
+};
 /** Atomic context slice of Form-Config-Values */
-type CalcValuesCtx<TCvCb extends CvCbOpt<any, any>> = PartialOrOmit<
-  TCvCb,
-  { calculated: InferCv<TCvCb> }
+type CalcValuesCtx<TCfgDef extends AnyCfgDef> = PartialOrOmit<
+  InferCfgDefCvCb<TCfgDef>,
+  { calculated: InferCv<InferCfgDefCvCb<TCfgDef>> }
 >;
 /** Atomic context slice of Form-Config-Values */
-type ExtValuesCtx<TEs extends ZObjOpt> = PartialOrOmit<TEs, { external: EvOut<TEs> }>;
+type ExtValuesCtx<TCfgDef extends AnyCfgDef> = PartialOrOmit<
+  InferCfgDefExternalSchema<TCfgDef>,
+  { external: EvOut<InferCfgDefExternalSchema<TCfgDef>> }
+>;
 
 /**
  * 'Values' property for the callback function.
  * This value is an object that may have 1-3 fields.
  */
-type FormConfigValuesBase<
-  TFs extends ZObj,
-  TCvCb extends CvCbOpt<TFs, TEs>,
-  TEs extends ZObjOpt
-> = FormValuesCtx<TFs> & CalcValuesCtx<TCvCb> & ExtValuesCtx<TEs>;
+type FormConfigValuesBase<TCfgDef extends AnyCfgDef> = FormValuesCtx<TCfgDef> &
+  CalcValuesCtx<TCfgDef> &
+  ExtValuesCtx<TCfgDef>;
 
 export type InferFormConfigValues<TConfig extends FormConfig<ZObj>> = TConfig extends FormConfig<
   infer TFs,
   infer TCvCb,
   infer TEs
 >
-  ? FormConfigValues<TFs, TCvCb, TEs>
+  ? FormConfigValues<TFs, TEs, TCvCb>
   : never;
 
 export type FormConfigValues<
   TFs extends ZObj,
-  TCvCb extends CvCbOpt<TFs, TEs>,
-  TEs extends ZObjOpt
-> = OmitOptionalKeys<FormConfigValuesBase<TFs, TCvCb, TEs>>;
+  TEs extends ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs>
+> = OmitOptionalKeys<FormConfigValuesBase<AnyCfgDef<TFs, TEs, TCvCb>>>;

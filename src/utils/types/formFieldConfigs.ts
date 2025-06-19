@@ -38,8 +38,8 @@ import type {
  */
 export type FormConfigFields<
   TFs extends ZObj,
-  TCvCb extends CvCbOpt<TFs, TEs>,
-  TEs extends ZObjOpt
-> = ResolvePartial<{
-  [FieldKey in InferFormKeys<TFs>]: FieldConfig<TFs, TCvCb, TEs, FieldKey>;
-}>;
+  TEs extends ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs>
+> = {
+  [FieldKey in InferFormKeys<TFs>]: FieldConfig<TFs, TEs, TCvCb, FieldKey>;
+};

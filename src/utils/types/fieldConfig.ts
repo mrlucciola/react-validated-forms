@@ -11,15 +11,15 @@ import type {
 /** Validation-schema configuration for a single form-field */
 export type FieldConfig<
   TFs extends ZObj,
-  TCvCb extends CvCbOpt<TFs, TEs>,
   TEs extends ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs>,
   TField extends InferFormKeys<TFs>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &
    * Field Effect: when a field is updated, all fields defined in the return object are updated when the specified field is changed by the user
    */
-  changeEvent?: (values: FormConfigValues<TFs, TCvCb, TEs>) => Partial<Nullish<TFs>>;
+  changeEvent?: (values: FormConfigValues<TFs, TEs, TCvCb>) => Partial<Nullish<TFs>>;
 
   /** @todo add `generalEffect`
    * General Effect: **any time** a field in the array is changed, all fields defined in its callback's return object are updated
@@ -29,7 +29,7 @@ export type FieldConfig<
   /** Conditionally include/ignore field validation by providing a callback.
    * For default validation, leave this field `undefined`.
    * See `buildCatchSchema` for how this method is applied. */
-  registerOn?: (values: FormConfigValues<TFs, TCvCb, TEs>) => boolean;
+  registerOn?: (values: FormConfigValues<TFs, TEs, TCvCb>) => boolean;
 
   /** this gets passed into a refinement
    * Rules/refinement logic will run if:
@@ -43,7 +43,7 @@ export type FieldConfig<
    * See: ZTransformEffect, ZRefinementEffect
    */
   rules?: (
-    values: FormConfigValues<TFs, TCvCb, TEs>,
+    values: FormConfigValues<TFs, TEs, TCvCb>,
     ctx: z.RefinementCtx,
     fieldKey: TField
   ) => void | undefined | never;

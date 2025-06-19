@@ -7,18 +7,18 @@ import type { CvCbOpt, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
  */
 export type FormConfigDefinition<
   TFs extends ZObj, // the form validation schema
-  TCvCb extends CvCbOpt<TFs, TEs>, // derived-values cb (optional)
-  TEs extends ZObjOpt // external-values schema (optional)
+  TEs extends ZObjOpt, // external-values schema (optional)
+  TCvCb extends CvCbOpt<TFs, TEs> // derived-values cb (optional)
 > = {
   formSchema: TFs;
   /** rename to fieldConfigs */
-  fields: Partial<FormConfigFields<TFs, TCvCb, TEs>>;
+  fields: Partial<FormConfigFields<TFs, TEs, TCvCb>>;
   calcValuesCallback?: TCvCb;
   externalSchema?: TEs;
 };
 
 export type AnyCfgDef<
   TFs extends ZObj = ZObj,
-  TEs extends ZObjOpt = ZObjOpt,
-  TCvCb extends CvCbOpt<TFs, TEs> = CvCbOpt<TFs, TEs>
-> = FormConfigDefinition<TFs, TCvCb, TEs>;
+  TEs extends ZObjOpt = void,
+  TCvCb extends CvCbOpt<TFs, TEs> = void
+> = FormConfigDefinition<TFs, TEs, TCvCb>;
