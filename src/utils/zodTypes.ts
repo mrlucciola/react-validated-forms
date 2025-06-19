@@ -4,4 +4,4 @@ import type { z } from "zod";
 export type ZObj<T extends z.ZodRawShape = z.ZodRawShape> = z.ZodObject<T>;
 
 /** Convenience type for optional z.ZodObject schema */
-export type ZObjOpt<T extends z.ZodRawShape = z.ZodRawShape> = undefined | z.ZodObject<T>;
+export type ZObjOpt<T extends z.ZodRawShape = z.ZodRawShape> = void | z.ZodObject<T>;

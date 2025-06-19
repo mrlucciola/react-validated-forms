@@ -1,4 +1,4 @@
-import type { CvCb, EvOut, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
+import type { CvCb, CvCbOpt, EvOut, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
 
 /** One ring to rule them all
  * Replaces:
@@ -26,8 +26,8 @@ type AnyFormConfig<
  */
 export type FormConfig<
   TFs extends ZObj,
-  TCvCb extends CvCb<TFs, any, any> | undefined = undefined,
-  TEs extends ZObjOpt = undefined
+  TCvCb extends CvCbOpt<TFs, any> = void,
+  TEs extends ZObjOpt = void
 > = {
   /** Field-level behaviour & validation */
   fields: Partial<FormConfigFields<TFs, TCvCb, TEs>>;

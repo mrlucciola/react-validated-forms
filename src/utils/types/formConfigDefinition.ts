@@ -11,6 +11,7 @@ export interface FormConfigDefinition<
   TEs extends ZObj | void // external-values schema (optional)
 > {
   formSchema: TFs;
+  /** rename to fieldConfigs */
   fields: Partial<FormConfigFields<TFs, TCvCb, TEs>>;
   calcValuesCallback?: TCvCb;
   externalSchema?: TEs;

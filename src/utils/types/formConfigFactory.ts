@@ -1,29 +1,25 @@
-import type { CvCb } from "@utils/cvCbTypes";
-import type { EvOut, FormConfigFields, UiValues } from "@utils/index";
-import type { ZObj, ZObjOpt } from "@utils/zodTypes";
+import type { CvCb, CvCbOpt, EvOut, FormConfigFields, UiValues, ZObj, ZObjOpt } from "@utils/index";
 
 export type FormConfigInstance<
   TFs extends ZObj,
-  TCvCb extends CvCb<TFs, any, any> | void,
+  TCvCb extends CvCbOpt<TFs, TEs>,
   TEs extends ZObjOpt
 > = {
   fields: Partial<FormConfigFields<TFs, TCvCb, TEs>>;
   calcValuesCallback?: TCvCb;
-} & TEs extends undefined
-  ? {}
-  : { externalValues: UiValues<NonNullable<TEs>> };
+} & (TEs extends ZObj ? { externalValues: UiValues<NonNullable<TEs>> } : {});
 export type InferInstance<F extends FormConfigFactory<any, any, any>> = ReturnType<F>;
 
 /**
- * Produced by `defineFormConfig`.  Accepts *current* external values
+ * Produced by `defineFormConfig`. Accepts current external values
  * (or none) and returns a fully-resolved config object.
  */
 export type FormConfigFactory<
   TFs extends ZObj,
-  TCvCb extends CvCb<TFs, any, any> | void,
-  TEs extends ZObj | void
+  TCvCb extends CvCbOpt<TFs, TEs>,
+  TEs extends ZObjOpt
 > = TEs extends ZObj
   ? // if you declared an external schema
-    (external: EvOut<TEs>) => FormConfigInstance<TFs, TCvCb, NonNullable<TEs>>
-  : // otherwise it’s parameterless `() => …`
-    () => FormConfigInstance<TFs, TCvCb, undefined>;
+    (externalValues: EvOut<TEs>) => FormConfigInstance<TFs, TCvCb, NonNullable<TEs>>
+  : // otherwise it’s parameterless `() => ...`
+    () => FormConfigInstance<TFs, TCvCb, TEs>;
