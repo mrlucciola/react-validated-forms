@@ -1,36 +1,34 @@
 import type {
+  CvCbOpt,
   EvOut,
-  UiValues,
   FormConfig,
+  InferCv,
   OmitOptionalKeys,
   PartialOrOmit,
+  UiValues,
   ZObj,
   ZObjOpt,
-  CvCb,
 } from "@utils/index";
 
 /** Atomic context slice of Form-Config-Values */
-type FormValuesCtx<T extends UiValues> = { fields: T };
+type FormValuesCtx<TFs extends ZObj> = { fields: UiValues<TFs> };
 /** Atomic context slice of Form-Config-Values */
-type CalcValuesCtx<T extends any> = PartialOrOmit<T, { calculated: T }>;
+type CalcValuesCtx<TCvCb extends CvCbOpt<any, any>> = PartialOrOmit<
+  TCvCb,
+  { calculated: InferCv<TCvCb> }
+>;
 /** Atomic context slice of Form-Config-Values */
-type ExtValuesCtx<T extends EvOut | unknown> = PartialOrOmit<T, { external: T }>;
-
-/** Identical to FormConfigValuesBase but with different generics */
-export type FormConfigCtx<TFv extends UiValues, TCv, TEv extends EvOut> = FormValuesCtx<TFv> &
-  CalcValuesCtx<TCv> &
-  ExtValuesCtx<TEv>;
+type ExtValuesCtx<TEs extends ZObjOpt> = PartialOrOmit<TEs, { external: EvOut<TEs> }>;
 
 /**
  * 'Values' property for the callback function.
  * This value is an object that may have 1-3 fields.
  */
-type FormConfigValuesBase<TFs extends ZObj, TCvCb, TEs extends ZObjOpt> = FormValuesCtx<
-  UiValues<TFs>
-> &
-  // Need to sort out generic - whether the callback type is provided or its return values
-  CalcValuesCtx<TCvCb> &
-  ExtValuesCtx<EvOut<TEs>>;
+type FormConfigValuesBase<
+  TFs extends ZObj,
+  TCvCb extends CvCbOpt<TFs, TEs>,
+  TEs extends ZObjOpt
+> = FormValuesCtx<TFs> & CalcValuesCtx<TCvCb> & ExtValuesCtx<TEs>;
 
 export type InferFormConfigValues<TConfig extends FormConfig<ZObj>> = TConfig extends FormConfig<
   infer TFs,
@@ -42,6 +40,6 @@ export type InferFormConfigValues<TConfig extends FormConfig<ZObj>> = TConfig ex
 
 export type FormConfigValues<
   TFs extends ZObj,
-  TCvCb extends CvCb<TFs, any, any> | undefined,
+  TCvCb extends CvCbOpt<TFs, TEs>,
   TEs extends ZObjOpt
 > = OmitOptionalKeys<FormConfigValuesBase<TFs, TCvCb, TEs>>;

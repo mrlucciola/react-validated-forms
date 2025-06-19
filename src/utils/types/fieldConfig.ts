@@ -1,14 +1,12 @@
 import type { z } from "zod";
-import type { CfgKey, CvCb, FormConfigValues, Nullish, UiValues, ZObj } from "@utils/index";
+import type { CfgKey, CvCbOpt, FormConfigValues, Nullish, ZObj, ZObjOpt } from "@utils/index";
 
 /** Validation-schema configuration for a single form-field */
 export type FieldConfig<
   TFs extends ZObj,
-  TCvCb_ extends CvCb<TFs, any, any> | void,
-  TEs_ extends ZObj | void,
-  TField extends CfgKey<UiValues<TFs>>,
-  TCvCb extends TCvCb_ extends void ? undefined : TCvCb_,
-  TEs extends TEs_ extends void ? undefined : TEs_
+  TCvCb extends CvCbOpt<TFs, TEs>,
+  TEs extends ZObjOpt,
+  TField extends CfgKey<TFs>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &

@@ -1,6 +1,6 @@
 import type {
   CvCbOpt,
-  FormConfig,
+  EvOut,
   FormConfigDefinition,
   FormConfigFactory,
   FormConfigInstance,
@@ -21,13 +21,16 @@ export const defineFormConfig = <
   calcValuesCallback,
   externalSchema,
   ...other
-}: FormConfigDefinition<TFs, TCvCb, TEs>) => {
+}: FormConfigDefinition<TFs, TCvCb, TEs>): FormConfigFactory<TFs, TCvCb, TEs> => {
   if (!externalSchema) {
-    const formConfigCb: FormConfigFactory<TFs, TCvCb, TEs> = (...args: any[]) => {
-      const configInstance: FormConfigInstance<TFs, TCvCb, TEs> = { fields, calcValuesCallback };
+    const formConfigCb = ((...args: any[]): FormConfigInstance<TFs, TCvCb, TEs> => {
+      const configInstance: FormConfigInstance<TFs, TCvCb, TEs> = {
+        fields,
+        calcValuesCallback,
+      } satisfies FormConfigInstance<TFs, TCvCb, TEs>;
 
       return configInstance;
-    };
+    }) satisfies FormConfigFactory<TFs, TCvCb, TEs>;
   }
 
   const formConfigCb: FormConfigFactory<TFs, TCvCb, TEs> = (ev: EvOut) => {
@@ -36,11 +39,7 @@ export const defineFormConfig = <
     return { fields, calcValuesCallback, externalValues };
   };
 
-  return formConfigCb satisfies FormConfig<
-    TFs,
-    typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config
-    TEs
-  >;
+  return formConfigCb satisfies FormConfigFactory<TFs, TCvCb, TEs>;
 
   // PROBLEMATIC - keeping for reference
   // return ((ev?: EvProp<EvOut<TEs>>) => {
