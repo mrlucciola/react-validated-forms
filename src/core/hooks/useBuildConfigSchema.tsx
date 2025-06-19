@@ -57,41 +57,19 @@ const useBuildConfigSchema = <TFs extends ZObj, TConfig extends FormConfig<TFs>>
   // For each field: Apply schema refinements defined in config to the baseSchema
   const getCalculatedValues = useCallback(
     (form: UiValues<TFs>, config: TConfig) =>
-      /**
-       * # Error: `config?.calcValues ?` @ calcValues
-       * Property 'calcValues' does not exist on type 'TConfig'.ts(2339)
-       * - any
-       *
-       * # Error: `config.calcValues(form` @ calcValues
-       * Property 'calcValues' does not exist on type 'TConfig'.ts(2339)
-       * - any
-       */
       config?.calcValues ? config.calcValues(form, config?.externalValues) : undefined,
     []
   );
 
   const cfgRuleArr = configFieldsFiltered.map(([fieldKey, fieldCfg]) => {
     return (form: z.output<TFs>, ctx: z.RefinementCtx) => {
-      /** Error @ `config?.externalValues`
-       * Argument of type '{} | undefined' is not assignable to parameter of type 'TConfig'.
-       * - 'TConfig' could be instantiated with an arbitrary type which could be unrelated to '{} | undefined'.ts(2345)
-       * - (property) externalValues?: {} | undefined
-       */
       const calculated = getCalculatedValues(form, config?.externalValues);
 
       const configValues = {
         form,
         externalValues: config?.externalValues,
-        /** Error at `.calcValues`
-         * Property 'calcValues' does not exist on type 'TConfig'.ts(2339)
-         * - any
-         */
         calculated: config?.calcValues
-          ? /** Error at `.calcValues`
-             * Property 'calcValues' does not exist on type 'TConfig'.ts(2339)
-             * - any
-             */
-            config.calcValues(form, config?.externalValues)
+          ? config.calcValues(form, config?.externalValues)
           : undefined,
       };
 
