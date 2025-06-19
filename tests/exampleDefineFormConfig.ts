@@ -1,42 +1,14 @@
 import { z } from "zod";
 // local
+import type { ZObjOpt, ZObj, EvOut, UiValues } from "@utils/index";
 import { defineFormConfig } from "@configDsl/index";
-import { zDayjs } from "@utils/zod";
-import type { ZEvSchema, ZFormSchema, EvOut, UiValues, CvCb_, CvCbFromCv } from "@utils/index";
+import { formSchema } from "./testVars/formSchema";
 
 type DefCalcValues<
-  TFormSchema extends ZFormSchema = ZFormSchema,
+  TFormSchema extends ZObj = ZObj,
   TCv = any,
-  TEvSchema extends ZEvSchema = ZEvSchema
+  TEvSchema extends ZObjOpt = ZObjOpt
 > = (form: UiValues<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
-
-const TestObj = z.object({ name: z.string(), date: zDayjs, num: z.number() });
-
-export const formSchema = z.object({
-  name: z.string(),
-  date: zDayjs,
-  num: z.number(),
-  obj: TestObj,
-  arr: z.array(TestObj),
-}) satisfies ZFormSchema;
-
-export const externalSchema = z.object({
-  userId: z.string(),
-  dtLogin: zDayjs,
-  points: z.number(),
-  company: TestObj,
-  connections: z.array(TestObj),
-}) satisfies ZEvSchema;
-
-const defCalcValues = ((fields, ext) => {
-  const definedOutsideReturn =
-    (fields.name ?? "null-fields.name") + (ext?.userId ?? "null-ext.userId");
-
-  return {
-    definedOutsideReturn,
-    definedWithinReturn: (fields.num ?? -1) + (ext?.points ?? -10),
-  };
-}) satisfies DefCalcValues<TestFormSchema, unknown, TestExternalSchema>;
 
 const testFormConfig = defineFormConfig({
   fields: {
@@ -51,7 +23,7 @@ const testFormConfig = defineFormConfig({
     },
   },
   formSchema,
-  calcValues: defCalcValues,
+  calcValuesCallback: calcValuesCallback,
   externalSchema,
 });
 const testFormConfigOutput = testFormConfig({});
@@ -78,12 +50,12 @@ type InferredEv = ReturnType<typeof testFormConfig>["calcValues"];
 
 {
   const testExternalValues = {} as NonNullable<EvOut<TestExternalSchema>>;
-  const testFxnCbInput = <TEvSchema extends ZEvSchema | unknown>(
+  const testFxnCbInput = <TEvSchema extends ZObjOpt | unknown>(
     input?: FormConfigCbInput<TEvSchema>
   ) => {
     return input;
   };
-  const testCbInput = testFxnCbInput(externalSchema); // ERROR: this should show an error - `externalSchema` is `ZEvSchema` type NOT `FormConfigCbInput<TEvSchema>`
+  const testCbInput = testFxnCbInput(externalSchema); // ERROR: this should show an error - `externalSchema` is `ZObjOpt` type NOT `FormConfigCbInput<TEvSchema>`
   const testCbInputTyped = testFxnCbInput<TestExternalSchema>(testExternalValues); // no error
   const testCbInputUndefined = testFxnCbInput(undefined); // no error
   const testCbInputUndefinedTyped = testFxnCbInput<undefined>(undefined); // no error
@@ -94,7 +66,7 @@ type InferredEv = ReturnType<typeof testFormConfig>["calcValues"];
   const testCbInputUnknown2 = testFxnCbInput<unknown>();
 
   // Adding another layer: Function Props
-  const testFxnCbProps = <TEvSchema extends ZEvSchema>(input?: FormConfigCbProps<TEvSchema>) => {
+  const testFxnCbProps = <TEvSchema extends ZObjOpt>(input?: FormConfigCbProps<TEvSchema>) => {
     return input;
   };
   const testCbProps = testFxnCbProps(testCbInput);
@@ -125,8 +97,8 @@ type InferredEv = ReturnType<typeof testFormConfig>["calcValues"];
 
 // Type-check tests: config variables
 {
-  const baseFormSchema: ZFormSchema = formSchema;
-  const baseExternalSchema: ZEvSchema = externalSchema;
+  const baseFormSchema: ZObj = formSchema;
+  const baseExternalSchema: ZObjOpt = externalSchema;
   const defCalcValues = ((fields: TestForm, ext: TestEv) => {
     const definedOutsideReturn =
       (fields.name ?? "null-fields.name") + (ext?.userId ?? "null-ext.userId");
@@ -139,7 +111,7 @@ type InferredEv = ReturnType<typeof testFormConfig>["calcValues"];
 }
 // Type-check tests: root level of config output
 {
-  const fields: ZFormSchema = testFormConfigOutput.fields;
+  const fields: ZObj = testFormConfigOutput.fields;
 }
 
 testFormConfigOutput.fields.name.changeEvent; // this should be available

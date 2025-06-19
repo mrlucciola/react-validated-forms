@@ -27,8 +27,8 @@ export type InferCv<T extends CvCbOpt<any, any>> = T extends CvCb<any, any, infe
 /** This is always required */
 // type FormCvCbArg<TFs extends ZObj> = [form: TFs];
 // /** This is conditionally required */
-// type ExtValCvCbArg<TEs extends ZEvSchema> = [externalValues?: NonNullable<EvOut<NonNullable<TEs>>>];
-// export type CvCbArgs<TFs extends ZFormSchema = ZFormSchema, TEs extends ZEvSchema = ZEvSchema> = [
+// type ExtValCvCbArg<TEs extends ZObjOpt> = [externalValues?: NonNullable<EvOut<NonNullable<TEs>>>];
+// export type CvCbArgs<TFs extends ZObj = ZObj, TEs extends ZObjOpt = ZObjOpt> = [
 //   ...FormCvCbArg<TFs>,
 //   ...ExtValCvCbArg<TEs>
 // ];

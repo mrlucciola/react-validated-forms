@@ -1,7 +1,8 @@
 import type { ChangeEvent } from "react";
 import type { z } from "zod";
 import type dayjs from "dayjs";
-import type { ZEvSchema, ZFormSchema, ZObj } from "@utils/index";
+// local
+import type { ZObj, ZObjOpt } from "@utils/index";
 
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }
@@ -21,8 +22,8 @@ export type CatchFieldSchema<TField extends z.ZodTypeAny> = TField extends z.Zod
     >;
 
 /** Derive the **shape** of the provided Zod (object) schema's `catch` type (adding catches, nullability and/or defaults) */
-export type CatchSchemaShape<TSchema extends ZFormSchema> = {
-  [FieldKey in keyof TSchema["shape"]]: CatchFieldSchema<TSchema["shape"][FieldKey]>;
+export type CatchSchemaShape<TFs extends ZObj> = {
+  [FieldKey in keyof TFs["shape"]]: CatchFieldSchema<TFs["shape"][FieldKey]>;
 };
 
 /** ### "User Input" Form Schema
@@ -34,10 +35,10 @@ export type CatchSchemaShape<TSchema extends ZFormSchema> = {
  *
  * Prev: `SchemaFallback`, `AppliedFieldSchema`
  */
-export type UiFormSchema<TSchema extends ZFormSchema> = z.ZodObject<CatchSchemaShape<TSchema>>;
+export type UiFormSchema<TFs extends ZObj> = z.ZodObject<CatchSchemaShape<TFs>>;
 
 /** @deprecated renamed to `UiFormSchema` */
-export type AppliedFieldSchema<TSchema extends ZFormSchema> = UiFormSchema<TSchema>;
+export type AppliedFieldSchema<TFs extends ZObj> = UiFormSchema<TFs>;
 
 /** The type used to the output fields within `form` and getFieldProps('...').
  * The object that contains these values should always exist,
@@ -51,11 +52,9 @@ export type AppliedFieldSchema<TSchema extends ZFormSchema> = UiFormSchema<TSche
  *
  * @deprecated renamed to `UiFormOutput`
  */
-export type AppliedFieldOutput<TFormSchema extends ZFormSchema> = z.output<
-  UiFormSchema<TFormSchema>
->;
+export type AppliedFieldOutput<TFormSchema extends ZObj> = z.output<UiFormSchema<TFormSchema>>;
 
 /** @deprecated rename to `UiFormOutputOptional` - potentially remove */
-export type OptionalAppliedFieldOutput<TEvSchema extends ZEvSchema> = TEvSchema extends ZObj
-  ? AppliedFieldOutput<NonNullable<TEvSchema>>
+export type OptionalAppliedFieldOutput<TEs extends ZObjOpt> = TEs extends ZObj
+  ? AppliedFieldOutput<NonNullable<TEs>>
   : undefined;

@@ -3,17 +3,17 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { FieldConfig, FormConfig, UiValues, ZFormSchema } from "@utils/index";
+import type { FieldConfig, FormConfig, UiValues, ZObj } from "@utils/index";
 
 /**
  * @deprecated needs to be completed
 const applyFieldConfigValidationRefinements = <
-  TBase extends ZFormSchema,
-  TConfig extends FormConfig<TBase>,
+  TFs extends ZObj,
+  TConfig extends FormConfig<TFs>,
   FieldKey extends keyof TConfig["fields"] = keyof TConfig["fields"]
 >(
   fieldTuple: [FieldKey, FieldConfig<any, any, any, FieldKey>] // [FieldKey, FieldCfg]
-): ((form: z.output<TBase>, ctx: z.RefinementCtx) => void) => {};
+): ((form: z.output<TFs>, ctx: z.RefinementCtx) => void) => {};
  */
 
 /**
@@ -29,15 +29,15 @@ const applyFieldConfigValidationRefinements = <
  * @param configValues
  * @returns
  */
-const useBuildConfigSchema = <TBase extends ZFormSchema, TConfig extends FormConfig<TBase>>(
-  baseSchema: TBase,
+const useBuildConfigSchema = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
+  baseSchema: TFs,
   config?: TConfig
 ) => {
   // if no config provided: Early return `baseUserInputSchema`
   if (!config || !config.fields) return baseSchema;
 
   // Convert field schemas to array
-  type FieldKey = keyof z.output<TBase>;
+  type FieldKey = keyof z.output<TFs>;
   type FieldCfg = FieldConfig<any, any, any, FieldKey>;
   const configFieldsArr = useMemo(() => Object.entries(config.fields), []) as [
     FieldKey,
@@ -56,7 +56,7 @@ const useBuildConfigSchema = <TBase extends ZFormSchema, TConfig extends FormCon
   // @todo memoize
   // For each field: Apply schema refinements defined in config to the baseSchema
   const getCalculatedValues = useCallback(
-    (form: UiValues<TBase>, config: TConfig) =>
+    (form: UiValues<TFs>, config: TConfig) =>
       /**
        * # Error: `config?.calcValues ?` @ calcValues
        * Property 'calcValues' does not exist on type 'TConfig'.ts(2339)
@@ -71,7 +71,7 @@ const useBuildConfigSchema = <TBase extends ZFormSchema, TConfig extends FormCon
   );
 
   const cfgRuleArr = configFieldsFiltered.map(([fieldKey, fieldCfg]) => {
-    return (form: z.output<TBase>, ctx: z.RefinementCtx) => {
+    return (form: z.output<TFs>, ctx: z.RefinementCtx) => {
       /** Error @ `config?.externalValues`
        * Argument of type '{} | undefined' is not assignable to parameter of type 'TConfig'.
        * - 'TConfig' could be instantiated with an arbitrary type which could be unrelated to '{} | undefined'.ts(2345)
@@ -108,7 +108,7 @@ const useBuildConfigSchema = <TBase extends ZFormSchema, TConfig extends FormCon
       }
     };
   });
-  const injected = (form: z.output<TBase>, ctx: z.RefinementCtx) => {
+  const injected = (form: z.output<TFs>, ctx: z.RefinementCtx) => {
     for (let idx = 0; idx < cfgRuleArr.length; idx++) {
       const appliedFieldRefinement = cfgRuleArr[idx];
       appliedFieldRefinement && appliedFieldRefinement(form, ctx);

@@ -60,7 +60,7 @@ const configInstance: FormConfigInstance<TFs, TCvCb, TEs>
     /** Error:
      * Type '{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFs>>, any>]: addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFs>>, any>[k]; }' does not satisfy the constraint 'ZObj'.
      * - Type '{ [k in keyof addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFs>>, any>]: addQuestionMarks<baseObjectOutputType<CatchSchemaShape<TFs>>, any>[k]; }' is missing the following properties from type 'ZodObject<ZodRawShape, UnknownKeysParam, ZodTypeAny, { [x: string]: any; }, { [x: string]: any; }>': _cached, _getCached, _parse, shape, and 52 more.ts(2344)
-     * - (type parameter) TFs in <TFs extends ZObj, TEs extends ZEvSchema, TCv extends Record<string, any>>(formConfigDefinition: FormConfigDefinition<TFs, TCv, TEs>): FormConfig<TFs, CvCbFromCv<TCv>, TEs>
+     * - (type parameter) TFs in <TFs extends ZObj, TEs extends ZObjOpt, TCv extends Record<string, any>>(formConfigDefinition: FormConfigDefinition<TFs, TCv, TEs>): FormConfig<TFs, CvCbFromCv<TCv>, TEs>
      */
     TFs,
     typeof formConfigDefinition.calcValuesCallback, // @note having issues propagating return type throughout config

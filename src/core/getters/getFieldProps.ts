@@ -5,29 +5,22 @@ import { getValueFromEvent } from "@utils/utils";
 import getFormConfigField from "./getFormConfigField";
 import type useSetField from "../setters/setField";
 // interfaces
-import type {
-  FormConfig,
-  Nullable,
-  OnChangeEventUnionNew,
-  UiValues,
-  ZFormSchema,
-} from "@utils/index";
-import type { AnyFormConfigValues } from "@configDsl/deprecatedInterfaces";
+import type { FormConfig, Nullable, OnChangeEventUnionNew, UiValues, ZObj } from "@utils/index";
 import type { SchemaParseErrors } from "../interfaces";
 
-type UseSetFieldReturn<TBase extends ZFormSchema, TConfig extends FormConfig<TBase>> = ReturnType<
-  typeof useSetField<TBase, TConfig>
+type UseSetFieldReturn<TFs extends ZObj, TConfig extends FormConfig<TFs>> = ReturnType<
+  typeof useSetField<TFs, TConfig>
 >;
 
-const useGetFieldProps = <TBase extends ZFormSchema, TConfig extends FormConfig<TBase>>(
-  setField: UseSetFieldReturn<TBase, TConfig>,
-  form: UiValues<TBase>,
-  errors: SchemaParseErrors<TBase> | undefined,
-  config?: FormConfig<TBase>,
-  configValues?: AnyFormConfigValues<TBase>
+const useGetFieldProps = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
+  setField: UseSetFieldReturn<TFs, TConfig>,
+  form: UiValues<TFs>,
+  errors: SchemaParseErrors<TFs> | undefined,
+  config?: FormConfig<TFs>,
+  configValues?: TConfig["fields"]
 ) =>
   useCallback(
-    <TField extends keyof z.input<TBase>, TInValue extends Nullable<z.input<TBase>>[TField]>(
+    <TField extends keyof z.input<TFs>, TInValue extends Nullable<z.input<TFs>>[TField]>(
       fieldKey: TField
     ) => {
       const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {

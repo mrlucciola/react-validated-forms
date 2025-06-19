@@ -8,28 +8,28 @@ import type { CvCbOpt, EvOut, FormConfigFields, UiValues, ZObj, ZObjOpt } from "
 type FieldConfigsCtx<TFs extends ZObj> = FormConfig<TFs>["fields"];
 // Atomic context slice of Calculated-Values-Callback
 type CvCbCtx<T extends AnyCvCb | undefined | unknown> = PartialOrOmit<T, { calcValuesCallback: T }>;
-type ExtValues_<T extends ZEvSchema | unknown> = T extends ZEvSchema ? EvOut<T> : unknown;
+type ExtValues_<T extends ZObjOpt | unknown> = T extends ZObjOpt ? EvOut<T> : unknown;
 // Atomic context slice of External-Values
-type ExtValuesCtx<T extends ZEvSchema | unknown, U = ExtValues_<T>> = PartialOrOmit<
+type ExtValuesCtx<T extends ZObjOpt | unknown, U = ExtValues_<T>> = PartialOrOmit<
   U,
   { externalValues: U }
 >;
 ---------------------------------------------------------------------------------------
 export type FormConfigCbReturn<
-  TFormSchema extends ZFormSchema,
+  TFormSchema extends ZObj,
   TCvCb,
-  TEvSchema extends ZEvSchema | unknown
+  TEvSchema extends ZObjOpt | unknown
 > = FieldConfigsCtx<TFormSchema> & CvCbCtx<TCvCb> & ExtValuesCtx<TEvSchema>;
 ---------------------------------------------------------------------------------------
-export type FormConfigCbArgs<TEs extends ZEvSchema | unknown> = [TEs] extends [ZObj]
+export type FormConfigCbArgs<TEs extends ZObjOpt | unknown> = [TEs] extends [ZObj]
   ? [externalValues: NonNullable<EvOut<NonNullable<TEs>>>]
   : [TEs] extends [undefined]
   ? []
   : [externalValues?: unknown];
 export type FormConfigCb<
-  TFormSchema extends ZFormSchema,
+  TFormSchema extends ZObj,
   TCvCb,
-  TEvSchema extends ZEvSchema | unknown
+  TEvSchema extends ZObjOpt | unknown
 > = (...args: FormConfigCbArgs<TEvSchema>) => FormConfigCbReturn<TFormSchema, TCvCb, TEvSchema>;
 ---------------------------------------------------------------------------------------
 */

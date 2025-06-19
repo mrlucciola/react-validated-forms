@@ -1,11 +1,11 @@
-import type { CvCb, CvCbOpt, EvOut, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
+import type { CvCbOpt, EvOut, FormConfigFields, ZObj, ZObjOpt } from "@utils/index";
 
 /** One ring to rule them all
  * Replaces:
 type AnyFormConfigCb<
-  TFormSchema extends ZFormSchema = ZFormSchema,
+  TFormSchema extends ZObj = ZObj,
   TCvCb extends AnyCvCb | unknown = AnyCvCb,
-  TEvSchema extends ZEvSchema | unknown = ZEvSchema
+  TEvSchema extends ZObjOpt | unknown = ZObjOpt
 > = FormConfigCb<TFormSchema, TCvCb, TEvSchema>;
 
 type AnyFormCfgObj<
@@ -15,9 +15,9 @@ type AnyFormCfgObj<
 > = FormCfgReturnObj<TForm, TCalc, TExt>;
 
 type AnyFormConfig<
-  TFs extends ZFormSchema = ZFormSchema,
+  TFs extends ZObj = ZObj,
   TCvCb extends AnyCvCb = AnyCvCb,
-  TEs extends ZEvSchema = ZEvSchema
+  TEs extends ZObjOpt = ZObjOpt
 > = {
   fields: FormConfig<TFs, InferCalcValuesFromCvCb<TCvCb>, EvOut<TEs>>;
   calcValuesCallback?: TCvCb;
