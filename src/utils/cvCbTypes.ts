@@ -1,75 +1,34 @@
-import type { ZEvSchema, ZFormSchema } from "@utils/index";
+import type { ZObj, ZObjOpt } from "@utils/index";
 import type { EvOut, UiValues } from "./formOutputTypes";
 
-/** This is always required */
-type FormCvCbArg<TFs extends ZFormSchema> = [form: TFs];
-/** This is conditionally required */
-type ExtValCvCbArg<TEs extends ZEvSchema> = [externalValues?: NonNullable<EvOut<NonNullable<TEs>>>];
-export type CvCbArgs<TFs extends ZFormSchema = ZFormSchema, TEs extends ZEvSchema = ZEvSchema> = [
-  ...FormCvCbArg<TFs>,
-  ...ExtValCvCbArg<TEs>
-];
-// type ExtValCvCbArgStrict<TEs extends ZEvSchema> = TEs extends ZObj
-//   ? Required<ExtValCvCbArg<NonNullable<TEs>>>
-//   : OmitPartialParams<ExtValCvCbArg<TEs>>;
-// export type CvCbArgsStrict = .../
-
-type CvCbBase<
-  TFs extends ZFormSchema,
-  TEs extends ZEvSchema,
-  TCv extends Record<string, any> = Record<string, any>
-> = (...args: CvCbArgs<TFs, TEs>) => TCv;
-// type CvCbBaseStrict<
-//   TFs extends ZFormSchema,
-//   TEs extends ZEvSchema,
-//   TCv extends Record<string, any> = Record<string, any>
-// > = (...args: CvCbArgs<TFs, TEs>) => TCv;
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-export type CvCb<
-  TFs extends ZFormSchema,
-  TEs extends ZEvSchema,
-  TCv extends Record<string, any> | undefined
-> = TCv extends undefined ? never : CvCbBase<TFs, TEs, NonNullable<TCv>>;
-// type CvCbStrict<
-//   TFs extends ZFormSchema,
-//   TEs extends ZEvSchema,
-//   TCv extends Record<string, any> | undefined
-// > = TCv extends undefined ? undefined : CvCbBaseStrict<TFs, TEs, NonNullable<TCv>>;
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-export type AnyCvCb<
-  TFs extends ZFormSchema = ZFormSchema,
-  TEs extends ZEvSchema = ZEvSchema,
-  TCv extends Record<string, any> | undefined = Record<string, any> | undefined
-> = CvCb<TFs, TEs, TCv>;
-// type AnyCvCbStrict<
-//   TFs extends ZFormSchema = ZFormSchema,
-//   TEs extends ZEvSchema = ZEvSchema,
-//   TCv extends Record<string, any> | undefined = undefined
-// > = CvCbStrict<TFs, TEs, TCv>;
-
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-export type InferCalcValuesFromCvCb<TCvCb extends AnyCvCb | undefined> = TCvCb extends undefined
-  ? undefined
-  : ReturnType<NonNullable<TCvCb>>;
+/** CvCb Param Utility Type for optional second param (External Values)
+ * Optional second parameter only when an external-values schema is present.
+ */
+type ExtArg<TEs extends ZObjOpt> = [TEs] extends [ZObj] ? [externalValues: EvOut<TEs>] : [];
 
 /** Represents "Calculated Values Callback"
  * Input form values + (optional) external values and returns `calculated` values
  */
-export type CvCb_<TFv extends UiValues, TCv, TEv extends EvOut> = (
-  form: TFv,
-  externalValues?: TEv
-) => TCv;
+export type CvCb<
+  TFs extends ZObj, // form schema
+  TEs extends ZObjOpt = void, // external-values schema (optional)
+  TCv extends Record<string, any> = Record<string, any>
+> = (form: UiValues<TFs>, ...args: ExtArg<TEs>) => TCv;
+export type CvCbOpt<TFs extends ZObj, TEs extends ZObjOpt = void> = void | CvCb<TFs, TEs>;
 
-export type AnyCvCb_<TFv extends UiValues = UiValues, TCv = any, TEv extends EvOut = any> = CvCb_<
-  TFv,
-  TCv,
-  TEv
->;
+export type InferCv_<TCvCb extends CvCbOpt<ZObj>> = TCvCb extends CvCb<ZObj>
+  ? ReturnType<NonNullable<TCvCb>>
+  : null;
 
-/** "Calculated Values Callback" type, derived from "calculatedValues" */
-export type CvCbFromCv<TCv> = TCv extends never | undefined ? never : CvCb_<any, TCv, any>;
+export type InferCv<T extends CvCbOpt<any, any>> = T extends CvCb<any, any, infer R> ? R : void;
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+/** This is always required */
+// type FormCvCbArg<TFs extends ZObj> = [form: TFs];
+// /** This is conditionally required */
+// type ExtValCvCbArg<TEs extends ZEvSchema> = [externalValues?: NonNullable<EvOut<NonNullable<TEs>>>];
+// export type CvCbArgs<TFs extends ZFormSchema = ZFormSchema, TEs extends ZEvSchema = ZEvSchema> = [
+//   ...FormCvCbArg<TFs>,
+//   ...ExtValCvCbArg<TEs>
+// ];
