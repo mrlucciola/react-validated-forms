@@ -1,5 +1,5 @@
 import type {
-  CvCb,
+  CvCbOpt,
   FormConfig,
   FormConfigDefinition,
   FormConfigFactory,
@@ -14,7 +14,7 @@ import type {
 export const defineFormConfig = <
   TFs extends ZObj,
   TEs extends ZObjOpt,
-  TCvCb extends CvCb<ZObj, any, any> | void
+  TCvCb extends CvCbOpt<TFs, TEs>
 >({
   formSchema,
   fields,
