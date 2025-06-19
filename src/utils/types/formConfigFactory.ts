@@ -43,6 +43,13 @@ export type FormConfigInstance<
 } & (TEs extends ZObj ? { externalValues: UiValues<NonNullable<TEs>> } : {});
 export type InferInstance<F extends FormConfigFactory<any, any, any>> = ReturnType<F>;
 
+/** Conditional parameter used in `FormConfigFactory` */
+type ConfigFactoryParamExternalValue<TEs extends ZObjOpt> = TEs extends ZObj
+  ? [externalValues: EvOut<TEs>]
+  : [];
+/** Scalable parameter-builder used in `FormConfigFactory` */
+type ConfigFactoryParams<TEs extends ZObjOpt> = [...ConfigFactoryParamExternalValue<TEs>];
+
 /**
  * Produced by `defineFormConfig`. Accepts current external values
  * (or none) and returns a fully-resolved config object.
@@ -53,6 +60,6 @@ export type FormConfigFactory<
   TEs extends ZObjOpt
 > = TEs extends ZObj
   ? // if you declared an external schema
-    (externalValues: EvOut<TEs>) => FormConfigInstance<TFs, TCvCb, NonNullable<TEs>>
+    (...args: ConfigFactoryParams<TEs>) => FormConfigInstance<TFs, TCvCb, NonNullable<TEs>>
   : // otherwise it’s parameterless `() => ...`
     () => FormConfigInstance<TFs, TCvCb, TEs>;
