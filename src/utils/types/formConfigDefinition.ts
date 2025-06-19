@@ -16,3 +16,9 @@ export type FormConfigDefinition<
   calcValuesCallback?: TCvCb;
   externalSchema?: TEs;
 };
+
+export type AnyCfgDef<
+  TFs extends ZObj = ZObj,
+  TEs extends ZObjOpt = ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs> = CvCbOpt<TFs, TEs>
+> = FormConfigDefinition<TFs, TCvCb, TEs>;
