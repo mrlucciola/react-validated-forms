@@ -52,7 +52,7 @@ export type AppliedFieldSchema<TFs extends ZObj> = UiFormSchema<TFs>;
  *
  * @deprecated renamed to `UiFormOutput`
  */
-export type AppliedFieldOutput<TFormSchema extends ZObj> = z.output<UiFormSchema<TFormSchema>>;
+export type AppliedFieldOutput<TFs extends ZObj> = z.output<UiFormSchema<TFs>>;
 
 /** @deprecated rename to `UiFormOutputOptional` - potentially remove */
 export type OptionalAppliedFieldOutput<TEs extends ZObjOpt> = TEs extends ZObj

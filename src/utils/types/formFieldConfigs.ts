@@ -43,3 +43,9 @@ export type FormConfigFields<
 > = {
   [FieldKey in InferFormKeys<TFs>]: FieldConfig<TFs, TEs, TCvCb, FieldKey>;
 };
+
+export type ConfigFieldsOpt<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs>
+> = Partial<FormConfigFields<TFs, TEs, TCvCb>> | void;

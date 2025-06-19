@@ -9,7 +9,7 @@ import useGetFieldProps from "./getters/getFieldProps";
 import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
 // interfaces
-import type { FormConfig, Nullish, ZObj } from "@utils/index";
+import type { AnyCfgDef, Nullish, ZObj } from "@utils/index";
 import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
@@ -32,7 +32,7 @@ import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TBase extends ZObj, TConfig extends FormConfig<TBase, any, any>>(
+const useForm = <TBase extends ZObj, TConfig extends AnyCfgDef<TBase>>(
   originalSchema: TBase,
   defaultFormValues?: Nullish<z.input<TBase>> | null,
   formConfig?: TConfig // @todo use AppliedFormCfgReturnCb - prev: config

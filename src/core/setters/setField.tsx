@@ -1,15 +1,21 @@
 import { useCallback } from "react";
 import type { z } from "zod";
 // utils
-import getFormConfigField from "../getters/getFormConfigField";
+import getFieldConfig from "../getters/getFieldConfig";
 // interfaces
-import type { FormConfig, SetState, UiValues, ZObj } from "@utils/index";
+import type {
+  AnyCfgDef,
+  InferCfgDefFormSchema,
+  InferConfigValues,
+  SetState,
+  UiValues,
+} from "@utils/index";
 
 /** @todo annotate */
-const useSetField = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
-  setForm: SetState<UiValues<TFs>>,
+const useSetField = <TConfig extends AnyCfgDef, TFs extends InferCfgDefFormSchema<TConfig>>(
+  setForm: SetState<UiValues<InferCfgDefFormSchema<TConfig>>>,
   config?: TConfig,
-  configValues?: InferConfigValues<TConfig> // not yet created
+  configValues?: InferConfigValues<TConfig>
 ) =>
   useCallback(
     <TField extends keyof z.input<TFs>>(
@@ -19,7 +25,8 @@ const useSetField = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
       setForm((prevFormValues: UiValues<TFs>) => {
         const newForm = { ...prevFormValues, [fieldKey]: value };
 
-        const fieldEffect = config && getFormConfigField(config, fieldKey).changeEvent;
+        const fieldConfig = getFieldConfig(config, fieldKey);
+        const fieldEffect = fieldConfig.changeEvent;
         if (fieldEffect) {
           const effectValues = configValues && fieldEffect(configValues);
           return { ...newForm, ...effectValues };

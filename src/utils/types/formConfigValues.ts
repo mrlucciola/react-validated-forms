@@ -1,8 +1,8 @@
 import type {
   AnyCfgDef,
   CvCbOpt,
-  EvOut,
-  FormConfig,
+  ExtValues,
+  FormConfigDefinition,
   InferCfgDefCvCb,
   InferCfgDefExternalSchema,
   InferCfgDefFormSchema,
@@ -26,7 +26,7 @@ type CalcValuesCtx<TCfgDef extends AnyCfgDef> = PartialOrOmit<
 /** Atomic context slice of Form-Config-Values */
 type ExtValuesCtx<TCfgDef extends AnyCfgDef> = PartialOrOmit<
   InferCfgDefExternalSchema<TCfgDef>,
-  { external: EvOut<InferCfgDefExternalSchema<TCfgDef>> }
+  { external: ExtValues<InferCfgDefExternalSchema<TCfgDef>> }
 >;
 
 /**
@@ -37,10 +37,11 @@ type FormConfigValuesBase<TCfgDef extends AnyCfgDef> = FormValuesCtx<TCfgDef> &
   CalcValuesCtx<TCfgDef> &
   ExtValuesCtx<TCfgDef>;
 
-export type InferFormConfigValues<TConfig extends FormConfig<ZObj>> = TConfig extends FormConfig<
+export type InferConfigValues<TConfig extends AnyCfgDef> = TConfig extends FormConfigDefinition<
   infer TFs,
+  infer TEs,
   infer TCvCb,
-  infer TEs
+  infer _TFc
 >
   ? FormConfigValues<TFs, TEs, TCvCb>
   : never;

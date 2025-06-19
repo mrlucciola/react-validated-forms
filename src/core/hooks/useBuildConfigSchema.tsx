@@ -3,7 +3,15 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { FieldConfig, FormConfig, UiValues, ZObj } from "@utils/index";
+import type {
+  AnyCfgDef,
+  FieldConfig,
+  InferCfgDefFieldConfigs,
+  InferFormKeys,
+  UiValues,
+  ZObj,
+} from "@utils/index";
+import type { InferFormSchemaFromConfig } from "@configDsl/interfaces";
 
 /**
  * @deprecated needs to be completed
@@ -29,18 +37,22 @@ const applyFieldConfigValidationRefinements = <
  * @param configValues
  * @returns
  */
-const useBuildConfigSchema = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
-  baseSchema: TFs,
-  config?: TConfig
+const useBuildConfigSchema = <
+  TConfig extends AnyCfgDef,
+  TFs extends InferFormSchemaFromConfig<TConfig>
+>(
+  config: TConfig
 ) => {
+  const baseSchema = config.formSchema;
   // if no config provided: Early return `baseUserInputSchema`
-  if (!config || !config.fields) return baseSchema;
+  if (!config.fieldConfigs) return baseSchema;
 
   // Convert field schemas to array
-  type FieldKey = keyof z.output<TFs>;
-  type FieldCfg = FieldConfig<any, any, any, FieldKey>;
-  const configFieldsArr = useMemo(() => Object.entries(config.fields), []) as [
-    FieldKey,
+  type FieldCfg = InferCfgDefFieldConfigs<TConfig>; //
+  type FieldCfgKey = keyof FieldCfg;
+  type FieldKey = InferFormKeys<TFs>;
+  const configFieldsArr = useMemo(() => Object.entries(config.fieldConfigs), []) as [
+    FieldCfgKey,
     FieldCfg
   ][];
 
@@ -57,20 +69,18 @@ const useBuildConfigSchema = <TFs extends ZObj, TConfig extends FormConfig<TFs>>
   // For each field: Apply schema refinements defined in config to the baseSchema
   const getCalculatedValues = useCallback(
     (form: UiValues<TFs>, config: TConfig) =>
-      config?.calcValues ? config.calcValues(form, config?.externalValues) : undefined,
+      config.calcValues && config.calcValues(form, config.externalValues),
     []
   );
 
   const cfgRuleArr = configFieldsFiltered.map(([fieldKey, fieldCfg]) => {
     return (form: z.output<TFs>, ctx: z.RefinementCtx) => {
-      const calculated = getCalculatedValues(form, config?.externalValues);
+      const calculated = getCalculatedValues(form, config.externalValues);
 
       const configValues = {
         form,
-        externalValues: config?.externalValues,
-        calculated: config?.calcValues
-          ? config.calcValues(form, config?.externalValues)
-          : undefined,
+        externalValues: config.externalValues,
+        calculated: config.calcValues ? config.calcValues(form, config.externalValues) : undefined,
       };
 
       // IF `.registerOn()` IS DEFINED: Run `.registerOn()`, otherwise `registered = true`

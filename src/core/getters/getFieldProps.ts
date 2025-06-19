@@ -2,25 +2,33 @@ import { useCallback } from "react";
 import type { z } from "zod";
 // utils
 import { getValueFromEvent } from "@utils/utils";
-import getFormConfigField from "./getFormConfigField";
+import getFieldConfig from "./getFieldConfig";
 import type useSetField from "../setters/setField";
 // interfaces
-import type { FormConfig, Nullable, OnChangeEventUnionNew, UiValues, ZObj } from "@utils/index";
+import type {
+  AnyCfgDef,
+  InferCfgDefFormSchema,
+  InferConfigValues,
+  Nullable,
+  OnChangeEventUnionNew,
+  UiValues,
+} from "@utils/index";
 import type { SchemaParseErrors } from "../interfaces";
 
-type UseSetFieldReturn<TFs extends ZObj, TConfig extends FormConfig<TFs>> = ReturnType<
-  typeof useSetField<TFs, TConfig>
->;
+type UseSetFieldReturn<TConfig extends AnyCfgDef> = ReturnType<typeof useSetField<TConfig>>;
 
-const useGetFieldProps = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
-  setField: UseSetFieldReturn<TFs, TConfig>,
-  form: UiValues<TFs>,
-  errors: SchemaParseErrors<TFs> | undefined,
-  config?: FormConfig<TFs>,
-  configValues?: TConfig["fields"]
+const useGetFieldProps = <TConfig extends AnyCfgDef>(
+  setField: UseSetFieldReturn<TConfig>,
+  form: UiValues<InferCfgDefFormSchema<TConfig>>,
+  errors: SchemaParseErrors<InferCfgDefFormSchema<TConfig>> | undefined,
+  config?: TConfig, // might need to use a new AnyCfgInstance
+  configValues?: InferConfigValues<TConfig>
 ) =>
   useCallback(
-    <TField extends keyof z.input<TFs>, TInValue extends Nullable<z.input<TFs>>[TField]>(
+    <
+      TField extends keyof z.input<InferCfgDefFormSchema<TConfig>>,
+      TInValue extends Nullable<z.input<InferCfgDefFormSchema<TConfig>>>[TField]
+    >(
       fieldKey: TField
     ) => {
       const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
@@ -28,7 +36,7 @@ const useGetFieldProps = <TFs extends ZObj, TConfig extends FormConfig<TFs>>(
         setField(fieldKey, newFieldValue);
       };
 
-      const registerOn = config && getFormConfigField(config, fieldKey)?.registerOn;
+      const registerOn = config && getFieldConfig(config, fieldKey)?.registerOn;
 
       const shouldDisplay =
         // @ts-ignore

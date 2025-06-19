@@ -12,5 +12,11 @@ export type UiValues<TFs extends ZObj = ZObj> = AppliedFieldOutput<TFs>;
  * @todo differentiate between:
  * - display form values; and,
  * - "Actual" form values
+ * @deprecated use ExtValues
  */
 export type EvOut<TEs extends ZObjOpt = ZObjOpt> = OptionalAppliedFieldOutput<TEs>;
+
+/** "External Values" output */
+export type ExtValues<TEs extends ZObjOpt = ZObjOpt> = TEs extends ZObj
+  ? AppliedFieldOutput<NonNullable<TEs>>
+  : void;

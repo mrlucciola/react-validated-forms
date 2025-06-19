@@ -1,6 +1,10 @@
-import type { FormConfig, ZObj } from "@utils/index";
+import type { AnyCfgDef, ZObj } from "@utils/index";
 
-export type InferFormSchemaFromConfig<TConfig extends FormConfig<ZObj>> =
-  TConfig extends FormConfig<infer TFormSchema, infer _TCvCb, infer _TEvSchema>
-    ? TFormSchema
-    : never;
+export type InferFormSchemaFromConfig<TConfig extends AnyCfgDef<ZObj>> = TConfig extends AnyCfgDef<
+  infer TFs,
+  infer _TEs,
+  infer _TCvCb,
+  infer _TFc
+>
+  ? TFs
+  : never;
