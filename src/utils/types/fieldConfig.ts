@@ -1,12 +1,19 @@
 import type { z } from "zod";
-import type { CfgKey, CvCbOpt, FormConfigValues, Nullish, ZObj, ZObjOpt } from "@utils/index";
+import type {
+  CvCbOpt,
+  FormConfigValues,
+  InferFormKeys,
+  Nullish,
+  ZObj,
+  ZObjOpt,
+} from "@utils/index";
 
 /** Validation-schema configuration for a single form-field */
 export type FieldConfig<
   TFs extends ZObj,
   TCvCb extends CvCbOpt<TFs, TEs>,
   TEs extends ZObjOpt,
-  TField extends CfgKey<TFs>
+  TField extends InferFormKeys<TFs>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &
