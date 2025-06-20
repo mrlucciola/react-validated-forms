@@ -1,8 +1,12 @@
 import type {
+  AnyCfgDef,
+  CfgFs,
+  ConfigDefinition,
   CvCbOpt,
   FieldConfig,
   InferFormKeys,
   ResolvePartial,
+  Tighten,
   UiValues,
   ZObj,
   ZObjOpt,
@@ -36,16 +40,17 @@ import type {
  * });
  * ```
  */
-export type FormConfigFields<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCvCb extends CvCbOpt<TFs, TEs>
-> = {
-  [FieldKey in InferFormKeys<TFs>]: FieldConfig<TFs, TEs, TCvCb, FieldKey>;
+export type FormConfigFieldsBase<TCfg extends AnyCfgDef> = {
+  [FieldKey in InferFormKeys<CfgFs<TCfg>>]: FieldConfig<TCfg, FieldKey>;
 };
+export type FormConfigFieldsInternal<TCfg extends AnyCfgDef> = Partial<FormConfigFieldsBase<TCfg>>;
+
+export type PublicFormConfigFields<TCfg extends AnyCfgDef> = Tighten<
+  FormConfigFieldsInternal<TCfg>
+>;
 
 export type ConfigFieldsOpt<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCvCb extends CvCbOpt<TFs, TEs>
-> = Partial<FormConfigFields<TFs, TEs, TCvCb>> | void;
+> = FormConfigFieldsInternal<AnyCfgDef<TFs, TEs, TCvCb>> | void;

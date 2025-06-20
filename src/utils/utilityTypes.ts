@@ -56,3 +56,6 @@ export type ResolvePartial<T> = {
     ? never // Drop the key
     : K]-?: NonNullable<T[K]>; // Keep the key/make it `Required`/Strip `undefined`
 };
+export type Tighten<T> = {
+  [K in keyof T as undefined extends T[K] ? never : K]-?: NonNullable<T[K]>;
+};

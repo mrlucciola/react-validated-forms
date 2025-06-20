@@ -1,4 +1,15 @@
-import type { ConfigFieldsOpt, CvCbOpt, ExtValues, ZObj, ZObjOpt } from "@utils/index";
+import type {
+  AnyCfgDef,
+  CfgCvCb,
+  CfgEs,
+  CfgFc,
+  CfgFs,
+  ConfigFieldsOpt,
+  CvCbOpt,
+  ExtValues,
+  ZObj,
+  ZObjOpt,
+} from "@utils/index";
 
 /** Deprecated types - Keeping for reference
 ---------------------------------------------------------------------------------------
@@ -33,18 +44,13 @@ export type FormConfigCb<
 > = (...args: FormConfigCbArgs<TEvSchema>) => FormConfigCbReturn<TFormSchema, TCvCb, TEvSchema>;
 ---------------------------------------------------------------------------------------
 */
-export type FormConfigInstance<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCvCb extends CvCbOpt<TFs, TEs>,
-  TFc extends ConfigFieldsOpt<TFs, TEs, TCvCb>
-> = {
-  fieldConfigs?: TFc;
-  calcValuesCallback?: TCvCb;
-  externalValues?: ExtValues<TEs>;
+export type FormConfigInstance<TCfg extends AnyCfgDef> = {
+  fieldSchema: CfgFs<TCfg>;
+  externalValues?: ExtValues<CfgEs<TCfg>>;
+  calcValuesCallback?: CfgCvCb<TCfg>;
+  fieldConfigs?: CfgFc<TCfg>;
 };
-export type InferInstanceFromFactory<F extends FormConfigFactory<any, any, any, any>> =
-  ReturnType<F>;
+export type InferInstanceFromFactory<F extends FormConfigFactory<any>> = ReturnType<F>;
 
 /** Conditional parameter used in `FormConfigFactory` */
 type ConfigFactoryParamExternalValue<TEs extends ZObjOpt> = TEs extends ZObj
@@ -57,9 +63,6 @@ export type ConfigFactoryParams<TEs extends ZObjOpt> = [...ConfigFactoryParamExt
  * Produced by `defineFormConfig`. Accepts current external values
  * (or none) and returns a fully-resolved config object.
  */
-export type FormConfigFactory<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCvCb extends CvCbOpt<TFs, TEs>,
-  TFc extends ConfigFieldsOpt<TFs, TEs, TCvCb>
-> = (...args: ConfigFactoryParams<TEs>) => FormConfigInstance<TFs, TEs, TCvCb, TFc>;
+export type FormConfigFactory<TCfg extends AnyCfgDef> = (
+  ...args: ConfigFactoryParams<CfgEs<TCfg>>
+) => FormConfigInstance<TCfg>;

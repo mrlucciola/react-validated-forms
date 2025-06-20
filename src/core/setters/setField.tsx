@@ -3,19 +3,13 @@ import type { z } from "zod";
 // utils
 import getFieldConfig from "../getters/getFieldConfig";
 // interfaces
-import type {
-  AnyCfgDef,
-  InferCfgDefFormSchema,
-  InferConfigValues,
-  SetState,
-  UiValues,
-} from "@utils/index";
+import type { AnyCfgDef, CfgFs, FormConfigValues, SetState, UiValues } from "@utils/index";
 
 /** @todo annotate */
-const useSetField = <TConfig extends AnyCfgDef, TFs extends InferCfgDefFormSchema<TConfig>>(
-  setForm: SetState<UiValues<InferCfgDefFormSchema<TConfig>>>,
+const useSetField = <TConfig extends AnyCfgDef, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
+  setForm: SetState<UiValues<TFs>>,
   config?: TConfig,
-  configValues?: InferConfigValues<TConfig>
+  configValues?: FormConfigValues<TConfig>
 ) =>
   useCallback(
     <TField extends keyof z.input<TFs>>(

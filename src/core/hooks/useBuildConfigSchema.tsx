@@ -6,12 +6,13 @@ import { zAddRulesIssue } from "@utils/zod";
 import type {
   AnyCfgDef,
   FieldConfig,
-  InferCfgDefFieldConfigs,
+  CfgFs,
+  CfgFc,
   InferFormKeys,
   UiValues,
   ZObj,
+  InferCfg,
 } from "@utils/index";
-import type { InferFormSchemaFromConfig } from "@configDsl/interfaces";
 
 /**
  * @deprecated needs to be completed
@@ -37,10 +38,7 @@ const applyFieldConfigValidationRefinements = <
  * @param configValues
  * @returns
  */
-const useBuildConfigSchema = <
-  TConfig extends AnyCfgDef,
-  TFs extends InferFormSchemaFromConfig<TConfig>
->(
+const useBuildConfigSchema = <TConfig extends InferCfg, TFs extends CfgFs<TConfig>>(
   config: TConfig
 ) => {
   const baseSchema = config.formSchema;

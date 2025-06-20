@@ -2,13 +2,13 @@ import { useCallback } from "react";
 import type { z } from "zod";
 // utils
 import { getValueFromEvent } from "@utils/utils";
-import getFieldConfig from "./getFieldConfig";
+import getFieldConfig from "../getters/getFieldConfig";
 import type useSetField from "../setters/setField";
 // interfaces
 import type {
   AnyCfgDef,
-  InferCfgDefFormSchema,
-  InferConfigValues,
+  CfgFs,
+  FormConfigValues,
   Nullable,
   OnChangeEventUnionNew,
   UiValues,
@@ -17,18 +17,15 @@ import type { SchemaParseErrors } from "../interfaces";
 
 type UseSetFieldReturn<TConfig extends AnyCfgDef> = ReturnType<typeof useSetField<TConfig>>;
 
-const useGetFieldProps = <TConfig extends AnyCfgDef>(
+const useGetFieldProps = <TConfig extends AnyCfgDef, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
   setField: UseSetFieldReturn<TConfig>,
-  form: UiValues<InferCfgDefFormSchema<TConfig>>,
-  errors: SchemaParseErrors<InferCfgDefFormSchema<TConfig>> | undefined,
+  form: UiValues<TFs>,
+  errors: SchemaParseErrors<TFs> | undefined,
   config?: TConfig, // might need to use a new AnyCfgInstance
-  configValues?: InferConfigValues<TConfig>
+  configValues?: FormConfigValues<TConfig>
 ) =>
   useCallback(
-    <
-      TField extends keyof z.input<InferCfgDefFormSchema<TConfig>>,
-      TInValue extends Nullable<z.input<InferCfgDefFormSchema<TConfig>>>[TField]
-    >(
+    <TField extends keyof z.input<TFs>, TInValue extends Nullable<z.input<TFs>>[TField]>(
       fieldKey: TField
     ) => {
       const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {

@@ -1,33 +1,11 @@
-import type {
-  AnyCfgDef,
-  CvCbOpt,
-  ExtValues,
-  FormConfigDefinition,
-  InferCfgDefCvCb,
-  InferCfgDefExternalSchema,
-  InferCfgDefFormSchema,
-  InferCv,
-  OmitOptionalKeys,
-  PartialOrOmit,
-  UiValues,
-  ZObj,
-  ZObjOpt,
-} from "@utils/index";
+import type { AnyCfgDef, ExtValues, CfgCvCb, CfgEs, CfgFs, InferCv, UiValues } from "@utils/index";
 
 /** Atomic context slice of Form-Config-Values */
-type FormValuesCtx<TCfgDef extends AnyCfgDef> = {
-  fields: UiValues<InferCfgDefFormSchema<TCfgDef>>;
-};
+type FormValuesCtx<TCfgDef extends AnyCfgDef> = { form: UiValues<CfgFs<TCfgDef>> };
 /** Atomic context slice of Form-Config-Values */
-type CalcValuesCtx<TCfgDef extends AnyCfgDef> = PartialOrOmit<
-  InferCfgDefCvCb<TCfgDef>,
-  { calculated: InferCv<InferCfgDefCvCb<TCfgDef>> }
->;
+type CalcValuesCtx<TCfgDef extends AnyCfgDef> = { calculated?: InferCv<CfgCvCb<TCfgDef>> };
 /** Atomic context slice of Form-Config-Values */
-type ExtValuesCtx<TCfgDef extends AnyCfgDef> = PartialOrOmit<
-  InferCfgDefExternalSchema<TCfgDef>,
-  { external: ExtValues<InferCfgDefExternalSchema<TCfgDef>> }
->;
+type ExtValuesCtx<TCfgDef extends AnyCfgDef> = { external?: ExtValues<CfgEs<TCfgDef>> };
 
 /**
  * 'Values' property for the callback function.
@@ -37,17 +15,4 @@ type FormConfigValuesBase<TCfgDef extends AnyCfgDef> = FormValuesCtx<TCfgDef> &
   CalcValuesCtx<TCfgDef> &
   ExtValuesCtx<TCfgDef>;
 
-export type InferConfigValues<TConfig extends AnyCfgDef> = TConfig extends FormConfigDefinition<
-  infer TFs,
-  infer TEs,
-  infer TCvCb,
-  infer _TFc
->
-  ? FormConfigValues<TFs, TEs, TCvCb>
-  : never;
-
-export type FormConfigValues<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCvCb extends CvCbOpt<TFs, TEs>
-> = OmitOptionalKeys<FormConfigValuesBase<AnyCfgDef<TFs, TEs, TCvCb>>>;
+export type FormConfigValues<TCfg extends AnyCfgDef> = FormConfigValuesBase<TCfg>;
