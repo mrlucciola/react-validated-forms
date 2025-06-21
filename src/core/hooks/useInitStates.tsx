@@ -1,64 +1,104 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { isEqual } from "lodash";
 // utils
-import useDeepCompareMemoize from "@utils/hooks/useDeepCompareMemoize";
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { UiFormSchema, UiValues, ZObj } from "@utils/index";
 import type { FsDefaults } from "@core/types";
 
+/**
+ *
+ * @param uiSchema
+ * @param defaults
+ * @returns
+ */
 const useInitStates = <TFs extends ZObj>(
-  baseUiSchema: UiFormSchema<TFs>,
+  uiSchema: UiFormSchema<TFs>,
   defaults?: FsDefaults<TFs>
 ) => {
-  /** Used for dependency array updates */
-  const defaultsMemo = useDeepCompareMemoize(defaults);
-
-  const initializedForm: UiValues<TFs> = useMemo(
-    () => baseUiSchema.parse(defaults ?? {}),
-    [defaultsMemo]
-  );
-  const uninitializedForm: UiValues<TFs> = useMemo(() => baseUiSchema.parse({}), []);
-
-  const [referenceFormValues, setReferenceFormValues] = useState<UiValues<TFs>>(initializedForm);
-  const [form, setForm] = useState<UiValues<TFs>>(initializedForm);
-
-  const resetToDefault = useResetToDefault(baseUiSchema, setForm, setReferenceFormValues);
-
-  /** When `defaultValues` is updated (i.e. from request), set those fields on the `form` state
-   * @todo update init-logic (see 'todo's)
+  /** Used for dependency array updates
+   * - Keeps a stable reference for dependency arrays;
+   * - BUT runs JSON.stringify every rerender;
    */
+  const defaultsRef = useMemo(() => JSON.stringify(defaults ?? {}), [defaults]);
+  const parsedDefaults = useMemo(() => uiSchema.parse(defaults ?? {}), [defaultsRef]);
+  const refFormDefaults = useRef(parsedDefaults);
+
+  // Form state + setter (see `updateForm` for public setter for `form` state)
+  const [form, setForm] = useState<UiValues<TFs>>(parsedDefaults);
+  // References for 'dirty' values
+  type DirtyMapKeys = keyof UiValues<TFs>;
+  type DirtyMap = Record<DirtyMapKeys, boolean>;
+  const dirtyMap = useRef<DirtyMap>({} as DirtyMap);
+  const markDirty = useCallback(<K extends DirtyMapKeys>(key: K, v: UiValues<TFs>[K]) => {
+    dirtyMap.current[key] = !isEqual(v, refFormDefaults.current[key]);
+  }, []);
+  /** Public setter for `form` state. Maintains 'dirty'/'clean' state for form-fields. */
+  const updateForm = useCallback(
+    <K extends keyof UiValues<TFs>>(
+      key: K,
+      val: UiValues<TFs>[K] | ((prev: UiValues<TFs>[K]) => UiValues<TFs>[K])
+    ) => {
+      setForm((prev) => {
+        // @note Not a huge fan of this conditional - this is an edge-case, however
+        const next = typeof val === "function" ? (val as any)(prev[key]) : val;
+        const merged = { ...prev, [key]: next };
+        markDirty(key, next);
+        return merged;
+      });
+    },
+    []
+  );
+
+  /** Utility: reset form-fields to the default values/initial form state */
+  const resetToDefault = useResetToDefault(uiSchema, setForm);
+
+  /** When `defaultValues` is updated (i.e. from request), set those fields on the `form` state */
   useEffect(() => {
-    const isSameRef = isEqual(initializedForm, referenceFormValues);
-    const isSameForm = isEqual(initializedForm, form);
+    setForm((prev) => {
+      const merged: UiValues<TFs> = { ...prev };
+      let changed = false;
 
-    // Set form after once when default-form-values is available
-    // @todo Replace with below 'todo'
-    if (isSameRef && isSameForm && defaults !== null) {
-      resetToDefault(initializedForm);
-    }
-    // @todo Uncomment below line after fixed:
-    // resetToDefault(baseUiSchema.parse({ ...referenceFormValues, ...form, ...defaultFormValues }));
+      for (const k in parsedDefaults) {
+        /** Merge only if user never touched that field */
+        if (!dirtyMap.current[k as keyof UiValues<TFs>]) {
+          const defVal: UiValues<TFs>[typeof k] = parsedDefaults[k];
+          if (!isEqual(merged[k], defVal)) {
+            // @ts-ignore
+            merged[k] = defVal;
+            changed = true;
+          }
+        }
+      }
+      if (changed) return merged;
+      return prev;
+    });
+    refFormDefaults.current = parsedDefaults; // update baseline
+  }, [parsedDefaults]);
 
-    // @todo Apply updated default-form-values to non-dirty fields (requires defining `dirtyValues` object)
-  }, [defaultsMemo]);
+  // Computed Values
+  /** User-modified fields - form-fields which differ from the default values */
+  const dirtyFields = useMemo(
+    () =>
+      Object.keys(dirtyMap.current).filter(
+        (k) => dirtyMap.current[k as DirtyMapKeys]
+      ) as DirtyMapKeys[],
+    [form] // updates only when form changes
+  );
+  /** Is form modified - one or more form-fields differ from default values */
+  const isDirty = dirtyFields.length > 0;
 
   return {
-    /** @note Used for checking if first render (**BEFORE**, state/passed in defaults are set) */
-    uninitializedForm,
-    /** @note Used for checking if `form` state is updated with `defaultValues` */
-    initializedForm,
-
-    /** User-input fields */
+    // State + setters
     form,
-    setForm,
-
-    /** Form initialized with `defaultValues` */
-    referenceFormValues,
-    setReferenceFormValues,
+    setForm: updateForm,
 
     // Utils
     resetToDefault,
+
+    // Computed Values
+    dirtyFields,
+    isDirty,
   };
 };
 

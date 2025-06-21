@@ -37,7 +37,7 @@ const useForm = <C extends AnyCfgMeta>(
 ): UseFormState<CfgFs<C>, CfgEs<C>, CfgCvCb<C>, CfgFc<C>> => {
   const { baseSchema, baseUserInputSchema } = useInitSchemas(config);
 
-  const { form, setForm, referenceFormValues, resetToDefault } = useInitStates(
+  const { form, setForm, dirtyFields, isDirty, resetToDefault } = useInitStates(
     baseUserInputSchema,
     config.defaults
   );
@@ -53,7 +53,6 @@ const useForm = <C extends AnyCfgMeta>(
   const errors: SchemaParseErrors<TBase> | undefined = validation.error?.formErrors.fieldErrors;
 
   const isValid = validation.success;
-  const isDirty = !isEqual(referenceFormValues, form);
 
   const setField = useSetField(setForm, formConfig, configValues);
 
@@ -67,6 +66,7 @@ const useForm = <C extends AnyCfgMeta>(
     errors,
     isValid,
     isDirty,
+    dirtyFields,
     resetToDefault,
     // Utils
     getFieldProps,

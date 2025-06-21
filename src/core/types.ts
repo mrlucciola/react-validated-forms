@@ -51,6 +51,7 @@ export type UseFormState<
   errors: SchemaParseErrors<TFs>;
   isValid: boolean;
   isDirty: boolean;
+  dirtyFields: keyof UiValues<TFs>[];
 
   /* ——— helpers ——— */
   resetToDefault: (defaults?: Nullish<z.input<TFs>> | null, overwriteExisting?: boolean) => void;
