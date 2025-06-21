@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { isEqual } from "lodash";
 // utils
+import useDeepCompareMemoize from "@utils/hooks/useDeepCompareMemoize";
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { UiFormSchema, UiValues, ZObj } from "@utils/index";
@@ -10,11 +11,11 @@ const useInitStates = <TFs extends ZObj>(
   defaults?: Partial<UiValues<TFs>>
 ) => {
   /** Used for dependency array updates */
-  const defaultRef = JSON.stringify(defaults ?? {});
+  const defaultsMemo = useDeepCompareMemoize(defaults);
 
   const initializedForm: UiValues<TFs> = useMemo(
     () => baseUiSchema.parse(defaults ?? {}),
-    [defaultRef]
+    [defaultsMemo]
   );
   const uninitializedForm: UiValues<TFs> = useMemo(() => baseUiSchema.parse({}), []);
 
@@ -39,7 +40,7 @@ const useInitStates = <TFs extends ZObj>(
     // resetToDefault(baseUiSchema.parse({ ...referenceFormValues, ...form, ...defaultFormValues }));
 
     // @todo Apply updated default-form-values to non-dirty fields (requires defining `dirtyValues` object)
-  }, [defaultRef]);
+  }, [defaultsMemo]);
 
   return {
     /** @note Used for checking if first render (**BEFORE**, state/passed in defaults are set) */
