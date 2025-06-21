@@ -3,6 +3,7 @@ import { z } from "zod";
 import type { ZObjOpt, ZObj, EvOut, UiValues } from "@utils/index";
 import { defineFormConfig } from "@configDsl/index";
 import { formSchema } from "./testVars/formSchema";
+import { externalSchema } from "./testVars/externalSchema";
 
 type DefCalcValues<
   TFormSchema extends ZObj = ZObj,
@@ -11,7 +12,8 @@ type DefCalcValues<
 > = (form: UiValues<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
 
 const testFormConfig = defineFormConfig({
-  fields: {
+  aaa: "", //  should throw an error but doesnt
+  fieldConfigs: {
     name: {
       changeEvent: ({ fields, external, calculated }) => {
         return {};
@@ -24,7 +26,7 @@ const testFormConfig = defineFormConfig({
   },
   formSchema,
   calcValuesCallback: calcValuesCallback,
-  externalSchema,
+  externalSchema: externalSchema,
 });
 const testFormConfigOutput = testFormConfig({});
 

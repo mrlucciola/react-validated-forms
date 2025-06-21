@@ -6,7 +6,7 @@ import getFieldConfig from "../getters/getFieldConfig";
 import type useSetField from "../setters/setField";
 // interfaces
 import type {
-  AnyCfgDef,
+  CfgDefMeta,
   CfgFs,
   FormConfigValues,
   Nullable,
@@ -15,9 +15,9 @@ import type {
 } from "@utils/index";
 import type { SchemaParseErrors } from "../interfaces";
 
-type UseSetFieldReturn<TConfig extends AnyCfgDef> = ReturnType<typeof useSetField<TConfig>>;
+type UseSetFieldReturn<TConfig extends CfgDefMeta> = ReturnType<typeof useSetField<TConfig>>;
 
-const useGetFieldProps = <TConfig extends AnyCfgDef, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
+const useGetFieldProps = <TConfig extends CfgDefMeta, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
   setField: UseSetFieldReturn<TConfig>,
   form: UiValues<TFs>,
   errors: SchemaParseErrors<TFs> | undefined,

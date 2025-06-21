@@ -1,9 +1,9 @@
 import type { z } from "zod";
-import type { AnyCfgDef, CfgFs, FormConfigValues, InferFormKeys, Nullish } from "@utils/index";
+import type { CfgDefMeta, CfgFs, FormConfigValues, InferFormKeys, Nullish } from "@utils/index";
 
 /** Validation-schema configuration for a single form-field */
 export type FieldConfig<
-  TCfg extends AnyCfgDef,
+  TCfg extends CfgDefMeta,
   TField extends InferFormKeys<TFs>,
   TFs extends CfgFs<TCfg> = CfgFs<TCfg>
 > = {

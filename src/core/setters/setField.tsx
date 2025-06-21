@@ -3,10 +3,10 @@ import type { z } from "zod";
 // utils
 import getFieldConfig from "../getters/getFieldConfig";
 // interfaces
-import type { AnyCfgDef, CfgFs, FormConfigValues, SetState, UiValues } from "@utils/index";
+import type { CfgDefMeta, CfgFs, FormConfigValues, SetState, UiValues } from "@utils/index";
 
 /** @todo annotate */
-const useSetField = <TConfig extends AnyCfgDef, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
+const useSetField = <TConfig extends CfgDefMeta, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
   setForm: SetState<UiValues<TFs>>,
   config?: TConfig,
   configValues?: FormConfigValues<TConfig>

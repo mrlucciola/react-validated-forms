@@ -1,5 +1,5 @@
 import type {
-  AnyCfgDef,
+  CfgDefMeta,
   CfgCvCb,
   CfgEs,
   CfgFc,
@@ -44,7 +44,7 @@ export type FormConfigCb<
 > = (...args: FormConfigCbArgs<TEvSchema>) => FormConfigCbReturn<TFormSchema, TCvCb, TEvSchema>;
 ---------------------------------------------------------------------------------------
 */
-export type FormConfigInstance<TCfg extends AnyCfgDef> = {
+export type FormConfigInstance<TCfg extends CfgDefMeta> = {
   fieldSchema: CfgFs<TCfg>;
   externalValues?: ExtValues<CfgEs<TCfg>>;
   calcValuesCallback?: CfgCvCb<TCfg>;
@@ -63,6 +63,6 @@ export type ConfigFactoryParams<TEs extends ZObjOpt> = [...ConfigFactoryParamExt
  * Produced by `defineFormConfig`. Accepts current external values
  * (or none) and returns a fully-resolved config object.
  */
-export type FormConfigFactory<TCfg extends AnyCfgDef> = (
+export type FormConfigFactory<TCfg extends CfgDefMeta> = (
   ...args: ConfigFactoryParams<CfgEs<TCfg>>
 ) => FormConfigInstance<TCfg>;

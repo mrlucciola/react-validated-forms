@@ -1,5 +1,5 @@
 import type {
-  AnyCfgDef,
+  CfgDefMeta,
   InferCfgDefFieldConfigs,
   InferCfgDefFormSchema,
   InferFormKeys,
@@ -7,7 +7,7 @@ import type {
 
 /** @todo add description */
 const getFieldConfig = <
-  TConfig extends AnyCfgDef,
+  TConfig extends CfgDefMeta,
   TKey extends keyof InferFormKeys<InferCfgDefFormSchema<TConfig>>
 >(
   config: TConfig | undefined,

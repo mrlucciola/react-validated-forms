@@ -1,7 +1,7 @@
 import { z } from "zod";
 //
 import { zDayjs } from "@utils/zod";
-import type { ZObj } from "@utils/index";
+import type { ZObj, ZObjOpt } from "@utils/index";
 
 const TestObj = z.object({ name: z.string(), date: zDayjs, num: z.number() });
 
@@ -11,5 +11,5 @@ export const externalSchema = z.object({
   points: z.number(),
   company: TestObj,
   connections: z.array(TestObj),
-}) satisfies ZObj;
+}) satisfies ZObjOpt;
 export type ExternalSchema = typeof externalSchema;

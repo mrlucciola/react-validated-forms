@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type {
-  AnyCfgDef,
+  CfgDefMeta,
   FieldConfig,
   CfgFs,
   CfgFc,
@@ -38,7 +38,7 @@ const applyFieldConfigValidationRefinements = <
  * @param configValues
  * @returns
  */
-const useBuildConfigSchema = <TConfig extends InferCfg, TFs extends CfgFs<TConfig>>(
+const useBuildConfigSchema = <TDef extends ConfigDefinition<any>>(
   config: TConfig
 ) => {
   const baseSchema = config.formSchema;

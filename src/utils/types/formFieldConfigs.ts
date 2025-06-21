@@ -1,5 +1,5 @@
 import type {
-  AnyCfgDef,
+  CfgDefMeta,
   CfgFs,
   ConfigDefinition,
   CvCbOpt,
@@ -40,17 +40,21 @@ import type {
  * });
  * ```
  */
-export type FormConfigFieldsBase<TCfg extends AnyCfgDef> = {
+export type FormConfigFieldsBase<TCfg extends CfgDefMeta<any, any, any>> = {
   [FieldKey in InferFormKeys<CfgFs<TCfg>>]: FieldConfig<TCfg, FieldKey>;
 };
-export type FormConfigFieldsInternal<TCfg extends AnyCfgDef> = Partial<FormConfigFieldsBase<TCfg>>;
+export type FormConfigFieldsInternal<TCfg extends CfgDefMeta<any, any, any>> = Partial<
+  FormConfigFieldsBase<TCfg>
+>;
 
-export type PublicFormConfigFields<TCfg extends AnyCfgDef> = Tighten<
+export type PublicFormConfigFields<TCfg extends CfgDefMeta<any, any, any>> = ResolvePartial<
   FormConfigFieldsInternal<TCfg>
 >;
+export type PublicConfigFields<TCf extends FormConfigFieldsInternal<CfgDefMeta<any, any, any>>> =
+  ResolvePartial<TCf>;
 
 export type ConfigFieldsOpt<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCvCb extends CvCbOpt<TFs, TEs>
-> = FormConfigFieldsInternal<AnyCfgDef<TFs, TEs, TCvCb>> | void;
+> = FormConfigFieldsInternal<CfgDefMeta<TFs, TEs, TCvCb>> | void;

@@ -1,15 +1,15 @@
-import type { AnyCfgDef, CfgCvCb, CfgFs, FormConfigValues, InferCv, UiValues } from "@utils/index";
+import type { CfgCvCb, CfgFs, FormConfigValues, InferCv, UiValues, AnyCfgDef } from "@utils/index";
 
 /** @todo Add annotation
  * @todo Fix output type
  */
-const getConfigValues = <TConfig extends AnyCfgDef>(
-  uiValues: UiValues<CfgFs<TConfig>>,
-  config?: TConfig // Might need to be AnyCfgInstance
-): FormConfigValues<TConfig> | null => {
+const getConfigValues = <TCfg extends AnyCfgDef>(
+  uiValues: UiValues<CfgFs<TCfg>>,
+  config?: TCfg
+): FormConfigValues<TCfg> | null => {
   if (config === undefined) return null;
 
-  const calculated: InferCv<CfgCvCb<TConfig>> =
+  const calculated: InferCv<CfgCvCb<TCfg>> =
     config.calcValuesCallback && config.calcValuesCallback(uiValues, config);
 
   return {

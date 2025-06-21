@@ -4,28 +4,29 @@ import type {
   ConfigDefinition,
   FormConfigFactory,
   FormConfigInstance,
-  InferCfg,
   CfgEs,
-  AnyCfgDef,
+  BuildCfg,
 } from "@utils/index";
 
 /** Only for use in `useValidatedForm`
  * For fields on `externalSchema`, `null` is applied to fields where a catch is not provided
  */
-export const defineFormConfig = <TCfg extends AnyCfgDef>(
-  def: ConfigDefinition<TCfg>
-): FormConfigFactory<TCfg> => {
-  const formConfigCb: FormConfigFactory<TCfg> = (...args: ConfigFactoryParams<CfgEs<TCfg>>) => {
-    const evArg = args.length ? args[0] ?? {} : {};
-    const externalValues = def.externalSchema?.parse(evArg) as ExtValues<CfgEs<TCfg>>;
+export const defineFormConfig = <TDef extends ConfigDefinition<any>>(def: TDef) => {
+  type TCfg = BuildCfg<TDef>;
 
-    const configInstance = {
+  const factory: FormConfigFactory<TCfg> = (...args: ConfigFactoryParams<CfgEs<TCfg>>) => {
+    // external values – parse or fallback to {}
+    const evRaw = args.length ? args[0] ?? {} : {};
+    const externalValues = def.externalSchema?.parse(evRaw) as ExtValues<CfgEs<TCfg>>;
+
+    // This is what is passedreturn the fully-typed instance
+    return {
+      fieldSchema: def.formSchema,
       externalValues,
       calcValuesCallback: def.calcValuesCallback,
       fieldConfigs: def.fieldConfigs,
     } satisfies FormConfigInstance<TCfg>;
-    return configInstance;
   };
 
-  return formConfigCb satisfies FormConfigFactory<TCfg>;
+  return factory;
 };

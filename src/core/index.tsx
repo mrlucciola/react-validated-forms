@@ -32,10 +32,10 @@ import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TBase extends ZObj, TConfig extends AnyCfgDef<TBase>>(
+const useForm = <TBase extends ZObj, TCfg extends AnyCfgDef>(
   originalSchema: TBase,
   defaultFormValues?: Nullish<z.input<TBase>> | null,
-  formConfig?: TConfig // @todo use AppliedFormCfgReturnCb - prev: config
+  formConfig?: TCfg
 ) => {
   const { baseSchema, baseUserInputSchema } = useInitSchemas(originalSchema);
 
@@ -85,7 +85,7 @@ const useForm = <TBase extends ZObj, TConfig extends AnyCfgDef<TBase>>(
     /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
      * - This happens by assigning the type defined in the generic. */
     config: configValues,
-    // config: configValues as unknown as FormConfigCbReturnInferred<TConfig>,
+    // config: configValues as unknown as FormConfigCbReturnInferred<TCfg>,
   } as const;
 };
 
