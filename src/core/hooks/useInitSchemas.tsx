@@ -3,27 +3,29 @@ import { z } from "zod";
 // utils
 import { buildDefaultSchema } from "@utils/utils";
 // interfaces
-import type { UiFormSchema, ZObj } from "@utils/index";
+import type { AnyCfgMeta, CfgFs, ConfigDefinition, UiFormSchema, ZObj } from "@utils/index";
+import type { UseFormProps } from "@core/types";
 
 /**
  * @todo Annotate
  */
-const useInitSchemas = <TBase extends ZObj>(
-  originalSchema: TBase
+const useInitSchemas = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
+  config: UseFormProps<C>
 ): {
-  baseSchema: TBase;
-  baseUserInputSchema: UiFormSchema<TBase>;
+  baseSchema: TFs;
+  baseUserInputSchema: UiFormSchema<TFs>;
 } => {
+  const formSchema = config.schema;
   /** @note This object is memoized because:
    *   - Updates frequently (on each field change)
    *   - Can be expensive to recalculate (affects performance as # of fields (and the amount of nesting) increases
    */
-  const baseSchema: TBase = useMemo(() => {
+  const baseSchema: TFs = useMemo(() => {
     // Extract the base schema from its refined form (if refined)
-    const innerFormSchema: TBase =
-      originalSchema instanceof z.ZodEffects ? originalSchema.innerType() : originalSchema;
+    const innerFormSchema: TFs =
+      (formSchema as any) instanceof z.ZodEffects ? formSchema.innerType() : formSchema;
 
-    if (innerFormSchema instanceof z.ZodEffects)
+    if ((innerFormSchema as any) instanceof z.ZodEffects)
       throw new Error(
         "Refined schemas must use either a single `.refine`. Use `.superRefine` for one or more refinements."
       );
@@ -34,10 +36,7 @@ const useInitSchemas = <TBase extends ZObj>(
   /** Schema used for validating user input - any fields without a `catch` have `.catch()` schema applied.
    * @note The output values of this schema should only be used within the form components.
    */
-  const baseUserInputSchema: UiFormSchema<TBase> = useMemo(
-    () => buildDefaultSchema(baseSchema),
-    []
-  );
+  const baseUserInputSchema: UiFormSchema<TFs> = useMemo(() => buildDefaultSchema(baseSchema), []);
 
   return {
     /** The schema used for validating values used outside of the form fields.

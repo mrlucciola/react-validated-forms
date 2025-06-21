@@ -9,13 +9,25 @@ import type {
   CfgDefMeta,
   CfgFs,
   FormConfigValues,
+  InferFormKeys,
   Nullable,
   OnChangeEventUnionNew,
   UiValues,
+  ZObj,
 } from "@utils/index";
-import type { SchemaParseErrors } from "../interfaces";
+import type { SchemaParseErrors } from "./interfaces";
 
 type UseSetFieldReturn<TConfig extends CfgDefMeta> = ReturnType<typeof useSetField<TConfig>>;
+
+export type FieldProps<TFs extends ZObj, K extends InferFormKeys<TFs>> = {
+  /** MUI-style onChange union handled in utils */
+  onChange: (e: OnChangeEventUnionNew, ...rest: unknown[]) => void;
+
+  value: UiValues<TFs>[K] | null;
+  errors?: string;
+  hidden: boolean;
+  disabled?: boolean;
+};
 
 const useGetFieldProps = <TConfig extends CfgDefMeta, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
   setField: UseSetFieldReturn<TConfig>,
@@ -25,9 +37,9 @@ const useGetFieldProps = <TConfig extends CfgDefMeta, TFs extends CfgFs<TConfig>
   configValues?: FormConfigValues<TConfig>
 ) =>
   useCallback(
-    <TField extends keyof z.input<TFs>, TInValue extends Nullable<z.input<TFs>>[TField]>(
-      fieldKey: TField
-    ) => {
+    <TKey extends InferFormKeys<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
+      fieldKey: TKey
+    ): FieldProps<TFs, TKey> => {
       const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
         const newFieldValue = getValueFromEvent(e, args) as TInValue;
         setField(fieldKey, newFieldValue);

@@ -1,53 +1,45 @@
 import { useEffect, useMemo, useState } from "react";
-import type { z } from "zod";
 import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { Nullish, UiFormSchema, ZObj } from "@utils/index";
-import type { UiValues } from "../interfaces";
+import type { UiFormSchema, UiValues, ZObj } from "@utils/index";
 
-const useInitStates = <TBase extends ZObj>(
-  userInputSchema: UiFormSchema<TBase>,
-  defaultFormValues: Nullish<z.input<TBase>> | null | undefined,
-  baseSchema: TBase
+const useInitStates = <TFs extends ZObj>(
+  baseUiSchema: UiFormSchema<TFs>,
+  defaults?: Partial<UiValues<TFs>>
 ) => {
   /** Used for dependency array updates */
-  const defaultValuesRef = JSON.stringify(defaultFormValues);
+  const defaultRef = JSON.stringify(defaults ?? {});
 
-  const initializedForm: UiValues<TBase> = useMemo(
-    () => userInputSchema.parse(defaultFormValues ?? {}),
-    [defaultValuesRef]
+  const initializedForm: UiValues<TFs> = useMemo(
+    () => baseUiSchema.parse(defaults ?? {}),
+    [defaultRef]
   );
-  const uninitializedForm: UiValues<TBase> = useMemo(() => userInputSchema.parse({}), []);
+  const uninitializedForm: UiValues<TFs> = useMemo(() => baseUiSchema.parse({}), []);
 
-  const [referenceFormValues, setReferenceFormValues] = useState<UiValues<TBase>>(initializedForm);
-  const [form, setForm] = useState<UiValues<TBase>>(initializedForm);
+  const [referenceFormValues, setReferenceFormValues] = useState<UiValues<TFs>>(initializedForm);
+  const [form, setForm] = useState<UiValues<TFs>>(initializedForm);
 
-  const resetToDefault = useResetToDefault<TBase>(
-    form,
-    setForm,
-    userInputSchema,
-    setReferenceFormValues
-  );
+  const resetToDefault = useResetToDefault(form, setForm, baseUiSchema, setReferenceFormValues);
 
   /** When `defaultValues` is updated (i.e. from request), set those fields on the `form` state
    * @todo update init-logic (see 'todo's)
    */
   useEffect(() => {
-    const isRefFormInit = isEqual(initializedForm, referenceFormValues);
-    const isFormInit = isEqual(initializedForm, form);
+    const isSameRef = isEqual(initializedForm, referenceFormValues);
+    const isSameForm = isEqual(initializedForm, form);
 
     // Set form after once when default-form-values is available
     // @todo Replace with below 'todo'
-    if (isRefFormInit && isFormInit && defaultFormValues !== null) {
+    if (isSameRef && isSameForm && defaults !== null) {
       resetToDefault(initializedForm);
     }
     // @todo Uncomment below line after fixed:
-    // resetToDefault(userInputSchema.parse({ ...referenceFormValues, ...form, ...defaultFormValues }));
+    // resetToDefault(baseUiSchema.parse({ ...referenceFormValues, ...form, ...defaultFormValues }));
 
     // @todo Apply updated default-form-values to non-dirty fields (requires defining `dirtyValues` object)
-  }, [defaultValuesRef]);
+  }, [defaultRef]);
 
   return {
     /** @note Used for checking if first render (**BEFORE**, state/passed in defaults are set) */

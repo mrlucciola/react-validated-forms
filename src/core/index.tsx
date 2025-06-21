@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { isEqual } from "lodash";
 // utils
 import useBuildConfigSchema from "./hooks/useBuildConfigSchema";
@@ -9,8 +8,9 @@ import useGetFieldProps from "./getters/getFieldProps";
 import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
 // interfaces
-import type { AnyCfgDef, Nullish, ZObj } from "@utils/index";
-import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
+import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/index";
+import type { SchemaParseErrors } from "./getters/interfaces";
+import type { SchemaSpaReturn, UseFormProps, UseFormState } from "@core/types";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -32,24 +32,21 @@ import type { SchemaParseErrors, SchemaSpaReturn } from "./interfaces";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TBase extends ZObj, TCfg extends AnyCfgDef>(
-  originalSchema: TBase,
-  defaultFormValues?: Nullish<z.input<TBase>> | null,
-  formConfig?: TCfg
-) => {
-  const { baseSchema, baseUserInputSchema } = useInitSchemas(originalSchema);
+const useForm = <C extends AnyCfgMeta>(
+  config: UseFormProps<C>
+): UseFormState<CfgFs<C>, CfgEs<C>, CfgCvCb<C>, CfgFc<C>> => {
+  const { baseSchema, baseUserInputSchema } = useInitSchemas(config);
 
   const { form, setForm, referenceFormValues, resetToDefault } = useInitStates(
     baseUserInputSchema,
-    defaultFormValues,
-    baseSchema
-  ); // Other props: setReferenceFormValues, uninitializedForm, initializedForm,
+    config.defaults
+  );
 
   // @todo Fix type
-  const configValues = getConfigValues(form, formConfig);
+  const configValues = getConfigValues(form, config);
 
   // @todo rename
-  const appliedSchema = useBuildConfigSchema(baseSchema, formConfig);
+  const appliedSchema = useBuildConfigSchema(config);
 
   // ----------------- Getters (below) -----------------
   const validation: SchemaSpaReturn<TBase> = appliedSchema.safeParse(form);
