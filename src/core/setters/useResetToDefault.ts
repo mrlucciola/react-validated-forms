@@ -1,35 +1,35 @@
 import { useCallback } from "react";
-import { z } from "zod";
 // interfaces
-import type { UiValues, Nullish, SetState, UiFormSchema, ZObj } from "@utils/index";
+import type { UiValues, SetState, UiFormSchema, ZObj } from "@utils/index";
+import type { FsDefaults } from "@core/types";
 
-/**
- * @todo add description
- *
- * @param form
- * @param setForm
- * @param formSchema
- * @param setReferenceFormValues
- * @returns
- */
+/** Generate memoized `resetToDefault` function to reset 'user-interface' form values. */
 const useResetToDefault = <TFs extends ZObj>(
-  form: UiValues<TFs>,
-  setForm: SetState<UiValues<TFs>>,
-  formSchema: UiFormSchema<TFs>,
+  uiFormSchema: UiFormSchema<TFs>,
+  setUiForm: SetState<UiValues<TFs>>,
   setReferenceFormValues: SetState<UiValues<TFs>>
 ) => {
+  /** Reset user-interface form values to their default-values (and optionally overwrite entire form)
+   * ### Behavior:
+   * If overwrite = false: Existing form-fields that DO NOT match keys from the passed-in `defaults` remain unchanged.
+   * If overwrite = true: All form-fields are set to their `catch` values, then overwritten by fields in `defaults`.
+   */
   const resetToDefault = useCallback(
-    (
-      newDefaultValues?: Nullish<z.input<TFs>> | null,
-      overwriteExistingFormValues: boolean = false
-    ) => {
-      const updatedDefaultForm = {
-        ...(overwriteExistingFormValues ? {} : form),
-        ...(newDefaultValues ?? {}),
-      };
-      const parsed: UiValues<TFs> = formSchema.parse(updatedDefaultForm);
-      setReferenceFormValues(parsed);
-      setForm(parsed);
+    (defaults?: FsDefaults<TFs> | null, overwrite: boolean = false) => {
+      setUiForm((prevForm) => {
+        const updatedDefaultForm = {
+          ...(overwrite ? {} : prevForm),
+          ...(defaults ?? {}),
+        };
+
+        // Parse using the user-interface schema
+        const parsed: UiValues<TFs> = uiFormSchema.parse(updatedDefaultForm);
+
+        // Keep reference-copy of user-interface-form-values in sync
+        setReferenceFormValues(parsed);
+
+        return parsed;
+      });
     },
     []
   );

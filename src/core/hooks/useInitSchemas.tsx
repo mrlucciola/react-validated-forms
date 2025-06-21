@@ -3,7 +3,7 @@ import { z } from "zod";
 // utils
 import { buildDefaultSchema } from "@utils/utils";
 // interfaces
-import type { AnyCfgMeta, CfgFs, ConfigDefinition, UiFormSchema, ZObj } from "@utils/index";
+import type { AnyCfgMeta, CfgFs, UiFormSchema } from "@utils/index";
 import type { UseFormProps } from "@core/types";
 
 /**

@@ -30,7 +30,7 @@ export type UseFormPropsExt<C extends CfgDefMeta> = {
 
 export type UseFormProps<C extends CfgDefMeta> = {
   schema: CfgFs<C>;
-  defaults?: Partial<UiValues<CfgFs<C>>>;
+  defaults?: CfgDefaults<C>;
   fieldConfigs?: CfgFc<C>;
   calcValues?: CfgCvCb<C>;
 } & UseFormPropsExt<C>;
@@ -75,3 +75,12 @@ export type ResolvedConfig<C extends AnyCfgMeta> = Tighten<{
   calcValuesCallback?: CfgCvCb<C>;
   fieldConfigs?: CfgFc<C>;
 }>;
+
+/** Derive `defaults` type from the config-definition type (passed into `useForm`) */
+export type CfgDefaults<C extends AnyCfgMeta> = Partial<CfgUiValues<C>>;
+
+/** Derive `defaults` type from the `formSchema`/`TFs` type */
+export type FsDefaults<TFs extends ZObj> = Partial<UiValues<TFs>>;
+
+/** Derive `uiValues`/`formValues` type from the config-definition type (passed into `useForm`) */
+export type CfgUiValues<C extends AnyCfgMeta> = UiValues<CfgFs<C>>;

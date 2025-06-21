@@ -5,10 +5,11 @@ import useDeepCompareMemoize from "@utils/hooks/useDeepCompareMemoize";
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { UiFormSchema, UiValues, ZObj } from "@utils/index";
+import type { FsDefaults } from "@core/types";
 
 const useInitStates = <TFs extends ZObj>(
   baseUiSchema: UiFormSchema<TFs>,
-  defaults?: Partial<UiValues<TFs>>
+  defaults?: FsDefaults<TFs>
 ) => {
   /** Used for dependency array updates */
   const defaultsMemo = useDeepCompareMemoize(defaults);
@@ -22,7 +23,7 @@ const useInitStates = <TFs extends ZObj>(
   const [referenceFormValues, setReferenceFormValues] = useState<UiValues<TFs>>(initializedForm);
   const [form, setForm] = useState<UiValues<TFs>>(initializedForm);
 
-  const resetToDefault = useResetToDefault(form, setForm, baseUiSchema, setReferenceFormValues);
+  const resetToDefault = useResetToDefault(baseUiSchema, setForm, setReferenceFormValues);
 
   /** When `defaultValues` is updated (i.e. from request), set those fields on the `form` state
    * @todo update init-logic (see 'todo's)
