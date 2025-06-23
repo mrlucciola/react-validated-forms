@@ -18,7 +18,14 @@ export interface CfgDefMeta<
   readonly _cv: TCvCb; // Calc-Values Callback
   readonly _fc: TFc; // Config Fields
 }
-export type AnyCfgMeta = CfgDefMeta<any, any, any, any>;
+export type AnyCfgMetaOrig = CfgDefMeta<ZObj, any, any, any>;
+export type AnyCfgMeta<
+  TFs extends ZObj = ZObj,
+  TEs extends ZObjOpt = ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs> = CvCbOpt<TFs, TEs>,
+  TFc extends ConfigFieldsOpt<TFs, TEs, TCvCb> = ConfigFieldsOpt<TFs, TEs, TCvCb>
+> = CfgDefMeta<TFs, TEs, TCvCb, TFc>;
+
 export type CustomCfgDef<
   TFs extends ZObj,
   TEs extends ZObjOpt,
@@ -47,26 +54,7 @@ export type BuildCfg<Def extends ConfigDefinition<any>> = CfgDefMeta<
   Def["fieldConfigs"] extends ConfigFieldsOpt<any, any, any> ? Def["fieldConfigs"] : void
 >;
 
-// export type InferCfgDefCvCb<TDef extends CfgDefMeta> = TDef["calcValuesCallback"];
-// export type InferCfgDefFormSchema<TDef extends CfgDefMeta> = TDef["formSchema"];
-// export type InferCfgDefExternalSchema<TDef extends CfgDefMeta> = TDef["externalSchema"];
-// export type InferCfgDefFieldConfigs<TDef extends CfgDefMeta> = TDef["fields"];
-type Pass<T> = [T] extends [void] ? void : T;
-export type CfgFs<TCfg extends CfgDefMeta> = TCfg["_fs"];
-export type CfgEs<TCfg extends CfgDefMeta> = TCfg extends CfgDefMeta<any, infer ES, any, any>
-  ? Pass<ES>
-  : void;
-export type CfgCvCb<TCfg extends CfgDefMeta> = TCfg["_cv"];
-export type CfgFc<TCfg extends CfgDefMeta> = TCfg["_fc"];
-
-/**
- * Example:
- * type ExampleCfg = CfgFromDef<typeof exampleConfigDefinition>;
- */
-export type CfgFromDef<TDef extends ConfigDefinition<any>> = CfgDefMeta<
-  TDef["formSchema"],
-  // Coerce the following to void if not provided
-  TDef["externalSchema"] extends ZObj ? TDef["externalSchema"] : void,
-  TDef["calcValuesCallback"] extends CvCb<any> ? TDef["calcValuesCallback"] : void,
-  TDef["fieldConfigs"] extends ConfigFieldsOpt<any, any, any> ? TDef["fieldConfigs"] : void
->;
+export type CfgFs<TCfg extends AnyCfgMeta> = TCfg["_fs"];
+export type CfgEs<TCfg extends AnyCfgMeta> = TCfg["_es"];
+export type CfgCvCb<TCfg extends AnyCfgMeta> = TCfg["_cv"];
+export type CfgFc<TCfg extends AnyCfgMeta> = TCfg["_fc"];

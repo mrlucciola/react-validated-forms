@@ -1,17 +1,44 @@
 import type { z } from "zod";
-import type { CfgDefMeta, CfgFs, FormConfigValues, InferFormKeys, Nullish } from "@utils/index";
+import type {
+  AnyCfgMeta,
+  CfgDefMeta,
+  CfgFc,
+  CfgFs,
+  CfgUiKeys,
+  CvCbOpt,
+  DefineConfigValues,
+  FormConfigValues,
+  FsUiKeys,
+  Nullish,
+  UiValues,
+  ZObj,
+  ZObjOpt,
+} from "@utils/index";
+
+export type RequireFieldConfigs<C extends AnyCfgMeta> = C extends { _fc: infer F }
+  ? [F] extends [void]
+    ? never
+    : C // keep the original container when _fc present
+  : never;
+
+export type FieldConfig<
+  C extends AnyCfgMeta,
+  TField extends FieldCfgs extends [void] ? keyof FieldCfgs : never,
+  FieldCfgs extends CfgFc<C> = CfgFc<C>
+> = FieldCfgs extends [void] ? never : FieldCfgs[TField];
 
 /** Validation-schema configuration for a single form-field */
-export type FieldConfig<
-  TCfg extends CfgDefMeta,
-  TField extends InferFormKeys<TFs>,
-  TFs extends CfgFs<TCfg> = CfgFs<TCfg>
+export type DefineFieldConfig<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs>,
+  FieldKey extends FsUiKeys<TFs>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &
    * Field Effect: when a field is updated, all fields defined in the return object are updated when the specified field is changed by the user
    */
-  changeEvent?: (values: FormConfigValues<TCfg>) => Partial<Nullish<TFs>>;
+  changeEvent?: (values: DefineConfigValues<TFs, TEs, TCvCb>) => Partial<Nullish<TFs>>;
 
   /** @todo add `generalEffect`
    * General Effect: **any time** a field in the array is changed, all fields defined in its callback's return object are updated
@@ -21,7 +48,7 @@ export type FieldConfig<
   /** Conditionally include/ignore field validation by providing a callback.
    * For default validation, leave this field `undefined`.
    * See `buildCatchSchema` for how this method is applied. */
-  registerOn?: (values: FormConfigValues<TCfg>) => boolean;
+  registerOn?: (values: DefineConfigValues<TFs, TEs, TCvCb>) => boolean;
 
   /** this gets passed into a refinement
    * Rules/refinement logic will run if:
@@ -35,9 +62,9 @@ export type FieldConfig<
    * See: ZTransformEffect, ZRefinementEffect
    */
   rules?: (
-    values: FormConfigValues<TCfg>,
+    values: DefineConfigValues<TFs, TEs, TCvCb>,
     ctx: z.RefinementCtx,
-    fieldKey: TField
+    fieldKey: FieldKey
   ) => void | undefined | never;
 
   /** @todo Implement

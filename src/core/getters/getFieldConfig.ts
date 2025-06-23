@@ -1,23 +1,13 @@
-import type {
-  CfgDefMeta,
-  InferCfgDefFieldConfigs,
-  InferCfgDefFormSchema,
-  InferFormKeys,
-} from "@utils/index";
+import type { ConfigFieldsOpt } from "@utils/index";
 
 /** @todo add description */
-const getFieldConfig = <
-  TConfig extends CfgDefMeta,
-  TKey extends keyof InferFormKeys<InferCfgDefFormSchema<TConfig>>
->(
-  config: TConfig | undefined,
-  fieldKey: TKey
-): InferCfgDefFieldConfigs<TConfig> extends NonNullable<InferCfgDefFieldConfigs<TConfig>[TKey]>
-  ? InferCfgDefFieldConfigs<TConfig>[TKey]
-  : undefined => {
-  if (!config) return undefined;
-  if (!config.fieldConfigs) return undefined;
-  return config.fieldConfigs[fieldKey];
+const getFieldConfig = <Fc extends ConfigFieldsOpt<any, any, any>, FcKey extends keyof Fc>(
+  fieldConfigs: Fc,
+  fieldConfigKey: FcKey
+): Fc extends void ? undefined : NonNullable<Fc[FcKey]> => {
+  if (!fieldConfigs) return undefined as Fc extends void ? undefined : NonNullable<Fc[FcKey]>;
+
+  return fieldConfigs[fieldConfigKey] as Fc extends void ? undefined : NonNullable<Fc[FcKey]>;
 };
 
 export default getFieldConfig;

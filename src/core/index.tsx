@@ -11,6 +11,7 @@ import useInitStates from "./hooks/useInitStates";
 import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/index";
 import type { SchemaParseErrors } from "./getters/interfaces";
 import type { SchemaSpaReturn, UseFormProps, UseFormState } from "@core/types";
+import { useMemo } from "react";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -37,26 +38,23 @@ const useForm = <C extends AnyCfgMeta>(
 ): UseFormState<CfgFs<C>, CfgEs<C>, CfgCvCb<C>, CfgFc<C>> => {
   const { baseSchema, baseUserInputSchema } = useInitSchemas(config);
 
-  const { form, setForm, dirtyFields, isDirty, resetToDefault } = useInitStates(
-    baseUserInputSchema,
-    config.defaults
-  );
+  const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
+    useInitStates(baseUserInputSchema, config.defaults);
 
-  // @todo Fix type
   const configValues = getConfigValues(form, config);
 
   // @todo rename
-  const appliedSchema = useBuildConfigSchema(config);
+  const appliedSchema = useBuildConfigSchema(config, configValues);
 
   // ----------------- Getters (below) -----------------
-  const validation: SchemaSpaReturn<TBase> = appliedSchema.safeParse(form);
-  const errors: SchemaParseErrors<TBase> | undefined = validation.error?.formErrors.fieldErrors;
+  const validation: SchemaSpaReturn<CfgFs<C>> = appliedSchema.safeParse(form);
+  const errors: SchemaParseErrors<CfgFs<C>> | undefined = validation.error?.formErrors.fieldErrors;
 
   const isValid = validation.success;
 
-  const setField = useSetField(setForm, formConfig, configValues);
+  const setField = useSetField(setForm, config, configValues, markDirty);
 
-  const getFieldProps = useGetFieldProps(setField, form, errors, formConfig, configValues);
+  const getFieldProps = useGetFieldProps(setField, form, errors, config, configValues);
 
   return {
     form,
@@ -71,13 +69,13 @@ const useForm = <C extends AnyCfgMeta>(
     // Utils
     getFieldProps,
     /** Official validation schema. Use whenever the full payload needs to be valid. @todo apply correct type */
-    schema: appliedSchema as TBase,
+    schema: appliedSchema as CfgFs<C>,
     /** Schema applied to form values.
      * @note Only for use within the form.
      * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
      * @note Previous names: `formSchema`, `userInputSchema`
      */
-    baseUserInputSchema,
+    userInputSchema: baseUserInputSchema,
 
     /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
      * - This happens by assigning the type defined in the generic. */

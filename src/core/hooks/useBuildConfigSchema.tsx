@@ -1,29 +1,51 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type {
-  CfgDefMeta,
-  FieldConfig,
   CfgFs,
   CfgFc,
-  InferFormKeys,
-  UiValues,
-  ZObj,
-  InferCfg,
+  AnyCfgMeta,
+  FormConfigValues,
+  DefineFieldConfig,
+  CfgUiValues,
 } from "@utils/index";
+import type { UseFormProps } from "@core/types";
+
+type FieldKeyOf<C extends AnyCfgMeta> = keyof C["_fc"] & keyof CfgUiValues<C>;
+
+// Helper types for odd one-off data structures used throughout the file
+type FieldCfgEntry<C extends AnyCfgMeta, FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>> = [
+  FieldKey,
+  DefineFieldConfig<C, FieldKey>
+];
 
 /**
- * @deprecated needs to be completed
-const applyFieldConfigValidationRefinements = <
-  TFs extends ZObj,
-  TConfig extends FormConfig<TFs>,
-  FieldKey extends keyof TConfig["fields"] = keyof TConfig["fields"]
->(
-  fieldTuple: [FieldKey, FieldConfig<any, any, any, FieldKey>] // [FieldKey, FieldCfg]
-): ((form: z.output<TFs>, ctx: z.RefinementCtx) => void) => {};
+ * @deprecated needs to be analyzed
  */
+const applyFieldConfigValidationRefinements =
+  <C extends AnyCfgMeta>(configValues: FormConfigValues<C>) =>
+  <FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>>(
+    fieldEntryTuple: FieldCfgEntry<C, FieldKey> //FieldCfgEntry<C, FieldKey>
+  ): ((form: CfgUiValues<C>, ctx: z.RefinementCtx) => void) => {
+    const [fieldKey, fieldCfg] = fieldEntryTuple;
+
+    return (form: CfgUiValues<C>, ctx: z.RefinementCtx): void => {
+      // IF `.registerOn()` IS DEFINED: Run `.registerOn()`, otherwise `registered = true`
+      // If no `registerOn` is set for a given field, then the field is always registered
+      // const testFieldCfgValues = !fieldCfg.registerOn || fieldCfg.registerOn(configValues);
+
+      // IF (FIELD IS REGISTERED) & (FIELD IS NULL): THROW VALIDATION ERROR
+      if (!!fieldCfg.registerOn && form[fieldKey] === null) {
+        zAddRulesIssue([ctx, fieldKey]);
+      } else {
+        // IF `isRegistered === true` & `.rules()` IS DEFINED: Run rules
+        !!fieldCfg.rules && fieldCfg.rules({ ...configValues, form }, ctx, fieldKey);
+      }
+    };
+  };
+//
 
 /**
  * Iterates through each field in the form-schema (object-schema):
@@ -38,62 +60,45 @@ const applyFieldConfigValidationRefinements = <
  * @param configValues
  * @returns
  */
-const useBuildConfigSchema = <TDef extends ConfigDefinition<any>>(
-  config: TConfig
+
+// export type ConfigDefinition<TCfg extends AnyCfgMeta> = {
+//   formSchema: CfgFs<TCfg>;
+//   externalSchema?: CfgEs<TCfg>;
+//   calcValuesCallback?: CfgCvCb<TCfg>;
+//   fieldConfigs?: CfgFc<TCfg>;
+// };
+
+/**
+ * For each field: Apply schema refinements defined in config to the baseSchema
+ */
+const useBuildConfigSchema = <C extends AnyCfgMeta>(
+  config: UseFormProps<C>,
+  configValues: FormConfigValues<C>
 ) => {
-  const baseSchema = config.formSchema;
+  type TFs = CfgFs<C>;
+  type TFc = CfgFc<C>;
+
+  const baseSchema: TFs = config.schema;
+  const fieldConfigs: TFc = config.fieldConfigs;
+
   // if no config provided: Early return `baseUserInputSchema`
-  if (!config.fieldConfigs) return baseSchema;
+  if (!fieldConfigs) return baseSchema;
 
-  // Convert field schemas to array
-  type FieldCfg = InferCfgDefFieldConfigs<TConfig>; //
-  type FieldCfgKey = keyof FieldCfg;
-  type FieldKey = InferFormKeys<TFs>;
-  const configFieldsArr = useMemo(() => Object.entries(config.fieldConfigs), []) as [
-    FieldCfgKey,
-    FieldCfg
-  ][];
+  /**
+   * Array of field-configs that have `registerOn() and .rules() defined
+   */
+  const configFieldsFiltered: FieldCfgEntry<C>[] = useMemo(() => {
+    const entries = Object.entries(fieldConfigs) as FieldCfgEntry<C>[];
+    return entries.filter(([_fieldKey, fieldCfg]) => !!fieldCfg.registerOn || !!fieldCfg.rules);
+  }, []);
 
-  if (configFieldsArr.length < 1) return baseSchema;
+  if (configFieldsFiltered.length < 1) return baseSchema;
 
-  // Get config-fields that have `.registerOn()` and `.rules()` defined
-  const configFieldsFiltered = useMemo(
-    () =>
-      configFieldsArr.filter(([_fieldKey, fieldCfg]) => !!fieldCfg.registerOn || !!fieldCfg.rules),
-    []
-  );
+  // Apply custom refinement logic defined in `.registerOn()` and `.rules()` (for each field's configuration)
+  const factory = applyFieldConfigValidationRefinements(configValues);
+  const cfgRuleArr = configFieldsFiltered.map(applyFieldConfigValidationRefinements(configValues));
 
-  // @todo memoize
-  // For each field: Apply schema refinements defined in config to the baseSchema
-  const getCalculatedValues = useCallback(
-    (form: UiValues<TFs>, config: TConfig) =>
-      config.calcValues && config.calcValues(form, config.externalValues),
-    []
-  );
-
-  const cfgRuleArr = configFieldsFiltered.map(([fieldKey, fieldCfg]) => {
-    return (form: z.output<TFs>, ctx: z.RefinementCtx) => {
-      const calculated = getCalculatedValues(form, config.externalValues);
-
-      const configValues = {
-        form,
-        externalValues: config.externalValues,
-        calculated: config.calcValues ? config.calcValues(form, config.externalValues) : undefined,
-      };
-
-      // IF `.registerOn()` IS DEFINED: Run `.registerOn()`, otherwise `registered = true`
-      // If no `registerOn` is set for a given field, then the field is always registered
-      // const testFieldCfgValues = !fieldCfg.registerOn || fieldCfg.registerOn(configValues);
-
-      // IF (FIELD IS REGISTERED) & (FIELD IS NULL): THROW VALIDATION ERROR
-      if (!!fieldCfg.registerOn && form[fieldKey] === null) {
-        zAddRulesIssue([ctx, fieldKey]);
-      } else {
-        // IF `isRegistered === true` & `.rules()` IS DEFINED: Run rules
-        !!fieldCfg.rules && fieldCfg.rules({ ...configValues, fields: form }, ctx, fieldKey);
-      }
-    };
-  });
+  // Enable these custom refinements to run when `schema.parse()` is called.
   const injected = (form: z.output<TFs>, ctx: z.RefinementCtx) => {
     for (let idx = 0; idx < cfgRuleArr.length; idx++) {
       const appliedFieldRefinement = cfgRuleArr[idx];

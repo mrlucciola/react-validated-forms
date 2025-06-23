@@ -4,6 +4,7 @@ import type { SchemaParseErrors } from "@core/getters/interfaces";
 import type {
   AnyCfgMeta,
   CfgCvCb,
+  CfgDefaults,
   CfgDefMeta,
   CfgEs,
   CfgFc,
@@ -11,7 +12,8 @@ import type {
   ConfigFieldsOpt,
   CvCbOpt,
   ExtValues,
-  InferFormKeys,
+  FormConfigValues,
+  FsUiKeys,
   Nullish,
   SetState,
   Tighten,
@@ -21,30 +23,25 @@ import type {
   ZObjOpt,
 } from "@utils/index";
 
-type MaybeSchema<C extends CfgDefMeta> = CfgEs<C> extends ZObj ? CfgEs<C> : never;
-
-export type UseFormPropsExt<C extends CfgDefMeta> = {
-  externalSchema?: MaybeSchema<C>;
-  externalValues?: MaybeSchema<C> extends never ? never : Partial<ExtValues<CfgEs<C>>>;
-};
-
-export type UseFormProps<C extends CfgDefMeta> = {
-  schema: CfgFs<C>;
+export type UseFormProps<C extends AnyCfgMeta> = {
   defaults?: CfgDefaults<C>;
-  fieldConfigs?: CfgFc<C>;
+  schema: CfgFs<C>;
   calcValues?: CfgCvCb<C>;
-} & UseFormPropsExt<C>;
+  fieldConfigs?: CfgFc<C>;
+  externalSchema?: CfgEs<C>;
+  externalValues?: Partial<ExtValues<CfgEs<C>>>;
+};
 
 export type UseFormState<
   TFs extends ZObj,
-  TEs extends ZObjOpt | void = void,
-  TCv extends CvCbOpt<TFs, TEs> | void = void,
-  TFc extends ConfigFieldsOpt<TFs, TEs, TCv> | void = void
+  TEs extends ZObjOpt,
+  TCv extends CvCbOpt<TFs, TEs>,
+  TFc extends ConfigFieldsOpt<TFs, TEs, TCv>
 > = {
   /* ——— reactive state ——— */
   form: UiValues<TFs>;
   setForm: SetState<UiValues<TFs>>;
-  setField: <K extends InferFormKeys<TFs>>(key: K, value: UiValues<TFs>[K] | null) => void;
+  setField: <K extends FsUiKeys<TFs>>(key: K, value: UiValues<TFs>[K] | null) => void;
 
   /* ——— validation results ——— */
   validation: SchemaSpaReturn<TFs>;
@@ -54,16 +51,17 @@ export type UseFormState<
   dirtyFields: keyof UiValues<TFs>[];
 
   /* ——— helpers ——— */
-  resetToDefault: (defaults?: Nullish<z.input<TFs>> | null, overwriteExisting?: boolean) => void;
+  resetToDefault: (defaults?: Nullish<UiValues<TFs>> | null, overwrite?: boolean) => void;
 
-  getFieldProps: <K extends InferFormKeys<TFs>>() => FieldProps<TFs, K>;
+  getFieldProps: <K extends FsUiKeys<TFs>>() => FieldProps<TFs, K>;
 
   /* ——— static artefacts ——— */
   schema: TFs; // official schema
-  baseUserInputSchema: UiFormSchema<TFs>; // “catch” schema
+  userInputSchema: UiFormSchema<TFs>; // “catch” schema
+  config: FormConfigValues<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
 
   /* ——— resolved config (optional parts omitted if unused) ——— */
-} & ResolvedConfig<CfgDefMeta<TFs, TEs, TCv, TFc>>;
+} & ResolvedConfigInstance<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
 
 /** Convenience-type to correct issues in zod impl */
 export type SchemaSpaReturn<TSchema extends ZObj> = z.SafeParseReturnType<
@@ -71,17 +69,9 @@ export type SchemaSpaReturn<TSchema extends ZObj> = z.SafeParseReturnType<
   z.output<TSchema>
 >;
 
-export type ResolvedConfig<C extends AnyCfgMeta> = Tighten<{
+/** Shape of config-instance Runtime */
+export type ResolvedConfigInstance<C extends AnyCfgMeta<ZObj, any, any, any>> = Tighten<{
   externalValues?: ExtValues<CfgEs<C>>;
   calcValuesCallback?: CfgCvCb<C>;
   fieldConfigs?: CfgFc<C>;
 }>;
-
-/** Derive `defaults` type from the config-definition type (passed into `useForm`) */
-export type CfgDefaults<C extends AnyCfgMeta> = Partial<CfgUiValues<C>>;
-
-/** Derive `defaults` type from the `formSchema`/`TFs` type */
-export type FsDefaults<TFs extends ZObj> = Partial<UiValues<TFs>>;
-
-/** Derive `uiValues`/`formValues` type from the config-definition type (passed into `useForm`) */
-export type CfgUiValues<C extends AnyCfgMeta> = UiValues<CfgFs<C>>;

@@ -1,44 +1,31 @@
-import type { ResolvedConfig } from "@core/types";
-import type {
-  CfgCvCb,
-  CfgFs,
-  FormConfigValues,
-  UiValues,
-  AnyCfgMeta,
-  CfgEs,
-  ExtValues,
-} from "@utils/index";
+import type { UseFormProps } from "@core/types";
+import type { AnyCfgMeta, CfgEs, CfgFs, ExtValues, FormConfigValues, UiValues } from "@utils/index";
+
+const getCalculatedValues = <C extends AnyCfgMeta>(
+  uiValues: UiValues<CfgFs<C>>,
+  config: UseFormProps<C>
+) => {
+  return config.calcValues && config.calcValues(uiValues, config.externalValues);
+};
+const getExternalValues = <C extends AnyCfgMeta>(config: UseFormProps<C>): ExtValues<CfgEs<C>> => {
+  return (
+    config.externalSchema &&
+    config.externalSchema.parse(config.externalValues ?? config.externalValues)
+  );
+};
 
 /** @todo Add annotation
  * @todo Fix output type
  */
-const getConfigValues = <TCfg extends AnyCfgMeta>(
-  uiValues: UiValues<CfgFs<TCfg>>,
-  config?: ResolvedConfig<TCfg>
-): FormConfigValues<TCfg> | null => {
-  if (config === undefined) return null;
-
-  const out: FormConfigValues<TCfg> = { form: uiValues } as any;
-
-  if ("externalValues" in config) {
-    out.external = config.externalValues as ExtValues<CfgEs<TCfg>>;
-  }
-
-  if ("calcValuesCallback" in config) {
-    out.calculated = (config.calcValuesCallback as CfgCvCb<TCfg>)(uiValues, out.external);
-  }
-
-  return out;
-
-  // return {
-  //   form: uiValues,
-  //   external: config?.externalValues,
-  //   calculated,
-  // };
+const getConfigValues = <C extends AnyCfgMeta>(
+  uiValues: UiValues<CfgFs<C>>,
+  config: UseFormProps<C>
+): FormConfigValues<C> => {
+  return {
+    form: uiValues,
+    external: getExternalValues(config),
+    calculated: getCalculatedValues(uiValues, config),
+  };
 };
 
 export default getConfigValues;
-
-export type Tighten<T> = {
-  [K in keyof T as undefined extends T[K] ? never : K]-?: NonNullable<T[K]>;
-};

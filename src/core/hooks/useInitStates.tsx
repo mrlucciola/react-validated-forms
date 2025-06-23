@@ -4,7 +4,7 @@ import { isEqual } from "lodash";
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { UiFormSchema, UiValues, ZObj } from "@utils/index";
-import type { FsDefaults } from "@core/types";
+import type { FsDefaults } from "@utils/index";
 
 /**
  *
@@ -91,12 +91,14 @@ const useInitStates = <TFs extends ZObj>(
   return {
     // State + setters
     form,
-    setForm: updateForm,
+    setForm,
+    updateForm,
 
     // Utils
     resetToDefault,
 
     // Computed Values
+    markDirty,
     dirtyFields,
     isDirty,
   };

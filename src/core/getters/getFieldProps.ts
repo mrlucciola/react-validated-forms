@@ -3,23 +3,26 @@ import type { z } from "zod";
 // utils
 import { getValueFromEvent } from "@utils/utils";
 import getFieldConfig from "../getters/getFieldConfig";
-import type useSetField from "../setters/setField";
+import useSetField from "../setters/setField";
 // interfaces
 import type {
+  AnyCfgDef,
+  AnyCfgMeta,
   CfgDefMeta,
   CfgFs,
   FormConfigValues,
-  InferFormKeys,
+  FsUiKeys,
   Nullable,
   OnChangeEventUnionNew,
   UiValues,
   ZObj,
 } from "@utils/index";
 import type { SchemaParseErrors } from "./interfaces";
+import type { UseFormProps } from "@core/types";
 
-type UseSetFieldReturn<TConfig extends CfgDefMeta> = ReturnType<typeof useSetField<TConfig>>;
+type UseSetFieldReturn<C extends CfgDefMeta> = ReturnType<typeof useSetField<C>>;
 
-export type FieldProps<TFs extends ZObj, K extends InferFormKeys<TFs>> = {
+export type FieldProps<TFs extends ZObj, K extends FsUiKeys<TFs>> = {
   /** MUI-style onChange union handled in utils */
   onChange: (e: OnChangeEventUnionNew, ...rest: unknown[]) => void;
 
@@ -29,15 +32,15 @@ export type FieldProps<TFs extends ZObj, K extends InferFormKeys<TFs>> = {
   disabled?: boolean;
 };
 
-const useGetFieldProps = <TConfig extends CfgDefMeta, TFs extends CfgFs<TConfig> = CfgFs<TConfig>>(
-  setField: UseSetFieldReturn<TConfig>,
+const useGetFieldProps = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
+  setField: ReturnType<typeof useSetField<C>>,
   form: UiValues<TFs>,
   errors: SchemaParseErrors<TFs> | undefined,
-  config?: TConfig, // might need to use a new AnyCfgInstance
-  configValues?: FormConfigValues<TConfig>
+  config: UseFormProps<C>, // might need to use a new AnyCfgInstance
+  configValues: FormConfigValues<C>
 ) =>
   useCallback(
-    <TKey extends InferFormKeys<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
+    <TKey extends FsUiKeys<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
       fieldKey: TKey
     ): FieldProps<TFs, TKey> => {
       const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
@@ -45,7 +48,7 @@ const useGetFieldProps = <TConfig extends CfgDefMeta, TFs extends CfgFs<TConfig>
         setField(fieldKey, newFieldValue);
       };
 
-      const registerOn = config && getFieldConfig(config, fieldKey)?.registerOn;
+      const registerOn = getFieldConfig(config.fieldConfigs, fieldKey as never)?.registerOn;
 
       const shouldDisplay =
         // @ts-ignore
