@@ -32,6 +32,7 @@
   "references": [
     { "path": "./src/configDsl" },
     { "path": "./src/core" },
+    { "path": "./src/internal" },
     { "path": "./src/utils" }
   ],
   "include": ["src"],

@@ -12,6 +12,7 @@
     "paths": {
       "@configDsl/*": ["configDsl/*"],
       "@core/*": ["core/*"],
+      "@internal/*": ["internal/*"],
       "@utils/*": ["utils/*"]
     }
   }
