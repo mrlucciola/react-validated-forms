@@ -4,7 +4,11 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/utils",
-    "rootDir": "./"
+    "rootDir": "./",
+    // Overrides
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "stripInternal": true
   },
   "include": ["./"]
 }

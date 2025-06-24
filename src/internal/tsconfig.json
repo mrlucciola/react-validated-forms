@@ -4,7 +4,9 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/internal",
-    "rootDir": "./"
+    "rootDir": "./",
+    // Overrides
+    "noUncheckedIndexedAccess": false
   },
   "include": ["./"]
 }

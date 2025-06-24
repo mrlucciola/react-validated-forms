@@ -4,7 +4,11 @@
     "composite": true,
     "declaration": true,
     "outDir": "../../dist/external",
-    "rootDir": "./"
+    "rootDir": "./",
+    // Overrides
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "stripInternal": true
   },
   "include": ["./"]
 }
