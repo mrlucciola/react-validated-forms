@@ -7,7 +7,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "types": ["bun-types"],
 
     "baseUrl": "./src",
     "paths": {
