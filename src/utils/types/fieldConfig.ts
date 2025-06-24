@@ -1,31 +1,28 @@
 import type { z } from "zod";
 import type {
   AnyCfgMeta,
-  CfgDefMeta,
+  CfgCvCb,
+  CfgEs,
   CfgFc,
   CfgFs,
-  CfgUiKeys,
   CvCbOpt,
   DefineConfigValues,
-  FormConfigValues,
   FsUiKeys,
   Nullish,
-  UiValues,
   ZObj,
   ZObjOpt,
 } from "@utils/index";
-
-export type RequireFieldConfigs<C extends AnyCfgMeta> = C extends { _fc: infer F }
-  ? [F] extends [void]
-    ? never
-    : C // keep the original container when _fc present
-  : never;
 
 export type FieldConfig<
   C extends AnyCfgMeta,
   TField extends FieldCfgs extends [void] ? keyof FieldCfgs : never,
   FieldCfgs extends CfgFc<C> = CfgFc<C>
 > = FieldCfgs extends [void] ? never : FieldCfgs[TField];
+
+export type CfgFieldConfig<
+  C extends AnyCfgMeta,
+  FieldKey extends FsUiKeys<CfgFs<C>>
+> = DefineFieldConfig<CfgFs<C>, CfgEs<C>, CfgCvCb<C>, FieldKey>;
 
 /** Validation-schema configuration for a single form-field */
 export type DefineFieldConfig<

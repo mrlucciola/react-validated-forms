@@ -1,17 +1,26 @@
-import type { CfgDefMeta, ConfigDefinition, ConfigFields, PublicConfigFields } from "@utils/index";
+import type {
+  CfgDefMeta,
+  ConfigDefinition,
+  DefineConfigFields,
+  ConfigFieldsOpt,
+  CvCbOpt,
+  ZObj,
+  ZObjOpt,
+} from "@utils/index";
 import type { FormSchema } from "./formSchema";
 import type { CalcValuesCallback } from "./calcValuesCallback";
 import type { ExternalSchema } from "./externalSchema";
 
-type asdf = CfgDefMeta<FormSchema, ExternalSchema, CalcValuesCallback>;
-const newFieldConfigs = <
-  T extends ConfigFields<asdf>,
-  R extends PublicConfigFields<T> = PublicConfigFields<T> // ① real type the function needs
->(
-  input: T
-) => input as R;
+const buildFieldConfigs = <TFs extends ZObj, TEs extends ZObjOpt, TCvCb extends CvCbOpt<TFs, TEs>>(
+  input: ConfigFieldsOpt<TFs, TEs, TCvCb>
+): DefineConfigFields<TFs, TEs, TCvCb> => {
+  const configFields = {};
+  return configFields;
+};
 
-export const fieldConfigs = newFieldConfigs({
+const fieldConfigs = buildFieldConfigs();
+
+export const test = {
   arr: {},
   name: {
     changeEvent: ({ form, external, calculated }) => {
@@ -22,6 +31,7 @@ export const fieldConfigs = newFieldConfigs({
     },
     rules: ({ form, external, calculated }) => {},
   },
-}) satisfies ConfigFields<asdf>;
-fieldConfigs; // all fields are partial. two should be required (arr, name) and the rest should be omitted
-export type FieldConfigs = PublicConfigFields<typeof fieldConfigs>;
+} satisfies DefineConfigFields<FormSchema, ExternalSchema, CalcValuesCallback>;
+
+export type FieldConfigs = typeof fieldConfigs;
+export type TestCfgDef = CfgDefMeta<FormSchema, ExternalSchema, CalcValuesCallback, FieldConfigs>;

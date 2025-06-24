@@ -4,12 +4,12 @@ import { z } from "zod";
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type {
-  CfgFs,
-  CfgFc,
   AnyCfgMeta,
-  FormConfigValues,
-  DefineFieldConfig,
+  CfgFc,
+  CfgFieldConfig,
+  CfgFs,
   CfgUiValues,
+  ResolveConfigValues,
 } from "@utils/index";
 import type { UseFormProps } from "@core/types";
 
@@ -18,14 +18,14 @@ type FieldKeyOf<C extends AnyCfgMeta> = keyof C["_fc"] & keyof CfgUiValues<C>;
 // Helper types for odd one-off data structures used throughout the file
 type FieldCfgEntry<C extends AnyCfgMeta, FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>> = [
   FieldKey,
-  DefineFieldConfig<C, FieldKey>
+  CfgFieldConfig<C, FieldKey>
 ];
 
 /**
  * @deprecated needs to be analyzed
  */
 const applyFieldConfigValidationRefinements =
-  <C extends AnyCfgMeta>(configValues: FormConfigValues<C>) =>
+  <C extends AnyCfgMeta>(configValues: ResolveConfigValues<C>) =>
   <FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>>(
     fieldEntryTuple: FieldCfgEntry<C, FieldKey> //FieldCfgEntry<C, FieldKey>
   ): ((form: CfgUiValues<C>, ctx: z.RefinementCtx) => void) => {
@@ -73,7 +73,7 @@ const applyFieldConfigValidationRefinements =
  */
 const useBuildConfigSchema = <C extends AnyCfgMeta>(
   config: UseFormProps<C>,
-  configValues: FormConfigValues<C>
+  configValues: ResolveConfigValues<C>
 ) => {
   type TFs = CfgFs<C>;
   type TFc = CfgFc<C>;

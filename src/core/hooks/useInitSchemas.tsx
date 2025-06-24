@@ -23,7 +23,7 @@ const useInitSchemas = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
   const baseSchema: TFs = useMemo(() => {
     // Extract the base schema from its refined form (if refined)
     const innerFormSchema: TFs =
-      (formSchema as any) instanceof z.ZodEffects ? formSchema.innerType() : formSchema;
+      formSchema instanceof z.ZodEffects ? formSchema.innerType() : formSchema;
 
     if ((innerFormSchema as any) instanceof z.ZodEffects)
       throw new Error(

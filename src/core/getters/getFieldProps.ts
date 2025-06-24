@@ -6,14 +6,13 @@ import getFieldConfig from "../getters/getFieldConfig";
 import useSetField from "../setters/setField";
 // interfaces
 import type {
-  AnyCfgDef,
   AnyCfgMeta,
   CfgDefMeta,
   CfgFs,
-  FormConfigValues,
   FsUiKeys,
   Nullable,
   OnChangeEventUnionNew,
+  ResolveConfigValues,
   UiValues,
   ZObj,
 } from "@utils/index";
@@ -37,7 +36,7 @@ const useGetFieldProps = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>
   form: UiValues<TFs>,
   errors: SchemaParseErrors<TFs> | undefined,
   config: UseFormProps<C>, // might need to use a new AnyCfgInstance
-  configValues: FormConfigValues<C>
+  configValues: ResolveConfigValues<C>
 ) =>
   useCallback(
     <TKey extends FsUiKeys<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
@@ -50,6 +49,7 @@ const useGetFieldProps = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>
 
       const registerOn = getFieldConfig(config.fieldConfigs, fieldKey as never)?.registerOn;
 
+      // @todo
       const shouldDisplay =
         // @ts-ignore
         registerOn && configValues ? registerOn({ ...configValues, form }) : true;

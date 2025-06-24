@@ -1,39 +1,15 @@
 import { useCallback } from "react";
-import type { z } from "zod";
 // utils
 import getFieldConfig from "../getters/getFieldConfig";
 // interfaces
-import type {
-  AnyCfgMeta,
-  CfgDefMeta,
-  CfgFs,
-  FormConfigValues,
-  SetState,
-  UiValues,
-} from "@utils/index";
+import type { AnyCfgMeta, CfgFs, InferConfigValues, SetState, UiValues } from "@utils/index";
 import type { UseFormProps } from "@core/types";
-
-// const updateForm = useCallback(
-//   <K extends keyof UiValues<TFs>>(
-//     key: K,
-//     val: UiValues<TFs>[K] | ((prev: UiValues<TFs>[K]) => UiValues<TFs>[K])
-//   ) => {
-//     setForm((prev) => {
-//       // @note Not a huge fan of this conditional - this is an edge-case, however
-//       const next = typeof val === "function" ? (val as any)(prev[key]) : val;
-//       const merged = { ...prev, [key]: next };
-//       markDirty(key, next);
-//       return merged;
-//     });
-//   },
-//   []
-// );
 
 /** @todo annotate */
 const useSetField = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
   setForm: SetState<UiValues<TFs>>,
   config: UseFormProps<C>,
-  configValues: FormConfigValues<C>,
+  configValues: InferConfigValues<C>,
   markDirty: (key: keyof UiValues<TFs>, v: UiValues<TFs>[keyof UiValues<TFs>]) => void
 ) =>
   useCallback(

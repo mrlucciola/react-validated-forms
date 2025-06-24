@@ -52,7 +52,7 @@ export type OmitPartialParams<T extends any[]> = T extends [infer Head, ...infer
  *     - Remove `undefined` from its type;
  */
 export type ResolvePartial<T> = {
-  [K in keyof T as [NonNullable<T[K]>] extends [void] // `void | undefined` ?
+  [K in keyof T as [T[K]] extends [void] // `void | undefined` ?
     ? never // Drop the key
     : K]-?: NonNullable<T[K]>; // Keep the key/make it `Required`/Strip `undefined`
 };

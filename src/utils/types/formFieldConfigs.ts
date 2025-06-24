@@ -1,12 +1,9 @@
 import type {
   AnyCfgMeta,
-  CfgDefMeta,
-  CfgFs,
-  ConfigDefinition,
+  CfgFc,
   CvCbOpt,
   DefineFieldConfig,
   FsUiKeys,
-  ResolvePartial,
   ZObj,
   ZObjOpt,
 } from "@utils/index";
@@ -44,16 +41,17 @@ type FormConfigFieldsBase<
   TEs extends ZObjOpt,
   TCvCb extends CvCbOpt<TFs, TEs>
 > = {
-  [FieldKey in FsUiKeys<TFs>]: DefineFieldConfig<ConfigDefinition<TFs, TEs, TCvCb, any>, FieldKey>;
+  [FieldKey in FsUiKeys<TFs>]: DefineFieldConfig<TFs, TEs, TCvCb, FieldKey>;
 };
 
-export type ConfigFields<
+export type DefineConfigFields<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCvCb extends CvCbOpt<TFs, TEs>
 > = Partial<FormConfigFieldsBase<TFs, TEs, TCvCb>>;
+
 export type ConfigFieldsOpt<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCvCb extends CvCbOpt<TFs, TEs>
-> = ConfigFields<TFs, TEs, TCvCb> | void;
+> = DefineConfigFields<TFs, TEs, TCvCb> | void;

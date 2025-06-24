@@ -41,7 +41,7 @@ const useForm = <C extends AnyCfgMeta>(
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
     useInitStates(baseUserInputSchema, config.defaults);
 
-  const configValues = getConfigValues(form, config);
+  const configValues = getConfigValues(config, form);
 
   // @todo rename
   const appliedSchema = useBuildConfigSchema(config, configValues);

@@ -5,16 +5,15 @@ import type {
   AnyCfgMeta,
   CfgCvCb,
   CfgDefaults,
-  CfgDefMeta,
   CfgEs,
   CfgFc,
   CfgFs,
   ConfigFieldsOpt,
   CvCbOpt,
   ExtValues,
-  FormConfigValues,
   FsUiKeys,
   Nullish,
+  ResolveConfigValues,
   SetState,
   Tighten,
   UiFormSchema,
@@ -26,7 +25,7 @@ import type {
 export type UseFormProps<C extends AnyCfgMeta> = {
   defaults?: CfgDefaults<C>;
   schema: CfgFs<C>;
-  calcValues?: CfgCvCb<C>;
+  calcValuesCallback?: CfgCvCb<C>;
   fieldConfigs?: CfgFc<C>;
   externalSchema?: CfgEs<C>;
   externalValues?: Partial<ExtValues<CfgEs<C>>>;
@@ -58,7 +57,7 @@ export type UseFormState<
   /* ——— static artefacts ——— */
   schema: TFs; // official schema
   userInputSchema: UiFormSchema<TFs>; // “catch” schema
-  config: FormConfigValues<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
+  config: ResolveConfigValues<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
 
   /* ——— resolved config (optional parts omitted if unused) ——— */
 } & ResolvedConfigInstance<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
