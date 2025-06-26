@@ -1,4 +1,11 @@
-import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type {
+  CalcValues,
+  CalcValuesOpt,
+  FieldConfigs,
+  FieldConfigsOpt,
+  ZObj,
+  ZObjOpt,
+} from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
@@ -34,7 +41,12 @@ export type CvCbInternal<
 /** This type represents the param `config` passed into `useForm`.
  * This should not be used outside of the `useForm` prop.
  */
-export type ConfigDef<TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues> = {
+export type ConfigDef<
+  TFs extends ZObj,
+  TEs extends ZObj,
+  TCv extends CalcValues,
+  TFc extends FieldConfigs<TFs, TEs, TCv>
+> = {
   schema: TFs;
   externalSchema?: TEs;
 
@@ -47,25 +59,25 @@ export type ConfigDef<TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
   externalValues?: Partial<ExtValues<TEs>>;
+  fieldConfigs?: TFc;
 };
 
 export type ConfigInternal<
   TFs extends ZObj = ZObj,
   TEs extends ZObj | void = ZObj,
-  TCv extends CalcValues | void = CalcValues
-> = ConfigDef<TFs, TEs extends ZObj ? TEs : ZObj, TCv extends CalcValues ? TCv : CalcValues> & {
+  TCv extends CalcValues | void = CalcValues,
+  TFc extends FieldConfigs<any, any, any> | void = FieldConfigs<any, any, any>
+> = ConfigDef<
+  TFs,
+  TEs extends ZObj ? TEs : ZObj,
+  TCv extends CalcValues ? TCv : CalcValues,
+  TFc extends FieldConfigs<any, any, any>
+    ? TFc
+    : FieldConfigs<TFs, TEs | ZObjOpt, TCv | CalcValuesOpt>
+> & {
   calcValuesCallback?: CvCbInternal;
 };
 
-export type InferDefFs<T extends ConfigDef<any, any, any>> = T extends ConfigDef<infer Fs, any, any>
-  ? Fs
-  : never;
-export type InferDefEs<T extends ConfigDef<any, any, any>> = T extends ConfigDef<any, infer Es, any>
-  ? Es
-  : never;
-export type InferDefCv<T extends ConfigDef<any, any, any>> = T extends ConfigDef<any, any, infer Cv>
-  ? Cv
-  : never;
 export type InferFs<T extends ConfigInput> = T["schema"];
 export type InferEs<T extends ConfigInput> = [T["externalSchema"]] extends [ZObj]
   ? T["externalSchema"]
@@ -81,4 +93,5 @@ export type ConfigInput = {
   calcValuesCallback?: CvCbInternal;
   defaults?: Partial<UiValues<ZObj>>;
   externalValues?: Partial<ExtValues<ZObj>>;
+  fieldConfigs?: FieldConfigs<ZObj, ZObjOpt, CalcValuesOpt>;
 };

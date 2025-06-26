@@ -40,13 +40,18 @@ const getConfigValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends Calc
   const parsedExternalValues = getExternalValues(config);
   const calculatedValues = getCalculatedValues(config, uiValues, parsedExternalValues);
 
-  const out = {
+  const out: ConfigValues<TFs, TEs, TCv> = {
     form: uiValues,
-    external: parsedExternalValues as TEs extends ZObj ? UiValues<NonNullable<TEs>> : undefined, // @todo reomve typecast
+    external: parsedExternalValues,
     calculated: calculatedValues,
   };
 
   return out;
+};
+export type ConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
+  form: UiValues<TFs>;
+  external: Ev<TEs>;
+  calculated: TCv extends CalcValues ? TCv : undefined;
 };
 
 export default getConfigValues;

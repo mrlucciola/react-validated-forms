@@ -3,11 +3,20 @@
 import useInitSchemas from "./hooks/useInitSchemas";
 // interfaces
 // DEPRECATED IMPORTS
-import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type {
+  CalcValues,
+  CalcValuesOpt,
+  FieldConfigs,
+  FieldConfigsOpt,
+  ZObj,
+  ZObjOpt,
+} from "@utils/rootTypes";
 import useInitStates from "@core/hooks/useInitStates";
 import type { ConfigDef, ConfigInternal } from "@utils/configTypes";
 import getConfigValues from "@core/getters/getConfigValues";
 import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
+import type { SchemaSpaReturn } from "@core/types";
+import type { SchemaParseErrors } from "@core/getters/interfaces";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -29,10 +38,20 @@ import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcValuesOpt = void>(
-  configInput: ConfigDef<TFs, TEs extends ZObj ? TEs : never, TCv extends CalcValues ? TCv : never>
+const useForm = <
+  TFs extends ZObj,
+  TEs extends ZObjOpt = void,
+  TCv extends CalcValuesOpt = void,
+  TFc extends FieldConfigsOpt = void
+>(
+  configInput: ConfigDef<
+    TFs,
+    TEs extends ZObj ? TEs : never,
+    TCv extends CalcValues ? TCv : never,
+    TFc extends FieldConfigs<any, any, any> ? TFc : never
+  >
 ) => {
-  const config = configInput as ConfigInternal<TFs, TEs, TCv>;
+  const config = configInput as ConfigInternal<TFs, TEs, TCv, TFc>;
 
   const { evSchema, uiSchema } = useInitSchemas(config);
 
@@ -43,15 +62,13 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
 
   // @todo rename
   const appliedUiSchema = useBuildConfigSchema(config, configValues);
-  /** TO-DO
-
-
-
-  // ----------------- Getters (below) -----------------
-  const validation: SchemaSpaReturn<CfgFs<C>> = appliedSchema.safeParse(form);
-  const errors: SchemaParseErrors<CfgFs<C>> | undefined = validation.error?.formErrors.fieldErrors;
-
+  const validation: SchemaSpaReturn<TFs> = appliedUiSchema.safeParse(form);
+  const errors: SchemaParseErrors<TFs> | undefined = validation.error?.formErrors.fieldErrors;
   const isValid = validation.success;
+
+  /** TO-DO
+  // ----------------- Getters (below) -----------------
+
 
   const setField = useSetField(setForm, config, configValues, markDirty);
 
@@ -69,6 +86,9 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
     /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
      * - This happens by assigning the type defined in the generic. */
     configValues,
+    validation,
+    errors,
+    isValid,
 
     // Utils
     // getFieldProps,

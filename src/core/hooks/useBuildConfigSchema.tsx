@@ -3,33 +3,44 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { ResolveConfigValues } from "@external/configValuesTypes";
+import type { CalcValuesOpt, FieldConfigsOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ConfigValues } from "@core/getters/getConfigValues";
+import type { ConfigInternal } from "@utils/configTypes";
 // DEPRECATED IMPORTS
-import type { AnyCfgMetaDEPREC, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { CfgUiValues } from "@utils/deprec/derived";
-import type { CfgFieldConfig } from "@utils/deprec/fieldConfig";
-import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
-import type { ConfigInternal } from "@utils/metaTypes";
+import type { UiValues } from "@utils/valueTypes";
+import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
 
-type FieldKeyOf<C extends AnyCfgMetaDEPREC> = keyof C["_fc"] & keyof CfgUiValues<C>;
+type FieldKeyOf<TFs extends ZObj, TFc extends FieldConfigsOpt> = keyof TFc & keyof UiValues<TFs>;
 
 // Helper types for odd one-off data structures used throughout the file
-type FieldCfgEntry<C extends AnyCfgMetaDEPREC, FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>> = [
-  FieldKey,
-  CfgFieldConfig<C, FieldKey>
-];
+type FieldCfgEntry<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  TFc extends FieldConfigsOpt,
+  FieldKey extends FieldKeyOf<TFs, TFc> = FieldKeyOf<TFs, TFc>
+> = [FieldKey, DefineFieldConfig<TFs, TEs, TCv, FieldKey>];
 
 /**
  * @deprecated needs to be analyzed
  */
 const applyFieldConfigValidationRefinements =
-  <C extends AnyCfgMetaDEPREC>(configValues: ResolveConfigValues<C>) =>
-  <FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>>(
-    fieldEntryTuple: FieldCfgEntry<C, FieldKey> //FieldCfgEntry<C, FieldKey>
-  ): ((form: CfgUiValues<C>, ctx: z.RefinementCtx) => void) => {
+  <
+    TFs extends ZObj = ZObj,
+    TEs extends ZObjOpt = ZObjOpt,
+    TCv extends CalcValuesOpt = CalcValuesOpt,
+    TFc extends FieldConfigsOpt = FieldConfigsOpt,
+    C extends ConfigInternal<TFs, TEs, TCv, TFc> = ConfigInternal<TFs, TEs, TCv, TFc>
+  >(
+    configValues: ConfigValues<TFs, TEs, TCv>
+  ) =>
+  <FieldKey extends FieldKeyOf<TFs, TFc> = FieldKeyOf<TFs, TFc>>(
+    fieldEntryTuple: FieldCfgEntry<TFs, TEs, TCv, TFc, FieldKey>
+  ): ((form: UiValues<TFs>, ctx: z.RefinementCtx) => void) => {
     const [fieldKey, fieldCfg] = fieldEntryTuple;
 
-    return (form: CfgUiValues<C>, ctx: z.RefinementCtx): void => {
+    return (form: UiValues<TFs>, ctx: z.RefinementCtx): void => {
       // IF `.registerOn()` IS DEFINED: Run `.registerOn()`, otherwise `registered = true`
       // If no `registerOn` is set for a given field, then the field is always registered
       // const testFieldCfgValues = !fieldCfg.registerOn || fieldCfg.registerOn(configValues);
@@ -69,18 +80,20 @@ const applyFieldConfigValidationRefinements =
 /**
  * For each field: Apply schema refinements defined in config to the baseSchema
  */
-const useBuildConfigSchema = <D extends ConfigInternal<any, any, any>>(
-  config: D,
-  configValues: ResolveConfigValues<C>
+const useBuildConfigSchema = <
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  TFc extends FieldConfigsOpt,
+  C extends ConfigInternal<TFs, TEs, TCv, TFc> = ConfigInternal<TFs, TEs, TCv, TFc>
+>(
+  config: ConfigInternal<TFs, TEs, TCv, TFc>,
+  configValues: ConfigValues<TFs, TEs, TCv>
 ) => {
-  type C = D extends ConfigInternal<infer TFs, infer TEs, infer TCv>
-    ? ConfigInternal<TFs, TEs, TCv>
-    : never;
-  type TFs = C["schema"];
   // type TFc = C['fieldConfigs'];
 
   const baseSchema: TFs = config.schema;
-  const fieldConfigs: TFc = config.fieldConfigs;
+  const fieldConfigs = config.fieldConfigs;
 
   // if no config provided: Early return `uiSchema`
   if (!fieldConfigs) return baseSchema;
@@ -88,15 +101,14 @@ const useBuildConfigSchema = <D extends ConfigInternal<any, any, any>>(
   /**
    * Array of field-configs that have `registerOn() and .rules() defined
    */
-  const configFieldsFiltered: FieldCfgEntry<C>[] = useMemo(() => {
-    const entries = Object.entries(fieldConfigs) as FieldCfgEntry<C>[];
+  const configFieldsFiltered: FieldCfgEntry<TFs, TEs, TCv, TFc>[] = useMemo(() => {
+    const entries = Object.entries(fieldConfigs) as FieldCfgEntry<TFs, TEs, TCv, TFc>[];
     return entries.filter(([_fieldKey, fieldCfg]) => !!fieldCfg.registerOn || !!fieldCfg.rules);
   }, []);
 
   if (configFieldsFiltered.length < 1) return baseSchema;
 
   // Apply custom refinement logic defined in `.registerOn()` and `.rules()` (for each field's configuration)
-  const factory = applyFieldConfigValidationRefinements(configValues);
   const cfgRuleArr = configFieldsFiltered.map(applyFieldConfigValidationRefinements(configValues));
 
   // Enable these custom refinements to run when `schema.parse()` is called.

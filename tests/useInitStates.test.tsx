@@ -23,6 +23,8 @@ const TestComponent: FC = () => {
       return { hai: "asdf" };
     },
     defaults: { dob: dayjs(), fullName: "" },
+    externalValues: { amount: null },
+    fieldConfigs: {},
   });
   const {
     form,
@@ -32,9 +34,15 @@ const TestComponent: FC = () => {
     isDirty,
     dirtyFields,
     resetToDefault,
+
+    configValues,
+    validation,
+    errors,
+    isValid,
+
     uiSchema,
     evSchema,
-    configValues,
+    appliedUiSchema,
   } = formState;
 
   uiSchema.parse({}).dob;
