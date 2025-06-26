@@ -33,13 +33,12 @@ import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcValuesOpt = void>(
   configInput: ConfigDef<TFs, TEs extends ZObj ? TEs : never, TCv extends CalcValues ? TCv : never>
 ) => {
-  type C = InferConfig<typeof configInput>;
-  const config = configInput as C;
+  const config = configInput as ConfigInternal<TFs, TEs, TCv>;
 
-  const { evSchema, uiSchema } = useInitSchemas(config);
+  const { evSchema, uiSchema } = useInitSchemas<TFs, TEs, TCv>(config);
 
-  // const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-  //   useInitStates(uiSchema, config);
+  const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
+    useInitStates<TFs, TEs, TCv>(uiSchema, config);
 
   // const configValues = getConfigValues(config, form);
 
@@ -60,13 +59,13 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
   const getFieldProps = useGetFieldProps(setField, form, errors, config, configValues);
   */
   return {
-    // form: form,
-    // setForm,
-    // updateForm,
-    // markDirty,
-    // isDirty,
-    // dirtyFields,
-    // resetToDefault,
+    form: form,
+    setForm,
+    updateForm,
+    markDirty,
+    isDirty,
+    dirtyFields,
+    resetToDefault,
 
     // Utils
     // getFieldProps,

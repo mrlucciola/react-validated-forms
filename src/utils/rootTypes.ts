@@ -18,11 +18,24 @@ export type CalcValuesOpt = CalcValues | void;
  */
 export type CfgMeta<
   TFs extends ZObj = ZObj,
-  TEs extends ZObjOpt = void,
-  TCv extends CalcValuesOpt = void
+  TEs extends ZObj = ZObj,
+  TCv extends CalcValues = CalcValues
 > = {
-  readonly __types?: [TFs, TEs, TCv];
+  _fs: TFs;
+  _es?: TEs;
+  _cv?: TCv;
 };
+export type MetaToCfgDef<M extends CfgMeta<any, any, any>> = ConfigDef<
+  M["_fs"],
+  M["_es"] extends ZObj ? M["_es"] : never,
+  M["_cv"] extends CalcValues ? M["_cv"] : never
+>;
+export type MetaToCfgInternal<M extends CfgMeta<any, any, any>> = ConfigInternal<
+  M["_fs"],
+  M["_es"] extends ZObj ? M["_es"] : never,
+  M["_cv"] extends CalcValues ? M["_cv"] : never
+>;
+
 /** Root Configuration Definition "adapter" type
  * This is a "phantom" type, implemented to:
  * - Reduce type-coupling/improve flexibility

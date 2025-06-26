@@ -3,17 +3,22 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { AnyCfgDef, AnyCfgMeta } from "@utils/rootTypes";
+import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { UiSchema } from "@utils/schemaTypes";
 import type { UiValues } from "@utils/valueTypes";
+import type { ConfigInput, ConfigInternal } from "@utils/configTypes";
 // DEPRECATED IMPORTS
 
-const useInitStates = <C extends AnyCfgDef, TFs extends C["schema"] = C["schema"]>(
+const useInitStates = <
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
+>(
   uiSchema: UiSchema<TFs>,
-  config: C
+  config: ConfigInput
 ) => {
-  config.defaults;
-  const defaults = {} as UiValues<TFs>; // config.defaults;
+  const defaults = config.defaults;
   /** Used for dependency array updates
    * - Keeps a stable reference for dependency arrays;
    * - BUT runs JSON.stringify every rerender;

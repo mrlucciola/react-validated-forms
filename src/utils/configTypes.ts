@@ -13,12 +13,6 @@ type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
 } & ExternalValuesProp<TEs>;
 
-export type CvCbInternal<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt
-> = (values: { form: UiValues<TFs>; externalValues?: ExtValues<TEs> }) => TCv;
-
 export type ConfigExternal<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
   schema: TFs;
 } & (([TEs] extends [void]
@@ -31,6 +25,11 @@ export type ConfigExternal<TFs extends ZObj, TEs extends ZObjOpt, TCv extends Ca
 export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
   values: CvCbParams<TFs, TEs>
 ) => TCv;
+export type CvCbInternal<
+  TFs extends ZObj = ZObj,
+  TEs extends ZObj | void = ZObj | void,
+  TCv extends CalcValues | void = CalcValues
+> = (values: { form: UiValues<TFs>; externalValues?: ExtValues<TEs> }) => TCv;
 
 /** This type represents the param `config` passed into `useForm`.
  * This should not be used outside of the `useForm` prop.
@@ -46,29 +45,38 @@ export type ConfigDef<TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues
    *    - `config.calcValuesCallback({form, externalValues})` Is typed incorrectly - `externalValues` prop does not exist;
    */
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
+  defaults?: Partial<UiValues<ZObj>>;
 };
 
 export type ConfigInternal<
   TFs extends ZObj = ZObj,
-  TEs extends ZObj = ZObj,
-  TCv extends CalcValues = CalcValues
-> = {
-  schema: TFs;
-  externalSchema?: TEs;
-  calcValuesCallback?: CvCbInternal<TFs, TEs, TCv>;
+  TEs extends ZObj | void = ZObj,
+  TCv extends CalcValues | void = CalcValues
+> = ConfigDef<TFs, TEs extends ZObj ? TEs : ZObj, TCv extends CalcValues ? TCv : CalcValues> & {
+  calcValuesCallback?: CvCbInternal;
 };
 
-export type InferFs<T extends ConfigDef<any, any, any>> = T extends ConfigDef<infer Fs, any, any>
+export type InferDefFs<T extends ConfigDef<any, any, any>> = T extends ConfigDef<infer Fs, any, any>
   ? Fs
   : never;
-export type InferEs<T extends ConfigDef<any, any, any>> = T extends ConfigDef<any, infer Es, any>
+export type InferDefEs<T extends ConfigDef<any, any, any>> = T extends ConfigDef<any, infer Es, any>
   ? Es
   : never;
-export type InferCv<T extends ConfigDef<any, any, any>> = T extends ConfigDef<any, any, infer Cv>
+export type InferDefCv<T extends ConfigDef<any, any, any>> = T extends ConfigDef<any, any, infer Cv>
   ? Cv
   : never;
-export type InferConfig<T extends ConfigDef<any, any, any>> = ConfigInternal<
-  InferFs<T>,
-  InferEs<T>,
-  InferCv<T>
->;
+export type InferFs<T extends ConfigInput> = T["schema"];
+export type InferEs<T extends ConfigInput> = [T["externalSchema"]] extends [ZObj]
+  ? T["externalSchema"]
+  : undefined;
+
+export type InferCv<T extends ConfigInput> = T["calcValuesCallback"];
+
+export type InferConfig<T extends ConfigInput> = ConfigInternal<InferFs<T>, InferEs<T>, InferCv<T>>;
+
+export type ConfigInput = {
+  schema: ZObj;
+  externalSchema?: ZObj;
+  calcValuesCallback?: CvCbInternal;
+  defaults?: Partial<UiValues<ZObj>>;
+};
