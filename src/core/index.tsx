@@ -1,22 +1,18 @@
 // utils
+import getConfigValues from "@core/getters/getConfigValues";
 // hooks
 import useInitSchemas from "./hooks/useInitSchemas";
-// interfaces
-// DEPRECATED IMPORTS
-import type {
-  CalcValues,
-  CalcValuesOpt,
-  FieldConfigs,
-  FieldConfigsOpt,
-  ZObj,
-  ZObjOpt,
-} from "@utils/rootTypes";
 import useInitStates from "@core/hooks/useInitStates";
-import type { ConfigDef, ConfigInternal } from "@utils/configTypes";
-import getConfigValues from "@core/getters/getConfigValues";
 import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
+// interfaces
+import type { CalcValues, FieldConfigs, ZObj } from "@utils/rootTypes";
+import type { ConfigInternal, CvCbDefinition } from "@utils/configTypes";
+import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
+import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
+
+type CvCbReturn<T> = T extends (...args: any) => infer R ? R : never;
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -38,21 +34,16 @@ import type { SchemaParseErrors } from "@core/getters/interfaces";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <
-  TFs extends ZObj,
-  TEs extends ZObjOpt = void,
-  TFc extends FieldConfigsOpt<TFs, TEs, TCv> = void,
-  TCv extends CalcValuesOpt = void
->(
-  configInput: ConfigDef<
-    TFs,
-    TEs extends ZObj ? TEs : never,
-    TCv extends Record<string, any> ? TCv : never,
-    TFc extends FieldConfigs<any, any, TCv>
-      ? TFc
-      : FieldConfigs<TFs, TEs extends ZObj ? TEs : never, TCv extends CalcValues ? TCv : never>
-  >
-) => {
+const useForm = <TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues>(configInput: {
+  schema: TFs;
+  externalSchema?: TEs;
+  calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
+  defaults?: Partial<UiValues<TFs>>;
+  externalValues?: Partial<ExtValues<TEs>>;
+  fieldConfigs?: FieldConfigs<TFs, TEs, TCv>;
+  newby?: TCv;
+}) => {
+  type TFc = typeof configInput.fieldConfigs;
   const config = configInput as ConfigInternal<TFs, TEs, TCv, TFc>;
 
   const { evSchema, uiSchema } = useInitSchemas(config);

@@ -24,18 +24,14 @@ const TestComponent: FC = () => {
     },
     defaults: { dob: dayjs(), fullName: "" },
     externalValues: { amount: null },
+    newby: { hai: "" },
     fieldConfigs: {
       // fullName: "",
       dob: {
         changeEvent: ({ form, external, calculated }) => {
-          // Type error for `calculated`
-          /**
-           * Property 'calculated' does not exist on type 'FieldConfigValueProp<ZodObject<{ fullName: ZodString; phone: ZodString; dob: ZodEffects<ZodType<Dayjs, ZodTypeDef, Dayjs>, Dayjs, unknown>; }, "strip", ZodTypeAny, { ...; }, { ...; }>, ZodObject<...>, never>'.ts(2339)
-(parameter) calculated: any
-           */
           form.fullName;
           external.amount;
-          calculated.hai; // this shouldnt be `any`
+          calculated.hai;
 
           return { fullName: "" };
         },

@@ -4,6 +4,9 @@ import type { ExtValues, UiValues } from "@utils/valueTypes";
 export type CalcValuesProp<TCv extends CalcValuesOpt> = [TCv] extends [void]
   ? // TCv is void
     {}
+  : [void] extends [TCv]
+  ? // TCv might be void
+    { calculated?: TCv }
   : // TCv is present
     { calculated: NonNullable<TCv> };
 
@@ -27,15 +30,6 @@ export type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
 type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
 } & ExternalValuesProp<TEs>;
-
-export type ConfigExternal<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
-  schema: TFs;
-} & (([TEs] extends [void]
-  ? { externalSchema?: undefined }
-  : { externalSchema: NonNullable<TEs> }) &
-  ([TCv] extends [void]
-    ? { calcValuesCallback?: undefined }
-    : { calcValuesCallback: CvCbDefinition<TFs, TEs, TCv> }));
 
 export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
   values: CvCbParams<TFs, TEs>
