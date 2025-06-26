@@ -4,22 +4,24 @@ import { z } from "zod";
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type { CalcValuesOpt, FieldConfigsOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ConfigValues } from "@core/getters/getConfigValues";
 import type { ConfigInternal } from "@utils/configTypes";
-// DEPRECATED IMPORTS
-import type { CfgUiValues } from "@utils/deprec/derived";
 import type { UiValues } from "@utils/valueTypes";
-import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
+import type { DefineFieldConfig, FieldConfigValueProp } from "@utils/fieldConfigTypes";
 
-type FieldKeyOf<TFs extends ZObj, TFc extends FieldConfigsOpt> = keyof TFc & keyof UiValues<TFs>;
+type FieldKeyOf<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  TFc extends FieldConfigsOpt<TFs, TEs, TCv>
+> = keyof TFc & keyof UiValues<TFs>;
 
 // Helper types for odd one-off data structures used throughout the file
 type FieldCfgEntry<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  TFc extends FieldConfigsOpt,
-  FieldKey extends FieldKeyOf<TFs, TFc> = FieldKeyOf<TFs, TFc>
+  TFc extends FieldConfigsOpt<TFs, TEs, TCv>,
+  FieldKey extends FieldKeyOf<TFs, TEs, TCv, TFc> = FieldKeyOf<TFs, TEs, TCv, TFc>
 > = [FieldKey, DefineFieldConfig<TFs, TEs, TCv, FieldKey>];
 
 /**
@@ -30,12 +32,11 @@ const applyFieldConfigValidationRefinements =
     TFs extends ZObj = ZObj,
     TEs extends ZObjOpt = ZObjOpt,
     TCv extends CalcValuesOpt = CalcValuesOpt,
-    TFc extends FieldConfigsOpt = FieldConfigsOpt,
-    C extends ConfigInternal<TFs, TEs, TCv, TFc> = ConfigInternal<TFs, TEs, TCv, TFc>
+    TFc extends FieldConfigsOpt<TFs, TEs, TCv> = FieldConfigsOpt<TFs, TEs, TCv>
   >(
-    configValues: ConfigValues<TFs, TEs, TCv>
+    configValues: FieldConfigValueProp<TFs, TEs, TCv>
   ) =>
-  <FieldKey extends FieldKeyOf<TFs, TFc> = FieldKeyOf<TFs, TFc>>(
+  <FieldKey extends FieldKeyOf<TFs, TEs, TCv, TFc> = FieldKeyOf<TFs, TEs, TCv, TFc>>(
     fieldEntryTuple: FieldCfgEntry<TFs, TEs, TCv, TFc, FieldKey>
   ): ((form: UiValues<TFs>, ctx: z.RefinementCtx) => void) => {
     const [fieldKey, fieldCfg] = fieldEntryTuple;
@@ -54,8 +55,10 @@ const applyFieldConfigValidationRefinements =
       }
     };
   };
-//
 
+/**
+ * For each field: Apply schema refinements defined in config to the baseSchema
+ */
 /**
  * Iterates through each field in the form-schema (object-schema):
  * 1. Looks-up the field-schema
@@ -69,26 +72,15 @@ const applyFieldConfigValidationRefinements =
  * @param configValues
  * @returns
  */
-
-// export type ConfigDefinition<TCfg extends AnyCfgMetaDEPREC> = {
-//   formSchema: CfgFs<TCfg>;
-//   externalSchema?: CfgEs<TCfg>;
-//   calcValuesCallback?: CfgCvCb<TCfg>;
-//   fieldConfigs?: CfgFc<TCfg>;
-// };
-
-/**
- * For each field: Apply schema refinements defined in config to the baseSchema
- */
 const useBuildConfigSchema = <
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  TFc extends FieldConfigsOpt,
+  TFc extends FieldConfigsOpt<TFs, TEs, TCv>,
   C extends ConfigInternal<TFs, TEs, TCv, TFc> = ConfigInternal<TFs, TEs, TCv, TFc>
 >(
   config: ConfigInternal<TFs, TEs, TCv, TFc>,
-  configValues: ConfigValues<TFs, TEs, TCv>
+  configValues: FieldConfigValueProp<TFs, TEs, TCv>
 ) => {
   // type TFc = C['fieldConfigs'];
 

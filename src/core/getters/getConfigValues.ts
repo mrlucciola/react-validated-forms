@@ -1,10 +1,7 @@
-import type { ConfigInternal, CvCbInternal } from "@utils/configTypes";
+import type { ConfigInternal, CvCbInternal, Ev } from "@utils/configTypes";
+import type { FieldConfigValueProp } from "@utils/fieldConfigTypes";
 import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
-
-type Ev<TEs extends ZObjOpt> = [TEs] extends [ZObj]
-  ? NonNullable<ExtValues<NonNullable<TEs>>>
-  : undefined;
 
 const getExternalValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   config: ConfigInternal<TFs, TEs, TCv>
@@ -40,18 +37,13 @@ const getConfigValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends Calc
   const parsedExternalValues = getExternalValues(config);
   const calculatedValues = getCalculatedValues(config, uiValues, parsedExternalValues);
 
-  const out: ConfigValues<TFs, TEs, TCv> = {
+  const out = {
     form: uiValues,
     external: parsedExternalValues,
     calculated: calculatedValues,
   };
 
-  return out;
-};
-export type ConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
-  form: UiValues<TFs>;
-  external: Ev<TEs>;
-  calculated: TCv extends CalcValues ? TCv : undefined;
+  return out as unknown as FieldConfigValueProp<TFs, TEs, TCv>;
 };
 
 export default getConfigValues;

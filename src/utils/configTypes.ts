@@ -1,14 +1,21 @@
-import type {
-  CalcValues,
-  CalcValuesOpt,
-  FieldConfigs,
-  FieldConfigsOpt,
-  ZObj,
-  ZObjOpt,
-} from "@utils/rootTypes";
+import type { CalcValues, CalcValuesOpt, FieldConfigs, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
-type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
+export type CalcValuesProp<TCv extends CalcValuesOpt> = [TCv] extends [void]
+  ? // TCv is void
+    {}
+  : // TCv is present
+    { calculated: NonNullable<TCv> };
+
+export type ExternalValuesProp2<TEs extends ZObjOpt> = [TEs] extends [void]
+  ? // TEs is void
+    {}
+  : [void] extends [TEs]
+  ? // TEs might be void
+    { external?: ExtValues<TEs> }
+  : // TEs is present
+    { external: NonNullable<ExtValues<TEs>> };
+export type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
   ? // TEs is void
     {}
   : [void] extends [TEs]
@@ -16,6 +23,7 @@ type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
     { externalValues?: ExtValues<TEs> }
   : // TEs is present
     { externalValues: NonNullable<ExtValues<TEs>> };
+
 type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
 } & ExternalValuesProp<TEs>;
@@ -43,19 +51,16 @@ export type CvCbInternal<
  */
 export type ConfigDef<
   TFs extends ZObj,
-  TEs extends ZObj,
-  TCv extends CalcValues,
-  TFc extends FieldConfigs<TFs, TEs | void>
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  TFc extends FieldConfigs<
+    TFs,
+    TEs extends ZObj ? TEs : never,
+    TCv extends CalcValues ? TCv : never
+  >
 > = {
   schema: TFs;
   externalSchema?: TEs;
-
-  /** This is typed incorrectly:
-   * - The end-user (React developer) use-case is working as expected:
-   *    - When defining the object in `useForm({ ... })` - types are correct, all fields and props propagate correctly;
-   * - For the internal library developer (within useForm(config: ConfigDef<A, B, C>) => {}:
-   *    - `config.calcValuesCallback({form, externalValues})` Is typed incorrectly - `externalValues` prop does not exist;
-   */
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
   externalValues?: Partial<ExtValues<TEs>>;
@@ -66,12 +71,22 @@ export type ConfigInternal<
   TFs extends ZObj = ZObj,
   TEs extends ZObj | void = ZObj,
   TCv extends CalcValues | void = CalcValues,
-  TFc extends FieldConfigs<ZObj, TEs> | void = FieldConfigs<ZObj, TEs>
+  TFc extends FieldConfigs<any, any, any> | void = FieldConfigs<TFs, TEs, TCv>
 > = ConfigDef<
   TFs,
   TEs extends ZObj ? TEs : ZObj,
   TCv extends CalcValues ? TCv : CalcValues,
-  TFc extends FieldConfigs<ZObj, ZObjOpt> ? FieldConfigs<TFs, TEs> : FieldConfigs<TFs, TEs>
+  TFc extends FieldConfigs<ZObj, ZObj | void, CalcValues | void> ? any : FieldConfigs<TFs, TEs, TCv>
 > & {
   calcValuesCallback?: CvCbInternal;
+};
+
+export type Ev<TEs extends ZObjOpt> = [TEs] extends [ZObj]
+  ? NonNullable<ExtValues<NonNullable<TEs>>>
+  : undefined;
+
+export type ConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
+  form: UiValues<TFs>;
+  external: Ev<TEs>;
+  calculated: TCv extends CalcValues ? TCv : undefined;
 };

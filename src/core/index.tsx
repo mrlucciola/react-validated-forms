@@ -41,14 +41,16 @@ import type { SchemaParseErrors } from "@core/getters/interfaces";
 const useForm = <
   TFs extends ZObj,
   TEs extends ZObjOpt = void,
-  TCv extends CalcValuesOpt = void,
-  TFc extends FieldConfigsOpt<TFs, TEs> = void
+  TFc extends FieldConfigsOpt<TFs, TEs, TCv> = void,
+  TCv extends CalcValuesOpt = void
 >(
   configInput: ConfigDef<
     TFs,
     TEs extends ZObj ? TEs : never,
-    TCv extends CalcValues ? TCv : never,
-    TFc extends FieldConfigs<any, any> ? TFc : FieldConfigs<TFs, TEs extends ZObj ? TEs : never>
+    TCv extends Record<string, any> ? TCv : never,
+    TFc extends FieldConfigs<any, any, TCv>
+      ? TFc
+      : FieldConfigs<TFs, TEs extends ZObj ? TEs : never, TCv extends CalcValues ? TCv : never>
   >
 ) => {
   const config = configInput as ConfigInternal<TFs, TEs, TCv, TFc>;

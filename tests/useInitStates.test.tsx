@@ -1,10 +1,10 @@
 import type { FC } from "react";
 import { z } from "zod";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 // local
 import useForm from "@core/index";
 import { zDayjs } from "@utils/zod";
-import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
 
 const schema = z.object({ fullName: z.string(), phone: z.string(), dob: zDayjs });
 const externalSchema = z.object({ email: z.string().email(), amount: z.number() });
@@ -27,12 +27,17 @@ const TestComponent: FC = () => {
     fieldConfigs: {
       // fullName: "",
       dob: {
-        changeEvent: (asdf) => {
-          asdf.form.fullName;
-          asdf.external?.amount;
-          asdf.external.amount;
+        changeEvent: ({ form, external, calculated }) => {
+          // Type error for `calculated`
+          /**
+           * Property 'calculated' does not exist on type 'FieldConfigValueProp<ZodObject<{ fullName: ZodString; phone: ZodString; dob: ZodEffects<ZodType<Dayjs, ZodTypeDef, Dayjs>, Dayjs, unknown>; }, "strip", ZodTypeAny, { ...; }, { ...; }>, ZodObject<...>, never>'.ts(2339)
+(parameter) calculated: any
+           */
+          form.fullName;
+          external.amount;
+          calculated.hai; // this shouldnt be `any`
 
-          return {};
+          return { fullName: "" };
         },
       },
     },

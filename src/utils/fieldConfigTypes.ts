@@ -2,25 +2,28 @@ import type { z } from "zod";
 //
 import type { Nullish } from "@utils/utilityTypes";
 import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ExtValues, UiValues } from "@utils/valueTypes";
+import type { UiValues } from "@utils/valueTypes";
+import type { CalcValuesProp, ExternalValuesProp2 } from "@utils/configTypes";
 
-type DefineConfigValues<TFs extends ZObj, TEs extends ZObjOpt> = {
-  // type DefineConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
-  form: UiValues<TFs>;
-  external?: ExtValues<TEs>;
-  // calculated?: TCv;
-};
+export type FieldConfigValueProp<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt
+> = CalcValuesProp<TCv> &
+  ExternalValuesProp2<TEs> & {
+    form: UiValues<TFs>;
+  };
 
 export type DefineFieldConfig<
   TFs extends ZObj,
   TEs extends ZObjOpt,
-  // TCv extends CalcValuesOpt,
+  TCv extends CalcValuesOpt,
   FieldKey extends keyof UiValues<TFs>
 > = {
-  changeEvent?: (values: DefineConfigValues<TFs, TEs>) => Partial<Nullish<TFs>>;
-  registerOn?: (values: DefineConfigValues<TFs, TEs>) => boolean;
+  changeEvent?: (values: FieldConfigValueProp<TFs, TEs, TCv>) => Nullish<UiValues<TFs>>;
+  registerOn?: (values: FieldConfigValueProp<TFs, TEs, TCv>) => boolean;
   rules?: (
-    values: DefineConfigValues<TFs, TEs>,
+    values: FieldConfigValueProp<TFs, TEs, TCv>,
     ctx: z.RefinementCtx,
     fieldKey: FieldKey
   ) => void | undefined | never;
@@ -28,13 +31,8 @@ export type DefineFieldConfig<
 
 export type FormConfigFieldsBase<
   TFs extends ZObj,
-  TEs extends ZObjOpt
-  // TCv extends CalcValuesOpt
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt
 > = {
-  [FieldKey in keyof UiValues<TFs>]: DefineFieldConfig<
-    TFs,
-    TEs,
-    FieldKey
-    // TFs, TEs, TCv, FieldKey
-  >;
+  [FieldKey in keyof UiValues<TFs>]: DefineFieldConfig<TFs, TEs, TCv, FieldKey>;
 };

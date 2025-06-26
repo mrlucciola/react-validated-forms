@@ -1,6 +1,5 @@
 import type { z } from "zod";
 //
-import type { ConfigDef, ConfigInternal } from "@utils/configTypes";
 import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
 
 /** Convenience type for z.ZodObject schema */
@@ -14,18 +13,14 @@ export type CalcValuesOpt = CalcValues | void;
 
 export type FieldConfigs<
   TFs extends ZObj,
-  TEs extends ZObjOpt
-  // TCv extends CalcValuesOpt
-> = Partial<
-  FormConfigFieldsBase<TFs, TEs>
-  // FormConfigFieldsBase<TFs, TEs, TCv>
->;
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt
+> = Partial<FormConfigFieldsBase<TFs, TEs, TCv>>;
 export type FieldConfigsOpt<
   TFs extends ZObj,
-  TEs extends ZObjOpt
-  // TCv extends CalcValuesOpt = CalcValuesOpt
-> = FieldConfigs<TFs, TEs> | void;
-// > = FieldConfigs<TFs, TEs, TCv> | void;
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt
+> = FieldConfigs<TFs, TEs, TCv> | void;
 
 /** Root Configuration Definition type
  * This is a "phantom" type, implemented to:
