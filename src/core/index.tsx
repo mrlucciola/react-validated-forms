@@ -3,8 +3,13 @@
 import useInitSchemas from "./hooks/useInitSchemas";
 // interfaces
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta } from "@utils/rootTypes";
-import type { UseFormConfig } from "@utils/metaTypes";
+import type { AnyCfgMeta, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ConfigInternal, UseFormConfig } from "@utils/metaTypes";
+import useInitStates from "@core/hooks/useInitStates";
+import type { UiValues } from "@utils/valueTypes";
+import type { ConfigDef, ConfigExternal } from "@utils/configTypes";
+import getConfigValues from "@core/getters/getConfigValues";
+import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -26,18 +31,23 @@ import type { UseFormConfig } from "@utils/metaTypes";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <C extends AnyCfgMeta>(config: UseFormConfig<C>) => {
-  const { baseSchema, evSchema, uiSchema } = useInitSchemas(config);
-  /** TO-DO
- 
-  
+const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcValuesOpt = void>(
+  config_: ConfigDef<TFs, TEs, TCv>
+) => {
+  const config = config_ as unknown as ConfigInternal<TFs, TEs, TCv>;
+
+  const { evSchema, uiSchema } = useInitSchemas(config);
+
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates(uiSchema, config.defaults);
+    useInitStates(uiSchema, config);
 
   const configValues = getConfigValues(config, form);
 
   // @todo rename
   const appliedSchema = useBuildConfigSchema(config, configValues);
+  /** TO-DO
+
+
 
   // ----------------- Getters (below) -----------------
   const validation: SchemaSpaReturn<CfgFs<C>> = appliedSchema.safeParse(form);
@@ -50,30 +60,27 @@ const useForm = <C extends AnyCfgMeta>(config: UseFormConfig<C>) => {
   const getFieldProps = useGetFieldProps(setField, form, errors, config, configValues);
   */
   return {
-    // form,
-    // setForm,
-    // setField,
-    // validation,
-    // errors,
-    // isValid,
-    // isDirty,
-    // dirtyFields,
-    // resetToDefault,
-    // // Utils
+    form: form,
+    setForm,
+    updateForm,
+    markDirty,
+    isDirty,
+    dirtyFields,
+    resetToDefault,
+
+    // Utils
     // getFieldProps,
-    // /** Official validation schema. Use whenever the full payload needs to be valid. @todo apply correct type */
-    // schema: appliedSchema as CfgFs<C>,
-    // /** Schema applied to form values.
-    //  * @note Only for use within the form.
-    //  * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
-    //  * @note Previous names: `formSchema`, `userInputSchema`
-    //  */
-    // userInputSchema: uiSchema,
-    //
-    // /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
-    //  * - This happens by assigning the type defined in the generic. */
-    // config: configValues,
-    // // config: configValues as unknown as FormConfigCbReturnInferred<TCfg>,
+    /** Schema applied to form values.
+     * @note Only for use within the form.
+     * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
+     * @note Previous names: `formSchema`, `userInputSchema`
+     */
+    uiSchema,
+    evSchema,
+
+    /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
+     * - This happens by assigning the type defined in the generic. */
+    configValues,
   } as const;
 };
 

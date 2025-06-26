@@ -3,27 +3,26 @@ import { z } from "zod";
 // utils
 import { buildDefaultSchema } from "@core/utils";
 // interfaces
-import type { ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ConfigDef } from "@utils/configTypes";
+import type { AnyCfgDef } from "@utils/rootTypes";
 import type { ExtSchema, UiSchema } from "@utils/schemaTypes";
+import type { ConfigInternal } from "@utils/metaTypes";
 
-const useInitSchemas = <
-  C extends ConfigDef<any, any, any>,
-  TFs extends ZObj = C["schema"],
-  TEs extends ZObjOpt = C["externalSchema"]
->(
-  config: C
+const useInitSchemas = <D extends ConfigInternal<any, any, any>>(
+  config: D
 ): {
-  baseSchema: TFs;
-  evSchema: ExtSchema<TEs>;
-  uiSchema: UiSchema<TFs>;
+  baseSchema: D["schema"];
+  evSchema: ExtSchema<D["externalSchema"]>;
+  uiSchema: UiSchema<D["schema"]>;
 } => {
+  type TFs = D["schema"];
+  type TEs = D["externalSchema"];
   if (config.schema instanceof z.ZodEffects) {
     throw new Error(
       `Schema cannot be an Effect type (preprocess/transform/refine): Provided: ${config.schema}`
     );
   }
-  if (config.externalSchema instanceof z.ZodEffects) {
+
+  if (config.externalSchema && config.externalSchema instanceof z.ZodEffects) {
     throw new Error(
       `External schema cannot be an Effect type (preprocess/transform/refine): Provided: ${config.externalSchema}`
     );
@@ -33,7 +32,7 @@ const useInitSchemas = <
    *   - Updates frequently (on each field change)
    *   - Can be expensive to recalculate (affects performance as # of fields (and the amount of nesting) increases
    */
-  const baseSchema: TFs = useMemo(() => config.schema, []);
+  const baseSchema: D["schema"] = useMemo(() => config.schema, []);
 
   /** Schema used for validating user input - any fields without a `catch` have `.catch()` schema applied.
    * @note The output values of this schema should only be used within the form components.

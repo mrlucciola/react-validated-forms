@@ -1,3 +1,4 @@
+import type { ConfigDef } from "@utils/configTypes";
 import type { z } from "zod";
 
 /** Convenience type for z.ZodObject schema */
@@ -27,3 +28,12 @@ export type CfgMeta<
  * - Facilitate deriving other types
  */
 export type AnyCfgMeta = CfgMeta<any, any, any>;
+export type AnyCfgDef = ConfigDef<any, any, any>;
+
+export type MetaFs<M extends AnyCfgMeta> = M extends CfgMeta<infer TFs, any, any> ? TFs : never;
+export type MetaEs<M extends AnyCfgMeta> = M extends CfgMeta<any, infer TEs, any> ? TEs : void;
+export type MetaCv<M extends AnyCfgMeta> = M extends CfgMeta<any, any, infer TCv> ? TCv : void;
+export type AnyFs = Pick<ConfigDef<ZObj, any, any>, "schema">;
+export type AnyEs = Pick<ConfigDef<any, ZObjOpt, any>, "externalSchema">;
+export type AnyCvCb = Pick<ConfigDef<ZObj, any, CalcValuesOpt>, "calcValuesCallback">;
+// export type AnyCv = Pick<ConfigDef<ZObj, any, CalcValuesOpt>, "calcValuesCallback">;

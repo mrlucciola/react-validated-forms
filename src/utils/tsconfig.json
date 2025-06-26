@@ -6,7 +6,7 @@
     "outDir": "../../dist/utils",
     "rootDir": "./",
     // Overrides
-    "exactOptionalPropertyTypes": true,
+    // "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "stripInternal": true
   },

@@ -6,8 +6,8 @@
     "outDir": "../../dist/core",
     "rootDir": "./",
     // Overrides
-    "exactOptionalPropertyTypes": true,
-    "noUncheckedIndexedAccess": true,
+    // "exactOptionalPropertyTypes": true,
+    // "noUncheckedIndexedAccess": true,
     "stripInternal": true
   },
   "include": ["./"],

@@ -19,6 +19,6 @@ import type { UiSchema } from "@utils/schemaTypes";
 export type UiValues<TFs extends ZObj = ZObj> = z.output<UiSchema<TFs>>;
 
 /** "External Values" output */
-export type ExtValues<TEs extends ZObjOpt = ZObjOpt> = TEs extends ZObj
+export type ExtValues<TEs extends ZObjOpt = ZObjOpt> = [TEs] extends [ZObj]
   ? UiValues<NonNullable<TEs>>
-  : void;
+  : never;

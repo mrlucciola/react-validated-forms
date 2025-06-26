@@ -1,4 +1,4 @@
-import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
@@ -13,9 +13,14 @@ type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
 } & ExternalValuesProp<TEs>;
 
-type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
+export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
   values: CvCbParams<TFs, TEs>
 ) => TCv;
+export type CvCbInternal<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt
+> = (values: { form: UiValues<TFs>; externalValues?: ExtValues<TEs> }) => TCv;
 
 export type ConfigExternal<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
   schema: TFs;

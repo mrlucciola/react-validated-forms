@@ -9,6 +9,7 @@ import type { AnyCfgMetaDEPREC, CfgFc, CfgFs } from "@utils/deprec/formConfigDef
 import type { CfgUiValues } from "@utils/deprec/derived";
 import type { CfgFieldConfig } from "@utils/deprec/fieldConfig";
 import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
+import type { ConfigInternal } from "@utils/metaTypes";
 
 type FieldKeyOf<C extends AnyCfgMetaDEPREC> = keyof C["_fc"] & keyof CfgUiValues<C>;
 
@@ -68,12 +69,15 @@ const applyFieldConfigValidationRefinements =
 /**
  * For each field: Apply schema refinements defined in config to the baseSchema
  */
-const useBuildConfigSchema = <C extends AnyCfgMetaDEPREC>(
-  config: UseFormProps<C>,
+const useBuildConfigSchema = <D extends ConfigInternal<any, any, any>>(
+  config: D,
   configValues: ResolveConfigValues<C>
 ) => {
-  type TFs = CfgFs<C>;
-  type TFc = CfgFc<C>;
+  type C = D extends ConfigInternal<infer TFs, infer TEs, infer TCv>
+    ? ConfigInternal<TFs, TEs, TCv>
+    : never;
+  type TFs = C["schema"];
+  // type TFc = C['fieldConfigs'];
 
   const baseSchema: TFs = config.schema;
   const fieldConfigs: TFc = config.fieldConfigs;

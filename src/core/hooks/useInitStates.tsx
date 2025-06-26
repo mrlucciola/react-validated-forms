@@ -3,22 +3,21 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { ZObj } from "@utils/rootTypes";
+import type { AnyCfgMeta } from "@utils/rootTypes";
+import type { UiSchema } from "@utils/schemaTypes";
+import type { UiValues } from "@utils/valueTypes";
 // DEPRECATED IMPORTS
-import type { UiSchema } from "@utils/deprec/fxnTypes";
-import type { FsDefaults } from "@utils/deprec/derived";
-import type { UiValues } from "@utils/deprec/formOutputTypes";
+import type { UseFormConfig } from "@utils/metaTypes";
 
-/**
- *
- * @param uiSchema
- * @param defaults
- * @returns
- */
-const useInitStates = <TFs extends ZObj>(
+const useInitStates = <
+  C extends AnyCfgMeta,
+  TFs extends UseFormConfig<C>["schema"] = UseFormConfig<C>["schema"]
+>(
   uiSchema: UiSchema<TFs>,
-  defaults?: FsDefaults<TFs>
+  config: UseFormConfig<C>
 ) => {
+  config.schema
+  const defaults = {} as UiValues<TFs>; // config.defaults;
   /** Used for dependency array updates
    * - Keeps a stable reference for dependency arrays;
    * - BUT runs JSON.stringify every rerender;

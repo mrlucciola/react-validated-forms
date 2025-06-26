@@ -6,7 +6,7 @@
     "outDir": "../../dist/internal",
     "rootDir": "./",
     // Overrides
-    "noUncheckedIndexedAccess": false
+    // "noUncheckedIndexedAccess": false
   },
   "include": ["./"],
   "references": [{ "path": "../utils" }]
