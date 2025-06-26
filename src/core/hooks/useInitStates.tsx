@@ -6,8 +6,7 @@ import useResetToDefault from "../setters/useResetToDefault";
 import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { UiSchema } from "@utils/schemaTypes";
 import type { UiValues } from "@utils/valueTypes";
-import type { ConfigInput, ConfigInternal } from "@utils/configTypes";
-// DEPRECATED IMPORTS
+import type { ConfigInternal } from "@utils/configTypes";
 
 const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   config: ConfigInternal<TFs, TEs, TCv>,

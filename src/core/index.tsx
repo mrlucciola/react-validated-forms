@@ -3,10 +3,9 @@
 import useInitSchemas from "./hooks/useInitSchemas";
 // interfaces
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta, CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import useInitStates from "@core/hooks/useInitStates";
-import type { UiValues } from "@utils/valueTypes";
-import type { ConfigDef, ConfigExternal, ConfigInternal, InferConfig } from "@utils/configTypes";
+import type { ConfigDef, ConfigInternal } from "@utils/configTypes";
 import getConfigValues from "@core/getters/getConfigValues";
 import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 
@@ -43,7 +42,7 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
   const configValues = getConfigValues(config, form);
 
   // @todo rename
-  // const appliedSchema = useBuildConfigSchema(config, configValues);
+  const appliedUiSchema = useBuildConfigSchema(config, configValues);
   /** TO-DO
 
 
@@ -67,6 +66,10 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
     dirtyFields,
     resetToDefault,
 
+    /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
+     * - This happens by assigning the type defined in the generic. */
+    configValues,
+
     // Utils
     // getFieldProps,
     /** Schema applied to form values.
@@ -76,10 +79,7 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
      */
     uiSchema,
     evSchema,
-
-    /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
-     * - This happens by assigning the type defined in the generic. */
-    // configValues,
+    appliedUiSchema,
   } as const;
 };
 

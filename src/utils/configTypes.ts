@@ -46,6 +46,7 @@ export type ConfigDef<TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues
    */
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
+  externalValues?: Partial<ExtValues<TEs>>;
 };
 
 export type ConfigInternal<
@@ -79,4 +80,5 @@ export type ConfigInput = {
   externalSchema?: ZObj;
   calcValuesCallback?: CvCbInternal;
   defaults?: Partial<UiValues<ZObj>>;
+  externalValues?: Partial<ExtValues<ZObj>>;
 };

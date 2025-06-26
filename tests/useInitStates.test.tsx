@@ -4,16 +4,10 @@ import { z } from "zod";
 import useForm from "@core/index";
 import { zDayjs } from "@utils/zod";
 import type { Dayjs } from "dayjs";
-import type { CvCbDefinition } from "@utils/configTypes";
 import dayjs from "dayjs";
 
 const schema = z.object({ fullName: z.string(), phone: z.string(), dob: zDayjs });
 const externalSchema = z.object({ email: z.string().email(), amount: z.number() });
-type Cvcb<T extends Record<string, any> = Record<string, any>> = CvCbDefinition<
-  typeof schema,
-  typeof externalSchema,
-  T
->;
 
 const TestComponent: FC = () => {
   const formState = useForm({

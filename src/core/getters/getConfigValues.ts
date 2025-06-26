@@ -1,56 +1,49 @@
-import type { ConfigInternal } from "@utils/metaTypes";
-import type { AnyCfgDef, AnyCvCb, ZObj } from "@utils/rootTypes";
+import type { ConfigInternal, CvCbInternal } from "@utils/configTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
-// DEPREC IMPORTS
 
-const getExternalValues = <D extends AnyCfgDef>(
-  config: D
-): D["externalSchema"] extends void ? undefined : NonNullable<ExtValues<D["externalSchema"]>> => {
-  type C = D extends ConfigInternal<infer TFs, infer TEs, infer TCv>
-    ? ConfigInternal<TFs, TEs, TCv>
-    : never;// @todo implement config-types properly
-  const schema = config.externalSchema as C["externalSchema"];
-  if (schema) {
-    return schema.parse(config.externalValues);
-  }
+type Ev<TEs extends ZObjOpt> = [TEs] extends [ZObj]
+  ? NonNullable<ExtValues<NonNullable<TEs>>>
+  : undefined;
+
+const getExternalValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
+  config: ConfigInternal<TFs, TEs, TCv>
+): Ev<TEs> => {
   const out = (config.externalSchema &&
-    config.externalSchema.parse(config.externalValues ?? {})) satisfies ExtValues<
-    D["externalSchema"]
-  >;
+    config.externalSchema.parse(config.externalValues ?? {})) satisfies ExtValues<TEs>;
 
   return out;
 };
 
-const getCalculatedValues = <D extends ConfigInternal<any, any, any>>(
-  config: D,
-  uiValues: UiValues<D["schema"]>,
-  parsedExternalValues: D["externalSchema"] extends void
-    ? undefined
-    : NonNullable<ExtValues<D["externalSchema"]>> // @todo implement config-types properly
-): D["calcValuesCallback"] extends AnyCvCb ? ReturnType<D["calcValuesCallback"]> : undefined => {
+const getCalculatedValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
+  config: ConfigInternal<TFs, TEs, TCv>,
+  uiValues: UiValues<TFs>,
+  externalValues: Ev<TEs>
+): TCv extends CalcValues ? TCv : undefined => {
+  const cvcb = config.calcValuesCallback as CvCbInternal<TFs, TEs, TCv>;
+
   return (
-    config.calcValuesCallback &&
-    config.calcValuesCallback({ form: uiValues, externalValues: parsedExternalValues })
+    cvcb &&
+    (cvcb({ form: uiValues, externalValues: externalValues }) as TCv extends CalcValues
+      ? TCv
+      : undefined)
   );
 };
 
 /** @todo Add annotation
  * @todo Fix output type
  */
-const getConfigValues = <D extends ConfigInternal<any, any, any>>(
-  config: D,
-  uiValues: UiValues<D["schema"]>
+const getConfigValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
+  config: ConfigInternal<TFs, TEs, TCv>,
+  uiValues: UiValues<TFs>
 ) => {
-  type C = D extends ConfigInternal<infer TFs, infer TEs, infer TCv>
-    ? ConfigInternal<TFs, TEs, TCv>
-    : never; // @todo reomve this and type properly
   const parsedExternalValues = getExternalValues(config);
   const calculatedValues = getCalculatedValues(config, uiValues, parsedExternalValues);
 
   const out = {
     form: uiValues,
-    external: parsedExternalValues as ExtValues<NonNullable<C["externalSchema"]>>, // @todo reomve cast
-    calculated: calculatedValues as D extends ConfigInternal<any, any, infer T> ? T : undefined, // @todo reomve cast
+    external: parsedExternalValues as TEs extends ZObj ? UiValues<NonNullable<TEs>> : undefined, // @todo reomve typecast
+    calculated: calculatedValues,
   };
 
   return out;
