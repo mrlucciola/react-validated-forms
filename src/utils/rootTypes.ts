@@ -14,29 +14,33 @@ export type CalcValuesOpt = CalcValues | void;
 
 export type FieldConfigs<
   TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt
-> = Partial<FormConfigFieldsBase<TFs, TEs, TCv>>;
+  TEs extends ZObjOpt
+  // TCv extends CalcValuesOpt
+> = Partial<
+  FormConfigFieldsBase<TFs, TEs>
+  // FormConfigFieldsBase<TFs, TEs, TCv>
+>;
 export type FieldConfigsOpt<
-  TFs extends ZObj = ZObj,
-  TEs extends ZObjOpt = ZObjOpt,
-  TCv extends CalcValuesOpt = CalcValuesOpt
-> = FieldConfigs<TFs, TEs, TCv> | void;
+  TFs extends ZObj,
+  TEs extends ZObjOpt
+  // TCv extends CalcValuesOpt = CalcValuesOpt
+> = FieldConfigs<TFs, TEs> | void;
+// > = FieldConfigs<TFs, TEs, TCv> | void;
 
 /** Root Configuration Definition type
  * This is a "phantom" type, implemented to:
  * - Reduce type-coupling/improve flexibility
  * - Facilitate deriving other types
  */
-export type CfgMeta<
-  TFs extends ZObj = ZObj,
-  TEs extends ZObj = ZObj,
-  TCv extends CalcValues = CalcValues
-> = {
-  _fs: TFs;
-  _es?: TEs;
-  _cv?: TCv;
-};
+// export type CfgMeta<
+//   TFs extends ZObj = ZObj,
+//   TEs extends ZObj = ZObj,
+//   TCv extends CalcValues = CalcValues
+// > = {
+//   _fs: TFs;
+//   _es?: TEs;
+//   _cv?: TCv;
+// };
 // export type MetaToCfgDef<M extends CfgMeta<any, any, any>> = ConfigDef<
 //   M["_fs"],
 //   M["_es"] extends ZObj ? M["_es"] : never,

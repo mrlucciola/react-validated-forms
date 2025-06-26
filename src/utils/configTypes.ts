@@ -45,7 +45,7 @@ export type ConfigDef<
   TFs extends ZObj,
   TEs extends ZObj,
   TCv extends CalcValues,
-  TFc extends FieldConfigs<TFs, TEs, TCv>
+  TFc extends FieldConfigs<TFs, TEs | void>
 > = {
   schema: TFs;
   externalSchema?: TEs;
@@ -66,32 +66,12 @@ export type ConfigInternal<
   TFs extends ZObj = ZObj,
   TEs extends ZObj | void = ZObj,
   TCv extends CalcValues | void = CalcValues,
-  TFc extends FieldConfigs<any, any, any> | void = FieldConfigs<any, any, any>
+  TFc extends FieldConfigs<ZObj, TEs> | void = FieldConfigs<ZObj, TEs>
 > = ConfigDef<
   TFs,
   TEs extends ZObj ? TEs : ZObj,
   TCv extends CalcValues ? TCv : CalcValues,
-  TFc extends FieldConfigs<any, any, any>
-    ? TFc
-    : FieldConfigs<TFs, TEs | ZObjOpt, TCv | CalcValuesOpt>
+  TFc extends FieldConfigs<ZObj, ZObjOpt> ? FieldConfigs<TFs, TEs> : FieldConfigs<TFs, TEs>
 > & {
   calcValuesCallback?: CvCbInternal;
-};
-
-export type InferFs<T extends ConfigInput> = T["schema"];
-export type InferEs<T extends ConfigInput> = [T["externalSchema"]] extends [ZObj]
-  ? T["externalSchema"]
-  : undefined;
-
-export type InferCv<T extends ConfigInput> = T["calcValuesCallback"];
-
-export type InferConfig<T extends ConfigInput> = ConfigInternal<InferFs<T>, InferEs<T>, InferCv<T>>;
-
-export type ConfigInput = {
-  schema: ZObj;
-  externalSchema?: ZObj;
-  calcValuesCallback?: CvCbInternal;
-  defaults?: Partial<UiValues<ZObj>>;
-  externalValues?: Partial<ExtValues<ZObj>>;
-  fieldConfigs?: FieldConfigs<ZObj, ZObjOpt, CalcValuesOpt>;
 };

@@ -42,13 +42,13 @@ const useForm = <
   TFs extends ZObj,
   TEs extends ZObjOpt = void,
   TCv extends CalcValuesOpt = void,
-  TFc extends FieldConfigsOpt = void
+  TFc extends FieldConfigsOpt<TFs, TEs> = void
 >(
   configInput: ConfigDef<
     TFs,
     TEs extends ZObj ? TEs : never,
     TCv extends CalcValues ? TCv : never,
-    TFc extends FieldConfigs<any, any, any> ? TFc : never
+    TFc extends FieldConfigs<any, any> ? TFc : FieldConfigs<TFs, TEs extends ZObj ? TEs : never>
   >
 ) => {
   const config = configInput as ConfigInternal<TFs, TEs, TCv, TFc>;

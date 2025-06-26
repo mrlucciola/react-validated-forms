@@ -24,7 +24,18 @@ const TestComponent: FC = () => {
     },
     defaults: { dob: dayjs(), fullName: "" },
     externalValues: { amount: null },
-    fieldConfigs: {},
+    fieldConfigs: {
+      // fullName: "",
+      dob: {
+        changeEvent: (asdf) => {
+          asdf.form.fullName;
+          asdf.external?.amount;
+          asdf.external.amount;
+
+          return {};
+        },
+      },
+    },
   });
   const {
     form,
