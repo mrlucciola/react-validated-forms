@@ -45,7 +45,7 @@ export type ConfigDef<TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues
    *    - `config.calcValuesCallback({form, externalValues})` Is typed incorrectly - `externalValues` prop does not exist;
    */
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
-  defaults?: Partial<UiValues<ZObj>>;
+  defaults?: Partial<UiValues<TFs>>;
 };
 
 export type ConfigInternal<

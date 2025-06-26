@@ -51,6 +51,7 @@ const useInitSchemas = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcV
     uiSchema,
     /** Schema used for validating external input - any fields without a `catch` have `.catch()` schema applied.
      * @note The output values of this schema should only be used within the form components.
+     * @todo remove typecast
      */
     evSchema: evSchema as TEs extends ZObj ? NonNullable<UiSchema<NonNullable<TEs>>> : undefined,
   };

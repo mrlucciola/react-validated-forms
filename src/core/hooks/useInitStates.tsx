@@ -9,14 +9,9 @@ import type { UiValues } from "@utils/valueTypes";
 import type { ConfigInput, ConfigInternal } from "@utils/configTypes";
 // DEPRECATED IMPORTS
 
-const useInitStates = <
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
->(
-  uiSchema: UiSchema<TFs>,
-  config: ConfigInput
+const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
+  config: ConfigInternal<TFs, TEs, TCv>,
+  uiSchema: UiSchema<TFs>
 ) => {
   const defaults = config.defaults;
   /** Used for dependency array updates

@@ -35,12 +35,12 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
 ) => {
   const config = configInput as ConfigInternal<TFs, TEs, TCv>;
 
-  const { evSchema, uiSchema } = useInitSchemas<TFs, TEs, TCv>(config);
+  const { evSchema, uiSchema } = useInitSchemas(config);
 
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates<TFs, TEs, TCv>(uiSchema, config);
+    useInitStates(config, uiSchema);
 
-  // const configValues = getConfigValues(config, form);
+  const configValues = getConfigValues(config, form);
 
   // @todo rename
   // const appliedSchema = useBuildConfigSchema(config, configValues);

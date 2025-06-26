@@ -5,6 +5,7 @@ import useForm from "@core/index";
 import { zDayjs } from "@utils/zod";
 import type { Dayjs } from "dayjs";
 import type { CvCbDefinition } from "@utils/configTypes";
+import dayjs from "dayjs";
 
 const schema = z.object({ fullName: z.string(), phone: z.string(), dob: zDayjs });
 const externalSchema = z.object({ email: z.string().email(), amount: z.number() });
@@ -27,6 +28,7 @@ const TestComponent: FC = () => {
 
       return { hai: "asdf" };
     },
+    defaults: { dob: dayjs(), fullName: "" },
   });
   const {
     form,
@@ -44,10 +46,10 @@ const TestComponent: FC = () => {
   uiSchema.parse({}).dob;
   uiSchema.parse({}).fullName;
   uiSchema.parse({}).phone;
-  evSchema.parse({}).amount; // INCORRECT: `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
-  evSchema.parse({}).email; // INCORRECT: `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
+  evSchema.parse({}).amount; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
+  evSchema.parse({}).email; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
 
-  form;
+  form.dob;
   configValues.form.dob;
   configValues.external.email;
   configValues.calculated.hai;
