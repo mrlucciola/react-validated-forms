@@ -1,23 +1,20 @@
 import { useCallback } from "react";
 import type { z } from "zod";
 // utils
-import { getValueFromEvent } from "@utils/utils";
+import { getValueFromEvent } from "@core/utils";
 import getFieldConfig from "../getters/getFieldConfig";
 import useSetField from "../setters/setField";
 // interfaces
-import type {
-  AnyCfgMeta,
-  CfgDefMeta,
-  CfgFs,
-  FsUiKeys,
-  Nullable,
-  OnChangeEventUnionNew,
-  ResolveConfigValues,
-  UiValues,
-  ZObj,
-} from "@utils/index";
+import type { Nullable } from "@utils/utilityTypes";
+import type { ZObj } from "@utils/rootTypes";
 import type { SchemaParseErrors } from "./interfaces";
-import type { UseFormProps } from "@core/types";
+import type { ResolveConfigValues } from "@external/configValuesTypes";
+// DEPRECATED IMPORTS
+import type { AnyCfgMeta, CfgDefMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { OnChangeEventUnionNew } from "@utils/deprec/fxnTypes";
+import type { UiValues } from "@utils/deprec/formOutputTypes";
+import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
+import type { FsUiKeys } from "@utils/deprec/derived";
 
 type UseSetFieldReturn<C extends CfgDefMeta> = ReturnType<typeof useSetField<C>>;
 

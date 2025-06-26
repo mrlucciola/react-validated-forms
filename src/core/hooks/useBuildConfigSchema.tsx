@@ -3,15 +3,12 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type {
-  AnyCfgMeta,
-  CfgFc,
-  CfgFieldConfig,
-  CfgFs,
-  CfgUiValues,
-  ResolveConfigValues,
-} from "@utils/index";
-import type { UseFormProps } from "@core/types";
+import type { ResolveConfigValues } from "@external/configValuesTypes";
+// DEPRECATED IMPORTS
+import type { AnyCfgMeta, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { CfgUiValues } from "@utils/deprec/derived";
+import type { CfgFieldConfig } from "@utils/deprec/fieldConfig";
+import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
 
 type FieldKeyOf<C extends AnyCfgMeta> = keyof C["_fc"] & keyof CfgUiValues<C>;
 

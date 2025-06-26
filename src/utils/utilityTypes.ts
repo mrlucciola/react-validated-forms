@@ -11,6 +11,9 @@ export type Nullable<T, U extends keyof T = keyof T> = Omit<T, U> & {
 export type Nullish<T, U extends keyof T = keyof T> = Omit<T, U> & {
   [P in keyof Pick<T, U>]?: Pick<T, U>[P] | null | undefined;
 };
+export type OmitVoidProps<T> = {
+  [K in keyof T as T[K] extends void ? never : K]-?: T[K];
+};
 
 export type SetState<T> = Dispatch<SetStateAction<T>>;
 
@@ -41,6 +44,8 @@ export type OmitPartialParams<T extends any[]> = T extends [infer Head, ...infer
     : [Head, ...OmitPartialParams<Tail>]
   : [];
 
+export type Optional<T> = T | void;
+
 /** Remove keys whose (non-nullable) type is `void`
  * and make every remaining key required with the `undefined` stripped out of its type.
  *
@@ -51,11 +56,8 @@ export type OmitPartialParams<T extends any[]> = T extends [infer Head, ...infer
  *     - Keep the key (`-?`), and;
  *     - Remove `undefined` from its type;
  */
-export type ResolvePartial<T> = {
-  [K in keyof T as [T[K]] extends [void] // `void | undefined` ?
-    ? never // Drop the key
-    : K]-?: NonNullable<T[K]>; // Keep the key/make it `Required`/Strip `undefined`
-};
-export type Tighten<T> = {
-  [K in keyof T as undefined extends T[K] ? never : K]-?: NonNullable<T[K]>;
-};
+export type Resolved<T> = { [K in keyof T]-?: NonNullable<T[K]> };
+export type ResolveKeys<T> = {
+  [K in keyof T]-?: void extends T[K] ? never : K;
+}[keyof T];
+export type Resolve<T> = Omit<T, ResolveKeys<T>>;

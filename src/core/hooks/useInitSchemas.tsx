@@ -1,10 +1,12 @@
 import { useMemo } from "react";
 import { z } from "zod";
 // utils
-import { buildDefaultSchema } from "@utils/utils";
+import { buildDefaultSchema } from "@core/utils";
 // interfaces
-import type { AnyCfgMeta, CfgFs, UiFormSchema } from "@utils/index";
-import type { UseFormProps } from "@core/types";
+// DEPRECATED IMPORTS
+import type { AnyCfgMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
+import type { UiFormSchema } from "@utils/deprec/fxnTypes";
 
 /**
  * @todo Annotate

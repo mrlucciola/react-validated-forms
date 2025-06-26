@@ -1,35 +1,17 @@
 import type { z } from "zod";
 import type { FieldProps } from "@core/getters/getFieldProps";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
-import type {
-  AnyCfgMeta,
-  CfgCvCb,
-  CfgDefaults,
-  CfgEs,
-  CfgFc,
-  CfgFs,
-  ConfigFieldsOpt,
-  CvCbOpt,
-  ExtValues,
-  FsUiKeys,
-  Nullish,
-  ResolveConfigValues,
-  SetState,
-  Tighten,
-  UiFormSchema,
-  UiValues,
-  ZObj,
-  ZObjOpt,
-} from "@utils/index";
-
-export type UseFormProps<C extends AnyCfgMeta> = {
-  defaults?: CfgDefaults<C>;
-  schema: CfgFs<C>;
-  calcValuesCallback?: CfgCvCb<C>;
-  fieldConfigs?: CfgFc<C>;
-  externalSchema?: CfgEs<C>;
-  externalValues?: Partial<ExtValues<CfgEs<C>>>;
-};
+import type { Resolved } from "@utils/utilityTypes";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { Nullish, SetState } from "@utils/utilityTypes";
+import type { ResolveConfigValues } from "@external/configValuesTypes";
+// DEPRECATED IMPORTS
+import type { CvCbOpt } from "@utils/deprec/cvCbTypes";
+import type { ConfigFieldsOpt } from "@utils/deprec/formFieldConfigs";
+import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
+import type { FsUiKeys } from "@utils/deprec/derived";
+import type { UiFormSchema } from "@utils/deprec/fxnTypes";
+import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc } from "@utils/deprec/formConfigDefinition";
 
 export type UseFormState<
   TFs extends ZObj,
@@ -69,7 +51,7 @@ export type SchemaSpaReturn<TSchema extends ZObj> = z.SafeParseReturnType<
 >;
 
 /** Shape of config-instance Runtime */
-export type ResolvedConfigInstance<C extends AnyCfgMeta<ZObj, any, any, any>> = Tighten<{
+export type ResolvedConfigInstance<C extends AnyCfgMeta<ZObj, any, any, any>> = Resolved<{
   externalValues?: ExtValues<CfgEs<C>>;
   calcValuesCallback?: CfgCvCb<C>;
   fieldConfigs?: CfgFc<C>;

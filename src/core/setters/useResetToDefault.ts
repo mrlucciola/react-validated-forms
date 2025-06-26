@@ -1,6 +1,10 @@
 import { useCallback } from "react";
 // interfaces
-import type { FsDefaults, UiValues, SetState, UiFormSchema, ZObj } from "@utils/index";
+import type { UiValues } from "@utils/deprec/formOutputTypes";
+import type { UiFormSchema } from "@utils/deprec/fxnTypes";
+import type { SetState } from "@utils/utilityTypes";
+import type { ZObj } from "@utils/rootTypes";
+import type { FsDefaults } from "@utils/deprec/derived";
 
 /** Generate memoized `resetToDefault` function to reset 'user-interface' form values. */
 const useResetToDefault = <TFs extends ZObj>(

@@ -1,4 +1,6 @@
-import type { ConfigFieldsOpt, CvCb, CvCbOpt, ZObj, ZObjOpt } from "@utils/index";
+import type { CvCb, CvCbOpt } from "@utils/deprec/cvCbTypes";
+import type { ConfigFieldsOpt } from "@utils/deprec/formFieldConfigs";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
 /** Canonical Configuration Definition type
  * This is a "phantom" type, implemented to:

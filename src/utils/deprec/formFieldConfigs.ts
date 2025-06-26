@@ -1,12 +1,7 @@
-import type {
-  AnyCfgMeta,
-  CfgFc,
-  CvCbOpt,
-  DefineFieldConfig,
-  FsUiKeys,
-  ZObj,
-  ZObjOpt,
-} from "@utils/index";
+import type { CvCbOpt } from "@utils/deprec/cvCbTypes";
+import type { FsUiKeys } from "@utils/deprec/derived";
+import type { DefineFieldConfig } from "@utils/deprec/fieldConfig";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
 /** Defines the configuration for all form fields
  *

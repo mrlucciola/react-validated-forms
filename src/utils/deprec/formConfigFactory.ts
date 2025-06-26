@@ -1,13 +1,6 @@
-import type {
-  CfgDefMeta,
-  CfgCvCb,
-  CfgEs,
-  CfgFc,
-  CfgFs,
-  ExtValues,
-  ZObj,
-  ZObjOpt,
-} from "@utils/index";
+import type { ExtValues } from "@utils/deprec/formOutputTypes";
+import type { CfgCvCb, CfgDefMeta, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
 export type FormConfigInstance<TCfg extends CfgDefMeta> = {
   fieldSchema: CfgFs<TCfg>;

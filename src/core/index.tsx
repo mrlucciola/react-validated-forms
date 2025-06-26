@@ -8,10 +8,11 @@ import useGetFieldProps from "./getters/getFieldProps";
 import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "./hooks/useInitStates";
 // interfaces
-import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/index";
 import type { SchemaParseErrors } from "./getters/interfaces";
-import type { SchemaSpaReturn, UseFormProps, UseFormState } from "@core/types";
-import { useMemo } from "react";
+import type { SchemaSpaReturn, UseFormState } from "@core/types";
+// DEPRECATED IMPORTS
+import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
 
 /** ### Stateful form with validation, based on `zod`.
  *

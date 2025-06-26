@@ -7,7 +7,8 @@
     "@types/bun": "latest",
     "@types/lodash": "^4.17.17",
     "@types/react": "^19.1.8",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "ts-unused-exports": "^11.0.1"
   },
   "peerDependencies": {
     "typescript": "^5.8.3"

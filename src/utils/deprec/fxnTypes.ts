@@ -2,7 +2,7 @@ import type { ChangeEvent } from "react";
 import type { z } from "zod";
 import type dayjs from "dayjs";
 // local
-import type { ZObj, ZObjOpt } from "@utils/index";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }
@@ -52,7 +52,10 @@ export type AppliedFieldSchema<TFs extends ZObj> = UiFormSchema<TFs>;
  *
  * @deprecated renamed to `UiFormOutput`
  */
-export type AppliedFieldOutput<TFs extends ZObj> = z.output<UiFormSchema<TFs>>;
+export type AppliedFieldOutput<
+  TFs extends ZObj<U>,
+  U extends z.ZodRawShape = z.ZodRawShape
+> = z.output<UiFormSchema<TFs>>;
 
 /** @deprecated rename to `ExtOutput` - potentially remove */
 export type OptionalAppliedFieldOutput<TEs extends ZObjOpt> = TEs extends ZObj

@@ -2,8 +2,11 @@ import { useCallback } from "react";
 // utils
 import getFieldConfig from "../getters/getFieldConfig";
 // interfaces
-import type { AnyCfgMeta, CfgFs, InferConfigValues, SetState, UiValues } from "@utils/index";
-import type { UseFormProps } from "@core/types";
+import type { AnyCfgMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { SetState } from "@utils/utilityTypes";
+import type { UiValues } from "@utils/deprec/formOutputTypes";
+import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
+import type { InferConfigValues } from "@internal/configValuesTypes";
 
 /** @todo annotate */
 const useSetField = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(

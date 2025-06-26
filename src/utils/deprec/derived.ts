@@ -1,8 +1,8 @@
-import type { ExtValues, UiValues } from "@utils/formOutputTypes";
-import type { CvCb, CvCbOpt } from "@utils/index";
-import type { AnyCfgMeta, CfgCvCb, CfgFc, CfgFs } from "@utils/types/formConfigDefinition";
-import type { ConfigFieldsOpt } from "@utils/types/formFieldConfigs";
-import type { ZObj, ZObjOpt } from "@utils/zodTypes";
+import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
+import type { CvCb, CvCbOpt } from "@utils/deprec/cvCbTypes";
+import type { AnyCfgMeta, CfgCvCb, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { ConfigFieldsOpt } from "@utils/deprec/formFieldConfigs";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
 /** Derive `defaults` type from the config-definition type (passed into `useForm`) */
 export type CfgDefaults<C extends AnyCfgMeta> = Partial<CfgUiValues<C>>;

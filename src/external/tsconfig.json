@@ -10,5 +10,6 @@
     "noUncheckedIndexedAccess": true,
     "stripInternal": true
   },
-  "include": ["./"]
+  "include": ["./"],
+  "references": [{ "path": "../internal" }, { "path": "../utils" }]
 }

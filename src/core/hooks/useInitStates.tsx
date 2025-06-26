@@ -3,8 +3,11 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { UiFormSchema, UiValues, ZObj } from "@utils/index";
-import type { FsDefaults } from "@utils/index";
+import type { ZObj } from "@utils/rootTypes";
+// DEPRECATED IMPORTS
+import type { UiFormSchema } from "@utils/deprec/fxnTypes";
+import type { FsDefaults } from "@utils/deprec/derived";
+import type { UiValues } from "@utils/deprec/formOutputTypes";
 
 /**
  *

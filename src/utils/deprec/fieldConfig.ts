@@ -1,17 +1,22 @@
 import type { z } from "zod";
-import type {
-  AnyCfgMeta,
-  CfgCvCb,
-  CfgEs,
-  CfgFc,
-  CfgFs,
-  CvCbOpt,
-  DefineConfigValues,
-  FsUiKeys,
-  Nullish,
-  ZObj,
-  ZObjOpt,
-} from "@utils/index";
+//
+import type { CvCbOpt } from "@utils/deprec/cvCbTypes";
+import type { CvCbCalculatedValues, FsUiKeys } from "@utils/deprec/derived";
+import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { Nullish } from "@utils/utilityTypes";
+import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
+
+/** @deprecated duplicate - see internal */
+export type DefineConfigValues<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCvCb extends CvCbOpt<TFs, TEs>
+> = {
+  form: UiValues<TFs>;
+  external?: ExtValues<TEs>;
+  calculated?: CvCbCalculatedValues<TCvCb>;
+};
 
 export type FieldConfig<
   C extends AnyCfgMeta,

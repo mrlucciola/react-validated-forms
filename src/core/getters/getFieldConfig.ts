@@ -1,4 +1,4 @@
-import type { ConfigFieldsOpt } from "@utils/index";
+import type { ConfigFieldsOpt } from "@utils/deprec/formFieldConfigs";
 
 /** @todo add description */
 const getFieldConfig = <Fc extends ConfigFieldsOpt<any, any, any>, FcKey extends keyof Fc>(

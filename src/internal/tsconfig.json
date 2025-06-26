@@ -8,5 +8,6 @@
     // Overrides
     "noUncheckedIndexedAccess": false
   },
-  "include": ["./"]
+  "include": ["./"],
+  "references": [{ "path": "../utils" }]
 }

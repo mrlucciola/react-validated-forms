@@ -1,12 +1,10 @@
+import type { ExtValues } from "@utils/deprec/formOutputTypes";
+import type { BuildCfg, CfgEs, ConfigDefinition } from "@utils/deprec/formConfigDefinition";
 import type {
   ConfigFactoryParams,
-  ExtValues,
-  ConfigDefinition,
   FormConfigFactory,
   FormConfigInstance,
-  CfgEs,
-  BuildCfg,
-} from "@utils/index";
+} from "@utils/deprec/formConfigFactory";
 
 /** Only for use in `useValidatedForm`
  * For fields on `externalSchema`, `null` is applied to fields where a catch is not provided

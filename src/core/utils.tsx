@@ -1,13 +1,14 @@
 import { z } from "zod";
 import { isDayjs } from "dayjs";
 // interfaces
-import type { ZObj } from "@utils/index";
+import type { ZObj } from "@utils/rootTypes";
+// DEPRECATED IMPORTS
 import type {
   AppliedFieldSchema,
   CatchFieldSchema,
   CatchSchemaShape,
   OnChangeEventUnionNew,
-} from "./fxnTypes";
+} from "@utils/deprec/fxnTypes";
 
 const getFieldDefaultValue = <TVal, TField extends z.ZodType<TVal>, TInput>(
   origFieldSchema: TInput extends z.ZodDefault<TField> ? z.ZodDefault<TField> : TField

@@ -1,15 +1,11 @@
-import type { UseFormProps } from "@core/types";
-import type {
-  AnyCfgMeta,
-  CfgCalculatedValues,
-  CfgEs,
-  CfgFs,
-  ExtValues,
-  InferConfigValues,
-  ResolveConfigValues,
-  UiValues,
-  ZObj,
-} from "@utils/index";
+import type { InferConfigValues } from "@internal/configValuesTypes";
+import type { ResolveConfigValues } from "@external/configValuesTypes";
+import type { ZObj } from "@utils/rootTypes";
+// DEPREC IMPORTS
+import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
+import type { AnyCfgMeta, CfgEs, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
+import type { CfgCalculatedValues } from "@utils/deprec/derived";
 
 const getExternalValues = <C extends AnyCfgMeta>(
   config: UseFormProps<C>
