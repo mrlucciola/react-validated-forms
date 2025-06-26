@@ -5,7 +5,7 @@ import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { ZObj } from "@utils/rootTypes";
 // DEPRECATED IMPORTS
-import type { UiFormSchema } from "@utils/deprec/fxnTypes";
+import type { UiSchema } from "@utils/deprec/fxnTypes";
 import type { FsDefaults } from "@utils/deprec/derived";
 import type { UiValues } from "@utils/deprec/formOutputTypes";
 
@@ -16,7 +16,7 @@ import type { UiValues } from "@utils/deprec/formOutputTypes";
  * @returns
  */
 const useInitStates = <TFs extends ZObj>(
-  uiSchema: UiFormSchema<TFs>,
+  uiSchema: UiSchema<TFs>,
   defaults?: FsDefaults<TFs>
 ) => {
   /** Used for dependency array updates

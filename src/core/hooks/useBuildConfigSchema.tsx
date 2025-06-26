@@ -5,15 +5,15 @@ import { zAddRulesIssue } from "@utils/zod";
 // interfaces
 import type { ResolveConfigValues } from "@external/configValuesTypes";
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { CfgUiValues } from "@utils/deprec/derived";
 import type { CfgFieldConfig } from "@utils/deprec/fieldConfig";
 import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
 
-type FieldKeyOf<C extends AnyCfgMeta> = keyof C["_fc"] & keyof CfgUiValues<C>;
+type FieldKeyOf<C extends AnyCfgMetaDEPREC> = keyof C["_fc"] & keyof CfgUiValues<C>;
 
 // Helper types for odd one-off data structures used throughout the file
-type FieldCfgEntry<C extends AnyCfgMeta, FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>> = [
+type FieldCfgEntry<C extends AnyCfgMetaDEPREC, FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>> = [
   FieldKey,
   CfgFieldConfig<C, FieldKey>
 ];
@@ -22,7 +22,7 @@ type FieldCfgEntry<C extends AnyCfgMeta, FieldKey extends FieldKeyOf<C> = FieldK
  * @deprecated needs to be analyzed
  */
 const applyFieldConfigValidationRefinements =
-  <C extends AnyCfgMeta>(configValues: ResolveConfigValues<C>) =>
+  <C extends AnyCfgMetaDEPREC>(configValues: ResolveConfigValues<C>) =>
   <FieldKey extends FieldKeyOf<C> = FieldKeyOf<C>>(
     fieldEntryTuple: FieldCfgEntry<C, FieldKey> //FieldCfgEntry<C, FieldKey>
   ): ((form: CfgUiValues<C>, ctx: z.RefinementCtx) => void) => {
@@ -58,7 +58,7 @@ const applyFieldConfigValidationRefinements =
  * @returns
  */
 
-// export type ConfigDefinition<TCfg extends AnyCfgMeta> = {
+// export type ConfigDefinition<TCfg extends AnyCfgMetaDEPREC> = {
 //   formSchema: CfgFs<TCfg>;
 //   externalSchema?: CfgEs<TCfg>;
 //   calcValuesCallback?: CfgCvCb<TCfg>;
@@ -68,7 +68,7 @@ const applyFieldConfigValidationRefinements =
 /**
  * For each field: Apply schema refinements defined in config to the baseSchema
  */
-const useBuildConfigSchema = <C extends AnyCfgMeta>(
+const useBuildConfigSchema = <C extends AnyCfgMetaDEPREC>(
   config: UseFormProps<C>,
   configValues: ResolveConfigValues<C>
 ) => {

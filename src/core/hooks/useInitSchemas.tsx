@@ -4,18 +4,18 @@ import { z } from "zod";
 import { buildDefaultSchema } from "@core/utils";
 // interfaces
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
-import type { UiFormSchema } from "@utils/deprec/fxnTypes";
+import type { UiSchema } from "@utils/deprec/fxnTypes";
 
 /**
  * @todo Annotate
  */
-const useInitSchemas = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
+const useInitSchemas = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = CfgFs<C>>(
   config: UseFormProps<C>
 ): {
   baseSchema: TFs;
-  baseUserInputSchema: UiFormSchema<TFs>;
+  baseUserInputSchema: UiSchema<TFs>;
 } => {
   const formSchema = config.schema;
   /** @note This object is memoized because:
@@ -38,7 +38,7 @@ const useInitSchemas = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
   /** Schema used for validating user input - any fields without a `catch` have `.catch()` schema applied.
    * @note The output values of this schema should only be used within the form components.
    */
-  const baseUserInputSchema: UiFormSchema<TFs> = useMemo(() => buildDefaultSchema(baseSchema), []);
+  const baseUserInputSchema: UiSchema<TFs> = useMemo(() => buildDefaultSchema(baseSchema), []);
 
   return {
     /** The schema used for validating values used outside of the form fields.

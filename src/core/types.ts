@@ -10,8 +10,8 @@ import type { CvCbOpt } from "@utils/deprec/cvCbTypes";
 import type { ConfigFieldsOpt } from "@utils/deprec/formFieldConfigs";
 import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
 import type { FsUiKeys } from "@utils/deprec/derived";
-import type { UiFormSchema } from "@utils/deprec/fxnTypes";
-import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc } from "@utils/deprec/formConfigDefinition";
+import type { UiSchema } from "@utils/deprec/fxnTypes";
+import type { AnyCfgMetaDEPREC, CfgCvCb, CfgEs, CfgFc } from "@utils/deprec/formConfigDefinition";
 
 export type UseFormState<
   TFs extends ZObj,
@@ -38,11 +38,11 @@ export type UseFormState<
 
   /* ——— static artefacts ——— */
   schema: TFs; // official schema
-  userInputSchema: UiFormSchema<TFs>; // “catch” schema
-  config: ResolveConfigValues<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
+  userInputSchema: UiSchema<TFs>; // “catch” schema
+  config: ResolveConfigValues<AnyCfgMetaDEPREC<TFs, TEs, TCv, TFc>>;
 
   /* ——— resolved config (optional parts omitted if unused) ——— */
-} & ResolvedConfigInstance<AnyCfgMeta<TFs, TEs, TCv, TFc>>;
+} & ResolvedConfigInstance<AnyCfgMetaDEPREC<TFs, TEs, TCv, TFc>>;
 
 /** Convenience-type to correct issues in zod impl */
 export type SchemaSpaReturn<TSchema extends ZObj> = z.SafeParseReturnType<
@@ -51,7 +51,7 @@ export type SchemaSpaReturn<TSchema extends ZObj> = z.SafeParseReturnType<
 >;
 
 /** Shape of config-instance Runtime */
-export type ResolvedConfigInstance<C extends AnyCfgMeta<ZObj, any, any, any>> = Resolved<{
+export type ResolvedConfigInstance<C extends AnyCfgMetaDEPREC<ZObj, any, any, any>> = Resolved<{
   externalValues?: ExtValues<CfgEs<C>>;
   calcValuesCallback?: CfgCvCb<C>;
   fieldConfigs?: CfgFc<C>;

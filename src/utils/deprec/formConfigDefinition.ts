@@ -21,7 +21,7 @@ export interface CfgDefMeta<
   readonly _fc: TFc; // Config Fields
 }
 export type AnyCfgMetaOrig = CfgDefMeta<ZObj, any, any, any>;
-export type AnyCfgMeta<
+export type AnyCfgMetaDEPREC<
   TFs extends ZObj = ZObj,
   TEs extends ZObjOpt = ZObjOpt,
   TCvCb extends CvCbOpt<TFs, TEs> = CvCbOpt<TFs, TEs>,
@@ -41,13 +41,13 @@ export type CustomCfgDef<
 };
 
 /** */
-export type ConfigDefinition<TCfg extends AnyCfgMeta> = {
+export type ConfigDefinition<TCfg extends AnyCfgMetaDEPREC> = {
   formSchema: CfgFs<TCfg>;
   externalSchema?: CfgEs<TCfg>;
   calcValuesCallback?: CfgCvCb<TCfg>;
   fieldConfigs?: CfgFc<TCfg>;
 };
-export type AnyCfgDef = ConfigDefinition<AnyCfgMeta>;
+export type AnyCfgDef = ConfigDefinition<AnyCfgMetaDEPREC>;
 
 export type BuildCfg<Def extends ConfigDefinition<any>> = CfgDefMeta<
   Def["formSchema"],
@@ -56,7 +56,7 @@ export type BuildCfg<Def extends ConfigDefinition<any>> = CfgDefMeta<
   Def["fieldConfigs"] extends ConfigFieldsOpt<any, any, any> ? Def["fieldConfigs"] : void
 >;
 
-export type CfgFs<TCfg extends AnyCfgMeta> = TCfg["_fs"];
-export type CfgEs<TCfg extends AnyCfgMeta> = TCfg["_es"];
-export type CfgCvCb<TCfg extends AnyCfgMeta> = TCfg["_cv"];
-export type CfgFc<TCfg extends AnyCfgMeta> = TCfg["_fc"];
+export type CfgFs<TCfg extends AnyCfgMetaDEPREC> = TCfg["_fs"];
+export type CfgEs<TCfg extends AnyCfgMetaDEPREC> = TCfg["_es"];
+export type CfgCvCb<TCfg extends AnyCfgMetaDEPREC> = TCfg["_cv"];
+export type CfgFc<TCfg extends AnyCfgMetaDEPREC> = TCfg["_fc"];

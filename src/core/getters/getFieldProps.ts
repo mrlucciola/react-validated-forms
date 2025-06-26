@@ -10,7 +10,7 @@ import type { ZObj } from "@utils/rootTypes";
 import type { SchemaParseErrors } from "./interfaces";
 import type { ResolveConfigValues } from "@external/configValuesTypes";
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta, CfgDefMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgDefMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { OnChangeEventUnionNew } from "@utils/deprec/fxnTypes";
 import type { UiValues } from "@utils/deprec/formOutputTypes";
 import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
@@ -28,7 +28,7 @@ export type FieldProps<TFs extends ZObj, K extends FsUiKeys<TFs>> = {
   disabled?: boolean;
 };
 
-const useGetFieldProps = <C extends AnyCfgMeta, TFs extends CfgFs<C> = CfgFs<C>>(
+const useGetFieldProps = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = CfgFs<C>>(
   setField: ReturnType<typeof useSetField<C>>,
   form: UiValues<TFs>,
   errors: SchemaParseErrors<TFs> | undefined,

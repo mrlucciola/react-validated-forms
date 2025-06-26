@@ -11,8 +11,16 @@ import useInitStates from "./hooks/useInitStates";
 import type { SchemaParseErrors } from "./getters/interfaces";
 import type { SchemaSpaReturn, UseFormState } from "@core/types";
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type {
+  AnyCfgMetaDEPREC,
+  CfgCvCb,
+  CfgEs,
+  CfgFc,
+  CfgFs,
+} from "@utils/deprec/formConfigDefinition";
 import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
+import type { AnyCfgMeta } from "@utils/rootTypes";
+import type { UseFormConfig } from "@utils/metaTypes";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -34,11 +42,11 @@ import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <C extends AnyCfgMeta>(
-  config: UseFormProps<C>
-): UseFormState<CfgFs<C>, CfgEs<C>, CfgCvCb<C>, CfgFc<C>> => {
+const useForm = <C extends AnyCfgMeta>(config: UseFormConfig<C>) => {
   const { baseSchema, baseUserInputSchema } = useInitSchemas(config);
-
+  /** TO-DO
+ 
+  
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
     useInitStates(baseUserInputSchema, config.defaults);
 
@@ -56,32 +64,32 @@ const useForm = <C extends AnyCfgMeta>(
   const setField = useSetField(setForm, config, configValues, markDirty);
 
   const getFieldProps = useGetFieldProps(setField, form, errors, config, configValues);
-
+  */
   return {
-    form,
-    setForm,
-    setField,
-    validation,
-    errors,
-    isValid,
-    isDirty,
-    dirtyFields,
-    resetToDefault,
-    // Utils
-    getFieldProps,
-    /** Official validation schema. Use whenever the full payload needs to be valid. @todo apply correct type */
-    schema: appliedSchema as CfgFs<C>,
-    /** Schema applied to form values.
-     * @note Only for use within the form.
-     * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
-     * @note Previous names: `formSchema`, `userInputSchema`
-     */
-    userInputSchema: baseUserInputSchema,
-
-    /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
-     * - This happens by assigning the type defined in the generic. */
-    config: configValues,
-    // config: configValues as unknown as FormConfigCbReturnInferred<TCfg>,
+    // form,
+    // setForm,
+    // setField,
+    // validation,
+    // errors,
+    // isValid,
+    // isDirty,
+    // dirtyFields,
+    // resetToDefault,
+    // // Utils
+    // getFieldProps,
+    // /** Official validation schema. Use whenever the full payload needs to be valid. @todo apply correct type */
+    // schema: appliedSchema as CfgFs<C>,
+    // /** Schema applied to form values.
+    //  * @note Only for use within the form.
+    //  * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
+    //  * @note Previous names: `formSchema`, `userInputSchema`
+    //  */
+    // userInputSchema: baseUserInputSchema,
+    //
+    // /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
+    //  * - This happens by assigning the type defined in the generic. */
+    // config: configValues,
+    // // config: configValues as unknown as FormConfigCbReturnInferred<TCfg>,
   } as const;
 };
 

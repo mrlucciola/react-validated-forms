@@ -2,7 +2,7 @@ import type { z } from "zod";
 //
 import type { CvCbOpt } from "@utils/deprec/cvCbTypes";
 import type { CvCbCalculatedValues, FsUiKeys } from "@utils/deprec/derived";
-import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { Nullish } from "@utils/utilityTypes";
 import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
@@ -19,13 +19,13 @@ export type DefineConfigValues<
 };
 
 export type FieldConfig<
-  C extends AnyCfgMeta,
+  C extends AnyCfgMetaDEPREC,
   TField extends FieldCfgs extends [void] ? keyof FieldCfgs : never,
   FieldCfgs extends CfgFc<C> = CfgFc<C>
 > = FieldCfgs extends [void] ? never : FieldCfgs[TField];
 
 export type CfgFieldConfig<
-  C extends AnyCfgMeta,
+  C extends AnyCfgMetaDEPREC,
   FieldKey extends FsUiKeys<CfgFs<C>>
 > = DefineFieldConfig<CfgFs<C>, CfgEs<C>, CfgCvCb<C>, FieldKey>;
 

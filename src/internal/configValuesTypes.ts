@@ -3,7 +3,7 @@ import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { CvCbOpt } from "@utils/deprec/cvCbTypes";
 import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
 import type { CvCbCalculatedValues } from "@utils/deprec/derived";
-import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgCvCb, CfgEs, CfgFs } from "@utils/deprec/formConfigDefinition";
 
 /** Used BEFORE config is defined */
 export type DefineConfigValues<
@@ -16,7 +16,7 @@ export type DefineConfigValues<
   calculated?: CvCbCalculatedValues<TCvCb>;
 };
 
-export type InferConfigValues<C extends AnyCfgMeta> = DefineConfigValues<
+export type InferConfigValues<C extends AnyCfgMetaDEPREC> = DefineConfigValues<
   CfgFs<C>,
   CfgEs<C>,
   CfgCvCb<C>

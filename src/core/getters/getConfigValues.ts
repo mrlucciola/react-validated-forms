@@ -3,11 +3,11 @@ import type { ResolveConfigValues } from "@external/configValuesTypes";
 import type { ZObj } from "@utils/rootTypes";
 // DEPREC IMPORTS
 import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
-import type { AnyCfgMeta, CfgEs, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgEs, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
 import type { CfgCalculatedValues } from "@utils/deprec/derived";
 
-const getExternalValues = <C extends AnyCfgMeta>(
+const getExternalValues = <C extends AnyCfgMetaDEPREC>(
   config: UseFormProps<C>
 ): CfgEs<C> extends void ? undefined : NonNullable<ExtValues<CfgEs<C>>> => {
   const schema = config.externalSchema;
@@ -20,7 +20,7 @@ const getExternalValues = <C extends AnyCfgMeta>(
   return undefined;
 };
 
-const getCalculatedValues = <C extends AnyCfgMeta>(
+const getCalculatedValues = <C extends AnyCfgMetaDEPREC>(
   config: UseFormProps<C>,
   uiValues: UiValues<CfgFs<C>>,
   parsedExternalValues: ExtValues<CfgEs<C>>
@@ -31,7 +31,7 @@ const getCalculatedValues = <C extends AnyCfgMeta>(
 /** @todo Add annotation
  * @todo Fix output type
  */
-const getConfigValues = <C extends AnyCfgMeta<ZObj, any, any, any>>(
+const getConfigValues = <C extends AnyCfgMetaDEPREC<ZObj, any, any, any>>(
   config: UseFormProps<C>,
   uiValues: UiValues<CfgFs<C>>
 ) => {

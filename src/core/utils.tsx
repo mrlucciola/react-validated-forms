@@ -2,13 +2,12 @@ import { z } from "zod";
 import { isDayjs } from "dayjs";
 // interfaces
 import type { ZObj } from "@utils/rootTypes";
-// DEPRECATED IMPORTS
 import type {
-  AppliedFieldSchema,
   CatchFieldSchema,
   CatchSchemaShape,
   OnChangeEventUnionNew,
-} from "@utils/deprec/fxnTypes";
+  UiSchema,
+} from "@utils/schemaTypes";
 
 const getFieldDefaultValue = <TVal, TField extends z.ZodType<TVal>, TInput>(
   origFieldSchema: TInput extends z.ZodDefault<TField> ? z.ZodDefault<TField> : TField
@@ -39,7 +38,7 @@ const getFieldCatchSchema = <
 /** Inspired by this [StackOverflow answer](https://stackoverflow.com/a/77720528) */
 export const buildDefaultSchema = <TOrigSchema extends ZObj>(
   schema: TOrigSchema
-): AppliedFieldSchema<TOrigSchema> => {
+): UiSchema<TOrigSchema> => {
   type FieldKey = keyof CatchSchemaShape<TOrigSchema>;
 
   const schemaFields = Object.entries(schema.shape) as [FieldKey, TOrigSchema["shape"][FieldKey]][];

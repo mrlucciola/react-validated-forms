@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { CvCb, CvCbOpt } from "@utils/deprec/cvCbTypes";
 import type { ExtValues, UiValues } from "@utils/deprec/formOutputTypes";
 import type { CfgDefaults } from "@utils/deprec/derived";
-import type { AnyCfgMeta, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
+import type { AnyCfgMetaDEPREC, CfgCvCb, CfgEs, CfgFc, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { ConfigFieldsOpt, DefineConfigFields } from "@utils/deprec/formFieldConfigs";
 import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { Resolved } from "@utils/utilityTypes";
@@ -62,7 +62,7 @@ export type ConfigBase<
 };
 
 /** @deprecated use ConfigBase */
-export type UseFormProps<C extends AnyCfgMeta> = {
+export type UseFormProps<C extends AnyCfgMetaDEPREC> = {
   defaults?: CfgDefaults<C>;
   schema: CfgFs<C>;
   calcValuesCallback?: CfgCvCb<C>;
