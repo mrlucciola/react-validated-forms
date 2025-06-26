@@ -3,11 +3,10 @@
 import useInitSchemas from "./hooks/useInitSchemas";
 // interfaces
 // DEPRECATED IMPORTS
-import type { AnyCfgMeta, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ConfigInternal, UseFormConfig } from "@utils/metaTypes";
+import type { AnyCfgMeta, CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import useInitStates from "@core/hooks/useInitStates";
 import type { UiValues } from "@utils/valueTypes";
-import type { ConfigDef, ConfigExternal } from "@utils/configTypes";
+import type { ConfigDef, ConfigExternal, ConfigInternal, InferConfig } from "@utils/configTypes";
 import getConfigValues from "@core/getters/getConfigValues";
 import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 
@@ -32,19 +31,20 @@ import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
 const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcValuesOpt = void>(
-  config_: ConfigDef<TFs, TEs, TCv>
+  configInput: ConfigDef<TFs, TEs extends ZObj ? TEs : never, TCv extends CalcValues ? TCv : never>
 ) => {
-  const config = config_ as unknown as ConfigInternal<TFs, TEs, TCv>;
+  type C = InferConfig<typeof configInput>;
+  const config = configInput as C;
 
   const { evSchema, uiSchema } = useInitSchemas(config);
 
-  const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates(uiSchema, config);
+  // const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
+  //   useInitStates(uiSchema, config);
 
-  const configValues = getConfigValues(config, form);
+  // const configValues = getConfigValues(config, form);
 
   // @todo rename
-  const appliedSchema = useBuildConfigSchema(config, configValues);
+  // const appliedSchema = useBuildConfigSchema(config, configValues);
   /** TO-DO
 
 
@@ -60,13 +60,13 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
   const getFieldProps = useGetFieldProps(setField, form, errors, config, configValues);
   */
   return {
-    form: form,
-    setForm,
-    updateForm,
-    markDirty,
-    isDirty,
-    dirtyFields,
-    resetToDefault,
+    // form: form,
+    // setForm,
+    // updateForm,
+    // markDirty,
+    // isDirty,
+    // dirtyFields,
+    // resetToDefault,
 
     // Utils
     // getFieldProps,
@@ -80,7 +80,7 @@ const useForm = <TFs extends ZObj, TEs extends ZObjOpt = void, TCv extends CalcV
 
     /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
      * - This happens by assigning the type defined in the generic. */
-    configValues,
+    // configValues,
   } as const;
 };
 

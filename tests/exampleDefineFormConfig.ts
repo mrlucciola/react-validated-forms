@@ -1,15 +1,17 @@
 import { z } from "zod";
 // local
-import type { ZObjOpt, ZObj, EvOut, UiValues } from "@utils/index";
+
 import { defineFormConfig } from "@configDsl/index";
 import { formSchema } from "./testVars/formSchema";
 import { externalSchema } from "./testVars/externalSchema";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 type DefCalcValues<
   TFormSchema extends ZObj = ZObj,
   TCv = any,
   TEvSchema extends ZObjOpt = ZObjOpt
-> = (form: UiValues<TFormSchema>, ext?: EvOut<TEvSchema>) => TCv;
+> = (form: UiValues<TFormSchema>, ext?: ExtValues<TEvSchema>) => TCv;
 
 const testFormConfig = defineFormConfig({
   aaa: "", //  should throw an error but doesnt
@@ -37,7 +39,7 @@ type TestExternalSchema = typeof externalSchema;
 type TestCalculatedValues = typeof defCalcValues;
 type TestForm = UiValues<TestFormSchema>;
 type TestCv = ReturnType<TestCalculatedValues>;
-type TestEv = EvOut<TestExternalSchema>;
+type TestEv = ExtValues<TestExternalSchema>;
 
 // Extracted types: config outputs
 type TestReturn = ReturnType<typeof testFormConfig>;
@@ -51,7 +53,7 @@ const asdf = calcValuesCallback({} as TestForm, {} as TestEv);
 type InferredEv = ReturnType<typeof testFormConfig>["calcValues"];
 
 {
-  const testExternalValues = {} as NonNullable<EvOut<TestExternalSchema>>;
+  const testExternalValues = {} as NonNullable<ExtValues<TestExternalSchema>>;
   const testFxnCbInput = <TEvSchema extends ZObjOpt | unknown>(
     input?: FormConfigCbInput<TEvSchema>
   ) => {

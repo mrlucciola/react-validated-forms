@@ -3,20 +3,16 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { AnyCfgMeta } from "@utils/rootTypes";
+import type { AnyCfgDef, AnyCfgMeta } from "@utils/rootTypes";
 import type { UiSchema } from "@utils/schemaTypes";
 import type { UiValues } from "@utils/valueTypes";
 // DEPRECATED IMPORTS
-import type { UseFormConfig } from "@utils/metaTypes";
 
-const useInitStates = <
-  C extends AnyCfgMeta,
-  TFs extends UseFormConfig<C>["schema"] = UseFormConfig<C>["schema"]
->(
+const useInitStates = <C extends AnyCfgDef, TFs extends C["schema"] = C["schema"]>(
   uiSchema: UiSchema<TFs>,
-  config: UseFormConfig<C>
+  config: C
 ) => {
-  config.schema
+  config.defaults;
   const defaults = {} as UiValues<TFs>; // config.defaults;
   /** Used for dependency array updates
    * - Keeps a stable reference for dependency arrays;
