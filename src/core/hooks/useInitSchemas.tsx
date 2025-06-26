@@ -3,42 +3,46 @@ import { z } from "zod";
 // utils
 import { buildDefaultSchema } from "@core/utils";
 // interfaces
-// DEPRECATED IMPORTS
-import type { AnyCfgMetaDEPREC, CfgFs } from "@utils/deprec/formConfigDefinition";
-import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
-import type { UiSchema } from "@utils/deprec/fxnTypes";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ConfigDef } from "@utils/configTypes";
+import type { ExtSchema, UiSchema } from "@utils/schemaTypes";
 
-/**
- * @todo Annotate
- */
-const useInitSchemas = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = CfgFs<C>>(
-  config: UseFormProps<C>
+const useInitSchemas = <
+  C extends ConfigDef<any, any, any>,
+  TFs extends ZObj = C["schema"],
+  TEs extends ZObjOpt = C["externalSchema"]
+>(
+  config: C
 ): {
   baseSchema: TFs;
-  baseUserInputSchema: UiSchema<TFs>;
+  evSchema: ExtSchema<TEs>;
+  uiSchema: UiSchema<TFs>;
 } => {
-  const formSchema = config.schema;
+  if (config.schema instanceof z.ZodEffects) {
+    throw new Error(
+      `Schema cannot be an Effect type (preprocess/transform/refine): Provided: ${config.schema}`
+    );
+  }
+  if (config.externalSchema instanceof z.ZodEffects) {
+    throw new Error(
+      `External schema cannot be an Effect type (preprocess/transform/refine): Provided: ${config.externalSchema}`
+    );
+  }
+
   /** @note This object is memoized because:
    *   - Updates frequently (on each field change)
    *   - Can be expensive to recalculate (affects performance as # of fields (and the amount of nesting) increases
    */
-  const baseSchema: TFs = useMemo(() => {
-    // Extract the base schema from its refined form (if refined)
-    const innerFormSchema: TFs =
-      formSchema instanceof z.ZodEffects ? formSchema.innerType() : formSchema;
-
-    if ((innerFormSchema as any) instanceof z.ZodEffects)
-      throw new Error(
-        "Refined schemas must use either a single `.refine`. Use `.superRefine` for one or more refinements."
-      );
-
-    return innerFormSchema;
-  }, []);
+  const baseSchema: TFs = useMemo(() => config.schema, []);
 
   /** Schema used for validating user input - any fields without a `catch` have `.catch()` schema applied.
    * @note The output values of this schema should only be used within the form components.
    */
-  const baseUserInputSchema: UiSchema<TFs> = useMemo(() => buildDefaultSchema(baseSchema), []);
+  const uiSchema: UiSchema<TFs> = useMemo(() => buildDefaultSchema(baseSchema), []);
+  const evSchema: ExtSchema<TEs> = useMemo(() => {
+    const out = config.externalSchema ? buildDefaultSchema(config.externalSchema) : undefined;
+    return out as ExtSchema<TEs>; // @todo remove this coersion
+  }, []);
 
   return {
     /** The schema used for validating values used outside of the form fields.
@@ -51,7 +55,11 @@ const useInitSchemas = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = CfgFs
     /** Schema used for validating user input - any fields without a `catch` have `.catch()` schema applied.
      * @note The output values of this schema should only be used within the form components.
      */
-    baseUserInputSchema,
+    uiSchema,
+    /** Schema used for validating external input - any fields without a `catch` have `.catch()` schema applied.
+     * @note The output values of this schema should only be used within the form components.
+     */
+    evSchema,
   };
 };
 

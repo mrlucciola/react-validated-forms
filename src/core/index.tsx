@@ -1,24 +1,8 @@
-import { isEqual } from "lodash";
 // utils
-import useBuildConfigSchema from "./hooks/useBuildConfigSchema";
-import useSetField from "./setters/setField";
-import getConfigValues from "./getters/getConfigValues";
 // hooks
-import useGetFieldProps from "./getters/getFieldProps";
 import useInitSchemas from "./hooks/useInitSchemas";
-import useInitStates from "./hooks/useInitStates";
 // interfaces
-import type { SchemaParseErrors } from "./getters/interfaces";
-import type { SchemaSpaReturn, UseFormState } from "@core/types";
 // DEPRECATED IMPORTS
-import type {
-  AnyCfgMetaDEPREC,
-  CfgCvCb,
-  CfgEs,
-  CfgFc,
-  CfgFs,
-} from "@utils/deprec/formConfigDefinition";
-import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
 import type { AnyCfgMeta } from "@utils/rootTypes";
 import type { UseFormConfig } from "@utils/metaTypes";
 
@@ -43,12 +27,12 @@ import type { UseFormConfig } from "@utils/metaTypes";
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
 const useForm = <C extends AnyCfgMeta>(config: UseFormConfig<C>) => {
-  const { baseSchema, baseUserInputSchema } = useInitSchemas(config);
+  const { baseSchema, evSchema, uiSchema } = useInitSchemas(config);
   /** TO-DO
  
   
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates(baseUserInputSchema, config.defaults);
+    useInitStates(uiSchema, config.defaults);
 
   const configValues = getConfigValues(config, form);
 
@@ -84,7 +68,7 @@ const useForm = <C extends AnyCfgMeta>(config: UseFormConfig<C>) => {
     //  * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
     //  * @note Previous names: `formSchema`, `userInputSchema`
     //  */
-    // userInputSchema: baseUserInputSchema,
+    // userInputSchema: uiSchema,
     //
     // /** Allows correctly-typed use of `external values` when used in config methods outside of this framework.
     //  * - This happens by assigning the type defined in the generic. */

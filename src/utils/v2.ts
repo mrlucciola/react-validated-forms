@@ -32,19 +32,3 @@ const calcValues1 = newCfg1.calcValuesCallback({
   externalValues: { alias: null, loginNonce: null },
 });
 const cv1Testing: string = calcValues1.testing;
-
-const useInitSchemas = <C extends ConfigDef<any, any, any>, TFs extends ZObj = C["schema"]>(
-  config: C
-): {
-  baseSchema: TFs;
-  baseUserInputSchema: UiSchema<TFs>;
-} => {
-  const formSchema = config.schema;
-  const baseSchema: TFs = formSchema instanceof z.ZodEffects ? formSchema.innerType() : formSchema;
-  const baseUserInputSchema: UiSchema<TFs> = buildDefaultSchema(baseSchema);
-
-  return { baseSchema, baseUserInputSchema };
-};
-
-const initSchemas = useInitSchemas(newCfg1);
-initSchemas.baseUserInputSchema.parse({}) satisfies UiValues<typeof newCfg1.schema>;

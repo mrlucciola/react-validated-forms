@@ -78,7 +78,7 @@ const useBuildConfigSchema = <C extends AnyCfgMetaDEPREC>(
   const baseSchema: TFs = config.schema;
   const fieldConfigs: TFc = config.fieldConfigs;
 
-  // if no config provided: Early return `baseUserInputSchema`
+  // if no config provided: Early return `uiSchema`
   if (!fieldConfigs) return baseSchema;
 
   /**

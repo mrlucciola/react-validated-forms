@@ -56,6 +56,6 @@ Argument of type 'FormConfigInstance<BuildCfg<{ formSchema: ZodObject<{ fullName
   const formState = useForm(schema, undefined, formCfgInst);
 
   formState.form; // No fields show up. the type is just `(property) form: UiValues<TBase>`
-  formState.baseUserInputSchema; // This shows the expected type however.
+  formState.uiSchema; // This shows the expected type however.
   return <div></div>;
 };
