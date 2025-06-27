@@ -2,7 +2,7 @@ import { z } from "zod";
 import dayjs from "dayjs";
 // local
 import { zDayjs } from "@utils/zod";
-import type { ZObj, ZObjOpt } from "@utils/index";
+import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
 const TestObj = z.object({ name: z.string(), date: zDayjs, num: z.number() });
 

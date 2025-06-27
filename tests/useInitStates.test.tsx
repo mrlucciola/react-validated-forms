@@ -1,47 +1,45 @@
 import type { FC } from "react";
 import { z } from "zod";
 import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
 // local
 import useForm from "@core/index";
 import { zDayjs } from "@utils/zod";
+import { externalSchema } from "./testVars/externalSchema";
+import { formSchema } from "./testVars/formSchema";
+import dayjs from "dayjs";
 
-const schema = z.object({ fullName: z.string(), phone: z.string(), dob: zDayjs });
-const externalSchema = z.object({ email: z.string().email(), amount: z.number() });
+// const schema = z.object({ fullName: z.string(), phone: z.string(), dob: zDayjs });
+// const externalSchema = z.object({ email: z.string().email(), amount: z.number() });
 
 const TestComponent: FC = () => {
   const formState = useForm({
-    schema,
+    schema: formSchema,
     externalSchema,
     calcValuesCallback: ({ form, externalValues }) => {
-      form.dob satisfies Dayjs | null; // CORRECT
-      form.fullName satisfies string | null; // CORRECT
-      form.phone satisfies string | null; // CORRECT
-      externalValues.amount satisfies number | null; // CORRECT: (property) amount: number | null
-      externalValues.email satisfies string | null; // CORRECT: (property) email: string | null
+      form.date satisfies Dayjs | null; // CORRECT
+      form.name satisfies string | null; // CORRECT
+      form.arr satisfies { name: string; date: Dayjs; num: number }[] | null; // CORRECT
+      externalValues.dtLogin satisfies Dayjs | null; // CORRECT: (property) amount: number | null
+      externalValues.points satisfies number | null; // CORRECT: (property) amount: number | null
+      externalValues.userId satisfies string | null; // CORRECT: (property) email: string | null
 
       return { hai: "asdf", lo: 9 };
     },
-    // defaults: { dob: dayjs(), fullName: "" },
-    // externalValues: { amount: null },
-    // extracted: {},
+    defaults: { date: dayjs(), name: "" },
+    externalValues: { points: null },
     fieldConfigs: {
-      // fullName: "",
-      dob: {
+      name: {
         changeEvent: (values) => {
           values.calculated.hai;
-          values.external.amount;
+          values.external.points;
           const { calculated, form, external } = values;
-          form.fullName;
-          external.amount;
+          form.name;
+          external.dtLogin;
           calculated.hai;
 
           return { fullName: "" };
         },
       },
-
-      // fullName: {},
-      // phone: {},
     },
   });
   const {
@@ -63,15 +61,15 @@ const TestComponent: FC = () => {
     appliedUiSchema,
   } = formState;
 
-  uiSchema.parse({}).dob;
-  uiSchema.parse({}).fullName;
-  uiSchema.parse({}).phone;
-  evSchema.parse({}).amount; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
-  evSchema.parse({}).email; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
+  uiSchema.parse({}).date;
+  uiSchema.parse({}).name;
+  uiSchema.parse({}).num;
+  evSchema.parse({}).company; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
+  evSchema.parse({}).connections; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
 
-  form.dob;
-  configValues.form.dob;
-  configValues.external.email;
+  form.name;
+  configValues.form.date;
+  configValues.external.userId;
   configValues.calculated.hai;
 
   return <div></div>;
