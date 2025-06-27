@@ -2,17 +2,22 @@ import { useCallback } from "react";
 // utils
 import getFieldConfig from "../getters/getFieldConfig";
 // interfaces
-import type { AnyCfgMetaDEPREC, CfgFs } from "@utils/deprec/formConfigDefinition";
 import type { SetState } from "@utils/utilityTypes";
-import type { UiValues } from "@utils/deprec/formOutputTypes";
-import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
-import type { InferConfigValues } from "@internal/configValuesTypes";
+import type { ConfigInternal } from "@utils/configTypes";
+import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { UiValues } from "@utils/valueTypes";
+import type { ConfigValues } from "@utils/fieldConfigTypes";
 
 /** @todo annotate */
-const useSetField = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = CfgFs<C>>(
+const useSetField = <
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
+>(
   setForm: SetState<UiValues<TFs>>,
-  config: UseFormProps<C>,
-  configValues: InferConfigValues<C>,
+  config: C,
+  configValues: ConfigValues<TFs, TEs, TCv>,
   markDirty: (key: keyof UiValues<TFs>, v: UiValues<TFs>[keyof UiValues<TFs>]) => void
 ) =>
   useCallback(

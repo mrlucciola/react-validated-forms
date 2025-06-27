@@ -1,4 +1,5 @@
-import type { CalcValues, CalcValuesOpt, FieldConfigs, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 export type CalcValuesProp<TCv extends CalcValuesOpt> = [TCv] extends [void]
@@ -27,7 +28,7 @@ export type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
   : // TEs is present
     { externalValues: NonNullable<ExtValues<TEs>> };
 
-type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
+export type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
 } & ExternalValuesProp<TEs>;
 
@@ -47,40 +48,26 @@ export type ConfigDef<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  TFc extends FieldConfigs<
-    TFs,
-    TEs extends ZObj ? TEs : never,
-    TCv extends CalcValues ? TCv : never
-  >
+  FcKeys extends keyof UiValues<TFs>
 > = {
   schema: TFs;
   externalSchema?: TEs;
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
   externalValues?: Partial<ExtValues<TEs>>;
-  fieldConfigs?: TFc;
+  fieldConfigs?: FormConfigFieldsBase<TFs, TEs, TCv, FcKeys>;
 };
 
 export type ConfigInternal<
   TFs extends ZObj = ZObj,
-  TEs extends ZObj | void = ZObj,
-  TCv extends CalcValues | void = CalcValues,
-  TFc extends FieldConfigs<any, any, any> | void = FieldConfigs<TFs, TEs, TCv>
+  TEs extends ZObjOpt = ZObj,
+  TCv extends CalcValuesOpt = CalcValues,
+  FcKeys extends keyof UiValues<TFs> = keyof UiValues<TFs>
 > = ConfigDef<
   TFs,
   TEs extends ZObj ? TEs : ZObj,
   TCv extends CalcValues ? TCv : CalcValues,
-  TFc extends FieldConfigs<ZObj, ZObj | void, CalcValues | void> ? any : FieldConfigs<TFs, TEs, TCv>
+  FcKeys extends keyof UiValues<TFs> ? FcKeys : keyof UiValues<TFs>
 > & {
   calcValuesCallback?: CvCbInternal;
-};
-
-export type Ev<TEs extends ZObjOpt> = [TEs] extends [ZObj]
-  ? NonNullable<ExtValues<NonNullable<TEs>>>
-  : undefined;
-
-export type ConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
-  form: UiValues<TFs>;
-  external: Ev<TEs>;
-  calculated: TCv extends CalcValues ? TCv : undefined;
 };

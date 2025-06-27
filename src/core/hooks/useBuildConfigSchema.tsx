@@ -6,7 +6,7 @@ import { zAddRulesIssue } from "@utils/zod";
 import type { CalcValuesOpt, FieldConfigsOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { UiValues } from "@utils/valueTypes";
-import type { DefineFieldConfig, FieldConfigValueProp } from "@utils/fieldConfigTypes";
+import type { DefineFieldConfig, ConfigValues } from "@utils/fieldConfigTypes";
 
 type FieldKeyOf<
   TFs extends ZObj,
@@ -34,7 +34,7 @@ const applyFieldConfigValidationRefinements =
     TCv extends CalcValuesOpt = CalcValuesOpt,
     TFc extends FieldConfigsOpt<TFs, TEs, TCv> = FieldConfigsOpt<TFs, TEs, TCv>
   >(
-    configValues: FieldConfigValueProp<TFs, TEs, TCv>
+    configValues: ConfigValues<TFs, TEs, TCv>
   ) =>
   <FieldKey extends FieldKeyOf<TFs, TEs, TCv, TFc> = FieldKeyOf<TFs, TEs, TCv, TFc>>(
     fieldEntryTuple: FieldCfgEntry<TFs, TEs, TCv, TFc, FieldKey>
@@ -77,10 +77,10 @@ const useBuildConfigSchema = <
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
   TFc extends FieldConfigsOpt<TFs, TEs, TCv>,
-  C extends ConfigInternal<TFs, TEs, TCv, TFc> = ConfigInternal<TFs, TEs, TCv, TFc>
+  C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
 >(
-  config: ConfigInternal<TFs, TEs, TCv, TFc>,
-  configValues: FieldConfigValueProp<TFs, TEs, TCv>
+  config: ConfigInternal<TFs, TEs, TCv>,
+  configValues: ConfigValues<TFs, TEs, TCv>
 ) => {
   // type TFc = C['fieldConfigs'];
 

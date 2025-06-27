@@ -6,19 +6,15 @@ import getFieldConfig from "../getters/getFieldConfig";
 import useSetField from "../setters/setField";
 // interfaces
 import type { Nullable } from "@utils/utilityTypes";
-import type { ZObj } from "@utils/rootTypes";
+import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { SchemaParseErrors } from "./interfaces";
-import type { ResolveConfigValues } from "@external/configValuesTypes";
 // DEPRECATED IMPORTS
-import type { AnyCfgMetaDEPREC, CfgDefMeta, CfgFs } from "@utils/deprec/formConfigDefinition";
-import type { OnChangeEventUnionNew } from "@utils/deprec/fxnTypes";
-import type { UiValues } from "@utils/deprec/formOutputTypes";
-import type { UseFormProps } from "@utils/deprec/useFormTypes/useFormTypes";
-import type { FsUiKeys } from "@utils/deprec/derived";
+import type { OnChangeEventUnionNew } from "@utils/schemaTypes";
+import type { UiValues } from "@utils/valueTypes";
+import type { ConfigInternal } from "@utils/configTypes";
+import type { ConfigValues } from "@utils/fieldConfigTypes";
 
-type UseSetFieldReturn<C extends CfgDefMeta> = ReturnType<typeof useSetField<C>>;
-
-export type FieldProps<TFs extends ZObj, K extends FsUiKeys<TFs>> = {
+export type FieldProps<TFs extends ZObj, K extends keyof UiValues<TFs>> = {
   /** MUI-style onChange union handled in utils */
   onChange: (e: OnChangeEventUnionNew, ...rest: unknown[]) => void;
 
@@ -28,15 +24,15 @@ export type FieldProps<TFs extends ZObj, K extends FsUiKeys<TFs>> = {
   disabled?: boolean;
 };
 
-const useGetFieldProps = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = CfgFs<C>>(
-  setField: ReturnType<typeof useSetField<C>>,
+const useGetFieldProps = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
+  setField: ReturnType<typeof useSetField<TFs, TEs, TCv>>,
   form: UiValues<TFs>,
   errors: SchemaParseErrors<TFs> | undefined,
-  config: UseFormProps<C>, // might need to use a new AnyCfgInstance
-  configValues: ResolveConfigValues<C>
+  config: ConfigInternal<TFs, TEs, TCv>, // might need to use a new AnyCfgInstance
+  configValues: ConfigValues<TFs, TEs, TCv>
 ) =>
   useCallback(
-    <TKey extends FsUiKeys<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
+    <TKey extends keyof UiValues<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
       fieldKey: TKey
     ): FieldProps<TFs, TKey> => {
       const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
@@ -44,7 +40,7 @@ const useGetFieldProps = <C extends AnyCfgMetaDEPREC, TFs extends CfgFs<C> = Cfg
         setField(fieldKey, newFieldValue);
       };
 
-      const registerOn = getFieldConfig(config.fieldConfigs, fieldKey as never)?.registerOn;
+      const registerOn = getFieldConfig(config.fieldConfigs, fieldKey)?.registerOn;
 
       // @todo
       const shouldDisplay =

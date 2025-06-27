@@ -1,30 +1,24 @@
-import type { ExtValues } from "@utils/deprec/formOutputTypes";
-import type { BuildCfg, CfgEs, ConfigDefinition } from "@utils/deprec/formConfigDefinition";
-import type {
-  ConfigFactoryParams,
-  FormConfigFactory,
-  FormConfigInstance,
-} from "@utils/deprec/formConfigFactory";
+import type { CvCbDefinition } from "@utils/configTypes";
+import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
+import type { CalcValues, ZObj } from "@utils/rootTypes";
+import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 /** Only for use in `useValidatedForm`
  * For fields on `externalSchema`, `null` is applied to fields where a catch is not provided
  */
-export const defineFormConfig = <TDef extends ConfigDefinition<any>>(def: TDef) => {
-  type TCfg = BuildCfg<TDef>;
-
-  const factory: FormConfigFactory<TCfg> = (...args: ConfigFactoryParams<CfgEs<TCfg>>) => {
-    // external values – parse or fallback to {}
-    const evRaw = args.length ? args[0] ?? {} : {};
-    const externalValues = def.externalSchema?.parse(evRaw) as ExtValues<CfgEs<TCfg>>;
-
-    // This is what is passedreturn the fully-typed instance
-    return {
-      fieldSchema: def.formSchema,
-      externalValues,
-      calcValuesCallback: def.calcValuesCallback,
-      fieldConfigs: def.fieldConfigs,
-    } satisfies FormConfigInstance<TCfg>;
-  };
-
-  return factory;
+export const defineFormConfig = <
+  TFs extends ZObj,
+  TEs extends ZObj,
+  TCv extends CalcValues,
+  FcKeys extends keyof UiValues<TFs>
+>(configInput: {
+  schema: TFs;
+  externalSchema?: TEs;
+  calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
+  defaults?: Partial<UiValues<TFs>>;
+  externalValues?: Partial<ExtValues<TEs>>;
+  fieldConfigs?: FormConfigFieldsBase<TFs, TEs, TCv, FcKeys>;
+}) => {
+  // type TCfg = BuildCfg<TDef>;
+  // return factory;
 };

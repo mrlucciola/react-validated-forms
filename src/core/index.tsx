@@ -5,14 +5,13 @@ import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "@core/hooks/useInitStates";
 import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 // interfaces
-import type { CalcValues, FieldConfigs, ZObj } from "@utils/rootTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ConfigInternal, CvCbDefinition } from "@utils/configTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
-import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
-
-type CvCbReturn<T> = T extends (...args: any) => infer R ? R : never;
+import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
+import type { ResolveFor, ResolveTo } from "@utils/utilityTypes";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -34,17 +33,25 @@ type CvCbReturn<T> = T extends (...args: any) => infer R ? R : never;
  * @todo rename `TBase` -> `TOutputSchema`
  * @todo rename `FormSchema` -> `FieldsSchema`
  */
-const useForm = <TFs extends ZObj, TEs extends ZObj, TCv extends CalcValues>(configInput: {
+const useForm = <
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  FcKeys extends keyof UiValues<TFs>
+>(configInput: {
   schema: TFs;
   externalSchema?: TEs;
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
-  externalValues?: Partial<ExtValues<TEs>>;
-  fieldConfigs?: FieldConfigs<TFs, TEs, TCv>;
-  newby?: TCv;
+  externalValues?: ResolveTo<TEs, Partial<ExtValues<TEs>>>;
+  fieldConfigs?: FormConfigFieldsBase<
+    TFs,
+    ResolveFor<TEs, ZObj>,
+    ResolveFor<TCv, CalcValues>,
+    FcKeys
+  >;
 }) => {
-  type TFc = typeof configInput.fieldConfigs;
-  const config = configInput as ConfigInternal<TFs, TEs, TCv, TFc>;
+  const config = configInput as ConfigInternal<TFs, TEs, TCv>;
 
   const { evSchema, uiSchema } = useInitSchemas(config);
 

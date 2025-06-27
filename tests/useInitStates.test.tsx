@@ -20,15 +20,18 @@ const TestComponent: FC = () => {
       externalValues.amount satisfies number | null; // CORRECT: (property) amount: number | null
       externalValues.email satisfies string | null; // CORRECT: (property) email: string | null
 
-      return { hai: "asdf" };
+      return { hai: "asdf", lo: 9 };
     },
-    defaults: { dob: dayjs(), fullName: "" },
-    externalValues: { amount: null },
-    newby: { hai: "" },
+    // defaults: { dob: dayjs(), fullName: "" },
+    // externalValues: { amount: null },
+    // extracted: {},
     fieldConfigs: {
       // fullName: "",
       dob: {
-        changeEvent: ({ form, external, calculated }) => {
+        changeEvent: (values) => {
+          values.calculated.hai;
+          values.external.amount;
+          const { calculated, form, external } = values;
           form.fullName;
           external.amount;
           calculated.hai;
@@ -36,6 +39,9 @@ const TestComponent: FC = () => {
           return { fullName: "" };
         },
       },
+
+      // fullName: {},
+      // phone: {},
     },
   });
   const {

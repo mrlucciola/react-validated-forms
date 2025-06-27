@@ -10,5 +10,5 @@
     "noUncheckedIndexedAccess": true,
     "stripInternal": true
   },
-  "include": ["./", "../core/utils.tsx"]
+  "include": ["./"]
 }

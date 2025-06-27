@@ -1,7 +1,14 @@
-import type { ConfigFieldsOpt } from "@utils/deprec/formFieldConfigs";
+import type { ConfigInternal } from "@utils/configTypes";
+import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 
 /** @todo add description */
-const getFieldConfig = <Fc extends ConfigFieldsOpt<any, any, any>, FcKey extends keyof Fc>(
+const getFieldConfig = <
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  Fc extends ConfigInternal<TFs, TEs, TCv>["fieldConfigs"],
+  FcKey extends keyof Fc
+>(
   fieldConfigs: Fc,
   fieldConfigKey: FcKey
 ): Fc extends void ? undefined : NonNullable<Fc[FcKey]> => {

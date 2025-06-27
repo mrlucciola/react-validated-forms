@@ -1,11 +1,11 @@
-import type { ConfigInternal, CvCbInternal, Ev } from "@utils/configTypes";
-import type { FieldConfigValueProp } from "@utils/fieldConfigTypes";
+import type { ConfigInternal, CvCbInternal } from "@utils/configTypes";
+import type { ConfigValues } from "@utils/fieldConfigTypes";
 import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 const getExternalValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   config: ConfigInternal<TFs, TEs, TCv>
-): Ev<TEs> => {
+) => {
   const out = (config.externalSchema &&
     config.externalSchema.parse(config.externalValues ?? {})) satisfies ExtValues<TEs>;
 
@@ -15,7 +15,7 @@ const getExternalValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends Ca
 const getCalculatedValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   config: ConfigInternal<TFs, TEs, TCv>,
   uiValues: UiValues<TFs>,
-  externalValues: Ev<TEs>
+  externalValues: ExtValues<TEs>
 ): TCv extends CalcValues ? TCv : undefined => {
   const cvcb = config.calcValuesCallback as CvCbInternal<TFs, TEs, TCv>;
 
@@ -43,7 +43,7 @@ const getConfigValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends Calc
     calculated: calculatedValues,
   };
 
-  return out as unknown as FieldConfigValueProp<TFs, TEs, TCv>;
+  return out as unknown as ConfigValues<TFs, TEs, TCv>;
 };
 
 export default getConfigValues;

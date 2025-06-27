@@ -1,11 +1,42 @@
 import type { z } from "zod";
 //
 import type { Nullish } from "@utils/utilityTypes";
-import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { UiValues } from "@utils/valueTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { CalcValuesProp, ExternalValuesProp2 } from "@utils/configTypes";
 
-export type FieldConfigValueProp<
+// FieldConfigValueProp
+export type ConfigValues2<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
+  form: UiValues<TFs>;
+  external: ExtValues<TEs>;
+} & ([TCv] extends [void] // if there is no calc-callback…
+  ? {} //   → drop the property
+  : { calculated: TCv });
+export type ConfigValues3<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = ([
+  TCv
+] extends [void]
+  ? // TCv is void
+    {}
+  : [void] extends [TCv]
+  ? // TCv might be void
+    { calculated?: TCv; maybeCalcc: string }
+  : // TCv is present
+    { calculated: NonNullable<TCv> }) &
+  ([TEs] extends [void]
+    ? // TEs is void
+      {}
+    : [void] extends [TEs]
+    ? // TEs might be void
+      { external?: ExtValues<TEs>; maybeExtt: string }
+    : // TEs is present
+      { external: NonNullable<ExtValues<TEs>> }) & { form: UiValues<TFs> };
+
+// Works well
+export type ConfigValues5<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
+  form: UiValues<TFs>;
+} & ([TEs] extends [void] ? {} : { external: ExtValues<TEs> }) &
+  ([TCv] extends [void] ? {} : { calculated: TCv });
+export type ConfigValuesOFFICIAL<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt
@@ -13,26 +44,30 @@ export type FieldConfigValueProp<
   ExternalValuesProp2<TEs> & {
     form: UiValues<TFs>;
   };
+export type ConfigValues<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt
+> = ConfigValues3<TFs, TEs, TCv>;
 
 /** Validation-schema configuration for a single form-field */
 export type DefineFieldConfig<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  FieldKey extends keyof UiValues<TFs>,
-  TValProp extends FieldConfigValueProp<TFs, TEs, TCv> = FieldConfigValueProp<TFs, TEs, TCv>
+  FieldKey extends keyof UiValues<TFs>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &
    * Field Effect: when a field is updated, all fields defined in the return object are updated when the specified field is changed by the user
    */
-  changeEvent?: (values: TValProp) => Nullish<UiValues<TFs>>;
+  changeEvent?: (values: ConfigValues<TFs, TEs, TCv>) => Nullish<UiValues<TFs>>;
 
   /** Conditionally include/ignore field validation by providing a callback.
    * For default validation, leave this field `undefined`.
    * See `buildCatchSchema` for how this method is applied.
    */
-  registerOn?: (values: TValProp) => boolean;
+  registerOn?: (values: ConfigValues<TFs, TEs, TCv>) => boolean;
 
   /** this gets passed into a refinement
    * Rules/refinement logic will run if:
@@ -45,7 +80,11 @@ export type DefineFieldConfig<
    * See: RefinementRules<TSchema>
    * See: ZTransformEffect, ZRefinementEffect
    */
-  rules?: (values: TValProp, ctx: z.RefinementCtx, fieldKey: FieldKey) => void | undefined | never;
+  rules?: (
+    values: ConfigValues<TFs, TEs, TCv>,
+    ctx: z.RefinementCtx,
+    fieldKey: FieldKey
+  ) => void | undefined | never;
 
   /** @todo add `generalEffect`
    * General Effect: **any time** a field in the array is changed, all fields defined in its callback's return object are updated
@@ -82,7 +121,6 @@ export type DefineFieldConfig<
 export type FormConfigFieldsBase<
   TFs extends ZObj,
   TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt
-> = {
-  [FieldKey in keyof UiValues<TFs>]: DefineFieldConfig<TFs, TEs, TCv, FieldKey>;
-};
+  TCv extends CalcValuesOpt,
+  FcKeys extends keyof UiValues<TFs>
+> = { [FieldKey in FcKeys]: DefineFieldConfig<TFs, TEs, TCv, FieldKey> };

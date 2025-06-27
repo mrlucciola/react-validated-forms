@@ -61,3 +61,5 @@ export type ResolveKeys<T> = {
   [K in keyof T]-?: void extends T[K] ? never : K;
 }[keyof T];
 export type Resolve<T> = Omit<T, ResolveKeys<T>>;
+export type ResolveFor<T, Expected> = [T] extends [Expected] ? T : never;
+export type ResolveTo<T, Out> = [T] extends [void] ? never : Out;
