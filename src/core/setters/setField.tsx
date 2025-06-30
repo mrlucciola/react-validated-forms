@@ -9,14 +9,9 @@ import type { UiValues } from "@utils/valueTypes";
 import type { ConfigValues } from "@utils/fieldConfigTypes";
 
 /** @todo annotate */
-const useSetField = <
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
->(
+const useSetField = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   setForm: SetState<UiValues<TFs>>,
-  config: C,
+  config: ConfigInternal<TFs, TEs, TCv>,
   configValues: ConfigValues<TFs, TEs, TCv>,
   markDirty: (key: keyof UiValues<TFs>, v: UiValues<TFs>[keyof UiValues<TFs>]) => void
 ) =>
@@ -28,7 +23,7 @@ const useSetField = <
       setForm((prevFormValues: UiValues<TFs>) => {
         const newForm = { ...prevFormValues, [fieldKey]: value };
 
-        const fieldConfig = getFieldConfig(config.fieldConfigs, fieldKey as never);
+        const fieldConfig = getFieldConfig(config, fieldKey);
         markDirty(fieldKey, value);
         const fieldEffect = fieldConfig?.changeEvent;
         if (fieldEffect) {

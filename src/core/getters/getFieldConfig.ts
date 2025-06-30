@@ -17,10 +17,16 @@ const getFieldConfig = <
   fieldConfigKey: FcKey
 ): undefined | DefineFieldConfig<TFs, TEs, TCv, FcKey> => {
   type FieldConfigKeys = keyof ConfigInternal<TFs, TEs, TCv>["fieldConfigs"];
-  const fieldConfigs = config.fieldConfigs;
-  if (!fieldConfigs || !fieldConfigs[fieldConfigKey as any]) return undefined;
 
-  return fieldConfigs[fieldConfigKey as keyof ConfigInternal<TFs, TEs, TCv>["fieldConfigs"]];
+  // Validate if fieldConfigs is defined
+  const fieldConfigs = config?.fieldConfigs;
+  if (!fieldConfigs) return undefined;
+
+  // Validate if config for provided field is defined
+  const fieldConfig = fieldConfigs[fieldConfigKey as FieldConfigKeys];
+  if (!fieldConfig) return undefined;
+
+  return fieldConfig;
 };
 
 export default getFieldConfig;
