@@ -20,20 +20,14 @@ import type { CvCbDefinition, FieldConfigs } from "@utils/configPropTypes";
  * - While the validation schema and initialization schema are different, which The values may be nullable/invalid, and this should be reflected
  * - We mainly need the `form` var for deriving the `isValid` (and occasionally value access when not using `getFieldProps`)
  *
- * @todo Add logic to handle nested fields (candidate impl.: use a 'selector' callback)
- * @todo Optionally handle request body validation
- * @todo Create generic `UseForm<FormSchema | FormConfig>`
- *
- * ### For config implementation (v3):
- * - Build object of fields to use in form
+ * @todo Support `ZodEffects` schemas (`superRefine`, `transform`, `preprocess`);
+ * @todo Add logic to handle nested fields (candidate impl.: use a 'selector' callback);
+ * @todo Optionally handle request body validation;
+ * @todo Implement `effects`:
  * - Effects - 2D array of field-names to listen on and logic to run when those fields change via `setField`
  *    - Example: A field needs to update when **any** of the provided 5 fields updates
  *     i.e. `{ effect: () => cond1 && cond2, fields: [field123, fieldAbc] }`
  *     `[]`
- * - Enable 'external data'/'data out of form-mgmt'
- *
- * @todo rename `TBase` -> `TOutputSchema`
- * @todo rename `FormSchema` -> `FieldsSchema`
  */
 const useForm = <
   TFs extends ZObj,
@@ -52,6 +46,9 @@ const useForm = <
     externalValues?: ResolveTo<TEs, Partial<ExtValues<TEs>>>;
   }
 ) => {
+  // Currently need this type-coersion to allow types in the definitions to be provided to other props within the same definition object (external-schema and calculated-values)
+  // 1) `externalSchema` defines `TEs`, which is used in `calcValuesCallback` and `fieldConfigs`;
+  // 2) `calcValuesCallback` defines 'calculated-values' type `TCv`, which is used in `fieldConfigs`;
   const config = configDefinition as ConfigInternal<TFs, TEs, TCv>;
 
   const { evSchema, uiSchema } = useInitSchemas(config);
