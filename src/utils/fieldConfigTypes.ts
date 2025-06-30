@@ -30,7 +30,7 @@ export type DefineFieldConfig<
    */
   registerOn?: (values: ConfigValues<TFs, TEs, TCv>) => boolean;
 
-  /** this gets passed into a refinement
+  /** This gets passed into a refinement
    * Rules/refinement logic will run if:
    * 1. `.registerOn()` field is not set
    * 1. `.registerOn()` returns `true`
@@ -53,11 +53,11 @@ export type DefineFieldConfig<
    */
 
   /** @todo Implement this and its corresponding 'getter' field
-   * If not set, `getFormProps(<field>).display` applies the boolean return from `.registerOn()`.
    * - In short, with-regards-to this overrides
-   *
-   * display?: () => void;
+   * - This field matches the `HTML` element prop to disable/enable a field.
+   * - @todo Evaluate this logic: "If not set, `getFormProps(<field>).display` applies the boolean return from `.registerOn()`.""
    */
+  disableOn?: (values: ConfigValues<TFs, TEs, TCv>) => boolean;
 
   /**
    * @todo Implement `effects` - apply a single callback function to a set of fields to subscribe to changes.

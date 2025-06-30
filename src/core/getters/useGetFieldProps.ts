@@ -20,7 +20,7 @@ export type FieldProps<TFs extends ZObj, K extends keyof UiValues<TFs>> = {
   value: UiValues<TFs>[K] | null;
   errors?: string;
   hidden: boolean;
-  disabled?: boolean;
+  disabled: boolean;
 };
 
 const getValueFromEvent = (e: OnChangeEventUnionNew, args?: (boolean | unknown)[]) => {
@@ -62,19 +62,19 @@ const useGetFieldProps =
 
     const fieldConfig = getFieldConfig(config, fieldKey);
 
-    const shouldDisplay = fieldConfig?.registerOn
+    const isRegistered = fieldConfig?.registerOn
       ? fieldConfig.registerOn({ ...configValues, form })
       : true;
 
-    /** @deprecated not yet configured in `FormConfig` */
-    const disabled = false; // fieldConfig?.disabled
+    const disabled = fieldConfig?.disableOn
+      ? fieldConfig?.disableOn({ ...configValues, form })
+      : false;
 
     return {
       onChange,
       errors: errors && errors[fieldKey]?.join(",\n"),
       value: form[fieldKey] ?? null,
-      hidden: !shouldDisplay,
-      /** @deprecated not yet configured in `FormConfig` */
+      hidden: !isRegistered,
       disabled,
     };
   };
