@@ -1,7 +1,5 @@
 import type { z } from "zod";
 //
-import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
-import type { UiValues } from "@utils/valueTypes";
 
 /** Convenience type for z.ZodObject schema */
 export type ZObj<T extends z.ZodRawShape = any> = z.ZodObject<T, any, any, any, any>;
@@ -11,20 +9,6 @@ export type ZObjOpt<T extends z.ZodRawShape = any> = ZObj<T> | void;
 
 export type CalcValues = Record<string, any>;
 export type CalcValuesOpt = CalcValues | void;
-
-export type FieldConfigs<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  FcKeys extends keyof UiValues<TFs>
-> = { [FieldKey in FcKeys]: DefineFieldConfig<TFs, TEs, TCv, FieldKey> };
-
-export type FieldConfigsOpt<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  FcKeys extends keyof UiValues<TFs> = keyof UiValues<TFs>
-> = FieldConfigs<TFs, TEs, TCv, FcKeys> | void;
 
 /** Root Configuration Definition type
  * This is a "phantom" type, implemented to:

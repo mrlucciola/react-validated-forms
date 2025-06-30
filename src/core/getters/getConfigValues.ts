@@ -1,4 +1,5 @@
-import type { ConfigInternal, CvCbInternal } from "@utils/configTypes";
+import type { ConfigInternal } from "@utils/configTypes";
+import type { CvCbInternal } from "@utils/configPropTypes";
 import type { ConfigValues } from "@utils/fieldConfigTypes";
 import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";

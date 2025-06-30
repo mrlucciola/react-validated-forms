@@ -1,19 +1,6 @@
-import type { CalcValues, CalcValuesOpt, FieldConfigs, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ResolveProp } from "@utils/utilityTypes";
+import type { CvCbDefinition, CvCbInternal, FieldConfigs } from "@utils/configPropTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
-
-type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
-  form: UiValues<TFs>;
-} & ResolveProp<ExtValues<TEs>, "externalValues">;
-
-export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
-  values: CvCbParams<TFs, TEs>
-) => TCv;
-export type CvCbInternal<
-  TFs extends ZObj = ZObj,
-  TEs extends ZObj | void = ZObj | void,
-  TCv extends CalcValues | void = CalcValues
-> = (values: { form: UiValues<TFs>; externalValues?: ExtValues<TEs> }) => TCv;
 
 /** This type represents the param `config` passed into `useForm`.
  * This should not be used outside of the `useForm` prop.

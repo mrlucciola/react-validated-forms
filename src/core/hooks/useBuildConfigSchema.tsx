@@ -3,10 +3,11 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { CalcValuesOpt, FieldConfigsOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { DefineFieldConfig, ConfigValues } from "@utils/fieldConfigTypes";
+import type { FieldConfigsOpt } from "@utils/configPropTypes";
 
 type FieldKeyOf<
   TFs extends ZObj,

@@ -1,5 +1,5 @@
-import type { CvCbDefinition } from "@utils/configTypes";
-import type { CalcValues, FieldConfigs, ZObj } from "@utils/rootTypes";
+import type { CvCbDefinition, FieldConfigs } from "@utils/configPropTypes";
+import type { CalcValues, ZObj } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 /** Only for use in `useValidatedForm`

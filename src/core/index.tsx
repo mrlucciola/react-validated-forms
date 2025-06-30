@@ -7,12 +7,13 @@ import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 import useSetField from "@core/setters/setField";
 import useGetFieldProps from "@core/getters/useGetFieldProps";
 // interfaces
-import type { CalcValues, CalcValuesOpt, FieldConfigs, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ConfigInternal, CvCbDefinition } from "@utils/configTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ConfigInternal } from "@utils/configTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
 import type { ResolveFor, ResolveTo } from "@utils/utilityTypes";
+import type { CvCbDefinition, FieldConfigs } from "@utils/configPropTypes";
 
 /** ### Stateful form with validation, based on `zod`.
  *

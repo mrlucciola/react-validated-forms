@@ -1,0 +1,31 @@
+import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
+import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ResolveProp } from "@utils/utilityTypes";
+import type { ExtValues, UiValues } from "@utils/valueTypes";
+
+type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
+  form: UiValues<TFs>;
+} & ResolveProp<ExtValues<TEs>, "externalValues">;
+
+export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
+  values: CvCbParams<TFs, TEs>
+) => TCv;
+export type CvCbInternal<
+  TFs extends ZObj = ZObj,
+  TEs extends ZObj | void = ZObj | void,
+  TCv extends CalcValues | void = CalcValues
+> = (values: { form: UiValues<TFs>; externalValues?: ExtValues<TEs> }) => TCv;
+
+export type FieldConfigs<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  FcKeys extends keyof UiValues<TFs>
+> = { [FieldKey in FcKeys]: DefineFieldConfig<TFs, TEs, TCv, FieldKey> };
+
+export type FieldConfigsOpt<
+  TFs extends ZObj,
+  TEs extends ZObjOpt,
+  TCv extends CalcValuesOpt,
+  FcKeys extends keyof UiValues<TFs> = keyof UiValues<TFs>
+> = FieldConfigs<TFs, TEs, TCv, FcKeys> | void;
