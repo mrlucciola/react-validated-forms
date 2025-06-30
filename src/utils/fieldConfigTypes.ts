@@ -84,10 +84,3 @@ export type DefineFieldConfig<
    * ```
    */
 };
-
-export type FormConfigFieldsBase<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  FcKeys extends keyof UiValues<TFs>
-> = { [FieldKey in FcKeys]: DefineFieldConfig<TFs, TEs, TCv, FieldKey> };

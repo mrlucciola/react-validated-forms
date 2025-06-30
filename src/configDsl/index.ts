@@ -1,5 +1,5 @@
 import type { CvCbDefinition } from "@utils/configTypes";
-import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
+import type { FieldConfigs } from "@utils/rootTypes";
 import type { CalcValues, ZObj } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
@@ -17,7 +17,7 @@ export const defineFormConfig = <
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
   externalValues?: Partial<ExtValues<TEs>>;
-  fieldConfigs?: FormConfigFieldsBase<TFs, TEs, TCv, FcKeys>;
+  fieldConfigs?: FieldConfigs<TFs, TEs, TCv, FcKeys>;
 }) => {
   // type TCfg = BuildCfg<TDef>;
   // return factory;

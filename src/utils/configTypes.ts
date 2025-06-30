@@ -1,5 +1,4 @@
-import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
-import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValues, CalcValuesOpt, FieldConfigs, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ResolveProp } from "@utils/utilityTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
@@ -30,7 +29,7 @@ export type ConfigDef<
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
   externalValues?: Partial<ExtValues<TEs>>;
-  fieldConfigs?: FormConfigFieldsBase<TFs, TEs, TCv, FcKeys>;
+  fieldConfigs?: FieldConfigs<TFs, TEs, TCv, FcKeys>;
 };
 
 export type ConfigInternal<

@@ -12,7 +12,7 @@ import type { ConfigInternal, CvCbDefinition } from "@utils/configTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
-import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
+import type { FieldConfigs } from "@utils/rootTypes";
 import type { ResolveFor, ResolveTo } from "@utils/utilityTypes";
 
 /** ### Stateful form with validation, based on `zod`.
@@ -46,12 +46,7 @@ const useForm = <
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
   defaults?: Partial<UiValues<TFs>>;
   externalValues?: ResolveTo<TEs, Partial<ExtValues<TEs>>>;
-  fieldConfigs?: FormConfigFieldsBase<
-    TFs,
-    ResolveFor<TEs, ZObj>,
-    ResolveFor<TCv, CalcValues>,
-    FcKeys
-  >;
+  fieldConfigs?: FieldConfigs<TFs, ResolveFor<TEs, ZObj>, ResolveFor<TCv, CalcValues>, FcKeys>;
 }) => {
   const config = configInput as ConfigInternal<TFs, TEs, TCv>;
 
