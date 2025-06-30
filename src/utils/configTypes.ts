@@ -5,7 +5,7 @@ import type { ExtValues, UiValues } from "@utils/valueTypes";
 /** This type represents the param `config` passed into `useForm`.
  * This should not be used outside of the `useForm` prop.
  */
-export type ConfigDef<
+type ConfigDef<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
@@ -14,10 +14,15 @@ export type ConfigDef<
   schema: TFs;
   externalSchema?: TEs;
   calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
-  defaults?: Partial<UiValues<TFs>>;
-  externalValues?: Partial<ExtValues<TEs>>;
   fieldConfigs?: FieldConfigs<TFs, TEs, TCv, FcKeys>;
 };
+
+export type ConfigExternalInputs<TFs extends ZObj, TEs extends ZObjOpt> =
+  | {
+      defaults?: Partial<UiValues<TFs>>;
+      externalValues?: Partial<ExtValues<TEs>>;
+    }
+  | undefined;
 
 export type ConfigInternal<
   TFs extends ZObj = ZObj,

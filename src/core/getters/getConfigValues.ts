@@ -1,14 +1,15 @@
-import type { ConfigInternal } from "@utils/configTypes";
+import type { ConfigExternalInputs, ConfigInternal } from "@utils/configTypes";
 import type { CvCbInternal } from "@utils/configPropTypes";
 import type { ConfigValues } from "@utils/fieldConfigTypes";
 import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 const getExternalValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
-  config: ConfigInternal<TFs, TEs, TCv>
+  config: ConfigInternal<TFs, TEs, TCv>,
+  externalInputs: ConfigExternalInputs<TFs, TEs>
 ) => {
   const out = (config.externalSchema &&
-    config.externalSchema.parse(config.externalValues ?? {})) satisfies ExtValues<TEs>;
+    config.externalSchema.parse(externalInputs?.externalValues ?? {})) satisfies ExtValues<TEs>;
 
   return out;
 };
@@ -33,9 +34,10 @@ const getCalculatedValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends 
  */
 const getConfigValues = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   config: ConfigInternal<TFs, TEs, TCv>,
-  uiValues: UiValues<TFs>
+  uiValues: UiValues<TFs>,
+  externalInputs: ConfigExternalInputs<TFs, TEs>
 ) => {
-  const parsedExternalValues = getExternalValues(config);
+  const parsedExternalValues = getExternalValues(config, externalInputs);
   const calculatedValues = getCalculatedValues(config, uiValues, parsedExternalValues);
 
   const out = {

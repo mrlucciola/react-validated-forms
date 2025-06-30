@@ -9,36 +9,38 @@ import { formSchema } from "./testVars/formSchema";
 // const externalSchema = z.object({ email: z.string().email(), amount: z.number() });
 
 const TestComponent: FC = () => {
-  const formState = useForm({
-    schema: formSchema,
-    externalSchema,
-    calcValuesCallback: ({ form, externalValues }) => {
-      form.date satisfies Dayjs | null; // CORRECT
-      form.name satisfies string | null; // CORRECT
-      form.arr satisfies { name: string; date: Dayjs; num: number }[] | null; // CORRECT
-      externalValues.dtLogin satisfies Dayjs | null; // CORRECT: (property) amount: number | null
-      externalValues.points satisfies number | null; // CORRECT: (property) amount: number | null
-      externalValues.userId satisfies string | null; // CORRECT: (property) email: string | null
+  const formState = useForm(
+    {
+      schema: formSchema,
+      externalSchema,
+      calcValuesCallback: ({ form, externalValues }) => {
+        form.date satisfies Dayjs | null; // CORRECT
+        form.name satisfies string | null; // CORRECT
+        form.arr satisfies { name: string; date: Dayjs; num: number }[] | null; // CORRECT
+        externalValues.dtLogin satisfies Dayjs | null; // CORRECT: (property) amount: number | null
+        externalValues.points satisfies number | null; // CORRECT: (property) amount: number | null
+        externalValues.userId satisfies string | null; // CORRECT: (property) email: string | null
 
-      return { hai: "asdf", lo: 9 };
-    },
-    defaults: { date: dayjs(), name: "" },
-    externalValues: { points: null },
-    fieldConfigs: {
-      name: {
-        changeEvent: (values) => {
-          values.calculated.hai;
-          values.external.points;
-          const { calculated, form, external } = values;
-          form.name;
-          external.dtLogin;
-          calculated.hai;
+        return { hai: "asdf", lo: 9 };
+      },
 
-          return { fullName: "" };
+      fieldConfigs: {
+        name: {
+          changeEvent: (values) => {
+            values.calculated.hai;
+            values.external.points;
+            const { calculated, form, external } = values;
+            form.name;
+            external.dtLogin;
+            calculated.hai;
+
+            return { fullName: "" };
+          },
         },
       },
     },
-  });
+    { defaults: { date: dayjs(), name: "" }, externalValues: { points: null } }
+  );
   const {
     form,
     setForm,

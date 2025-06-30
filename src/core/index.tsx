@@ -40,22 +40,26 @@ const useForm = <
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
   FcKeys extends keyof UiValues<TFs>
->(configInput: {
-  schema: TFs;
-  externalSchema?: TEs;
-  calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
-  defaults?: Partial<UiValues<TFs>>;
-  externalValues?: ResolveTo<TEs, Partial<ExtValues<TEs>>>;
-  fieldConfigs?: FieldConfigs<TFs, ResolveFor<TEs, ZObj>, ResolveFor<TCv, CalcValues>, FcKeys>;
-}) => {
-  const config = configInput as ConfigInternal<TFs, TEs, TCv>;
+>(
+  configDefinition: {
+    schema: TFs;
+    externalSchema?: TEs;
+    calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
+    fieldConfigs?: FieldConfigs<TFs, ResolveFor<TEs, ZObj>, ResolveFor<TCv, CalcValues>, FcKeys>;
+  },
+  externalInputs?: {
+    defaults?: Partial<UiValues<TFs>>;
+    externalValues?: ResolveTo<TEs, Partial<ExtValues<TEs>>>;
+  }
+) => {
+  const config = configDefinition as ConfigInternal<TFs, TEs, TCv>;
 
   const { evSchema, uiSchema } = useInitSchemas(config);
 
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates(config, uiSchema);
+    useInitStates(config, uiSchema, externalInputs);
 
-  const configValues = getConfigValues(config, form);
+  const configValues = getConfigValues(config, form, externalInputs);
 
   // @todo rename
   const appliedUiSchema = useBuildConfigSchema(config, configValues);
