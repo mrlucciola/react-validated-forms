@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import type { z } from "zod";
 import { isDayjs } from "dayjs";
 // utils
@@ -19,6 +18,7 @@ export type FieldProps<TFs extends ZObj, K extends keyof UiValues<TFs>> = {
 
   value: UiValues<TFs>[K] | null;
   errors?: string;
+  isRegistered: boolean;
   hidden: boolean;
   disabled: boolean;
 };
@@ -62,9 +62,21 @@ const useGetFieldProps =
 
     const fieldConfig = getFieldConfig(config, fieldKey);
 
-    const isRegistered = fieldConfig?.registerOn
-      ? fieldConfig.registerOn({ ...configValues, form })
-      : true;
+    const hidden = fieldConfig?.isHidden
+      ? // If `isHidden` is defined: run logic
+        fieldConfig.isHidden({ ...configValues, form })
+      : fieldConfig?.isHidden === false
+      ? // If `isHidden` is defined as false: return false
+        fieldConfig.isHidden
+      : // If `isHidden` is NOT defined: apply opposite value of `isRegistered`
+        false;
+
+    const isRegistered =
+      hidden === true
+        ? false
+        : fieldConfig?.registerOn
+        ? fieldConfig.registerOn({ ...configValues, form })
+        : true;
 
     const disabled = fieldConfig?.disableOn
       ? fieldConfig?.disableOn({ ...configValues, form })
@@ -74,7 +86,8 @@ const useGetFieldProps =
       onChange,
       errors: errors && errors[fieldKey]?.join(",\n"),
       value: form[fieldKey] ?? null,
-      hidden: !isRegistered,
+      isRegistered,
+      hidden,
       disabled,
     };
   };

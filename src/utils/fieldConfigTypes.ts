@@ -24,12 +24,6 @@ export type DefineFieldConfig<
    */
   changeEvent?: (values: ConfigValues<TFs, TEs, TCv>) => Nullish<UiValues<TFs>>;
 
-  /** Conditionally include/ignore field validation by providing a callback.
-   * For default validation, leave this field `undefined`.
-   * See `buildCatchSchema` for how this method is applied.
-   */
-  registerOn?: (values: ConfigValues<TFs, TEs, TCv>) => boolean;
-
   /** This gets passed into a refinement
    * Rules/refinement logic will run if:
    * 1. `.registerOn()` field is not set
@@ -47,18 +41,30 @@ export type DefineFieldConfig<
     fieldKey: FieldKey
   ) => void | undefined | never;
 
-  /** @todo add `generalEffect`
-   * General Effect: **any time** a field in the array is changed, all fields defined in its callback's return object are updated
-   * generalEffect?: () => {}
+  /** Define logic to control input-field's `hidden` state.
+   * - This field matches the `HTML` element prop `hidden` - if true: show/hide a field.
+   * - If not specified, HTML element's `hidden` state will default to `false`.
+   * - Setting value to `false` will force field to always be displayed.
    */
+  isHidden?: false | ((values: ConfigValues<TFs, TEs, TCv>) => boolean);
 
-  /** @todo Implement this and its corresponding 'getter' field
-   * - In short, with-regards-to this overrides
-   * - This field matches the `HTML` element prop to disable/enable a field.
+  /** Conditionally include/ignore field validation by providing a callback.
+   * For default validation, leave this field `undefined`.
+   * See `buildCatchSchema` for how this method is applied.
+   * - If `isHidden` evaluates to `true`: field will NOT be registered (because user cannot modify it).
+   */
+  registerOn?: (values: ConfigValues<TFs, TEs, TCv>) => boolean;
+
+  /** Define logic to control input-field's `disabled` state
+   * - This field matches the `HTML` input-element prop `disabled` - disable/enable a field.
    * - @todo Evaluate this logic: "If not set, `getFormProps(<field>).display` applies the boolean return from `.registerOn()`.""
    */
   disableOn?: (values: ConfigValues<TFs, TEs, TCv>) => boolean;
 
+  /** @todo add `generalEffect`
+   * General Effect: **any time** a field in the array is changed, all fields defined in its callback's return object are updated
+   * generalEffect?: () => {}
+   */
   /**
    * @todo Implement `effects` - apply a single callback function to a set of fields to subscribe to changes.
    * This callback function runs AFTER any of the subscribed fields changes.

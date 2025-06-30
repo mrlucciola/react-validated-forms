@@ -1,7 +1,8 @@
 import type { FC } from "react";
-import { useTestFormState } from "./testVars/TestFormState";
 import { expect } from "bun:test";
 import { isEqual } from "lodash";
+//
+import { useTestFormState } from "./testVars/TestFormState";
 
 const TestComponent: FC = () => {
   const { getFieldProps, ...formState } = useTestFormState();
@@ -30,5 +31,5 @@ const TestComponent: FC = () => {
   expect(asdf.value === false, "Disabled should be false");
    */
 
-  return <div></div>;
+  return <div {...getFieldProps("arr")}></div>;
 };
