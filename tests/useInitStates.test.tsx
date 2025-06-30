@@ -1,12 +1,9 @@
 import type { FC } from "react";
-import { z } from "zod";
-import type { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 // local
 import useForm from "@core/index";
-import { zDayjs } from "@utils/zod";
 import { externalSchema } from "./testVars/externalSchema";
 import { formSchema } from "./testVars/formSchema";
-import dayjs from "dayjs";
 
 // const schema = z.object({ fullName: z.string(), phone: z.string(), dob: zDayjs });
 // const externalSchema = z.object({ email: z.string().email(), amount: z.number() });

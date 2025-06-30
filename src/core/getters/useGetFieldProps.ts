@@ -2,17 +2,16 @@ import { useCallback } from "react";
 import type { z } from "zod";
 // utils
 import { getValueFromEvent } from "@core/utils";
-import getFieldConfig from "../getters/getFieldConfig";
+import getFieldConfig from "./getFieldConfig";
 import useSetField from "../setters/setField";
 // interfaces
 import type { Nullable } from "@utils/utilityTypes";
 import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { SchemaParseErrors } from "./interfaces";
-// DEPRECATED IMPORTS
 import type { OnChangeEventUnionNew } from "@utils/schemaTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { ConfigValues } from "@utils/fieldConfigTypes";
+import type { SchemaParseErrors } from "./interfaces";
 
 export type FieldProps<TFs extends ZObj, K extends keyof UiValues<TFs>> = {
   /** MUI-style onChange union handled in utils */

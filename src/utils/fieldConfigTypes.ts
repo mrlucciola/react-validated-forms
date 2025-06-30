@@ -1,54 +1,15 @@
 import type { z } from "zod";
 //
-import type { Nullish } from "@utils/utilityTypes";
-import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { Nullish, ResolveProp } from "@utils/utilityTypes";
+import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
-import type { CalcValuesProp, ExternalValuesProp2 } from "@utils/configTypes";
 
-// FieldConfigValueProp
-export type ConfigValues2<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
-  form: UiValues<TFs>;
-  external: ExtValues<TEs>;
-} & ([TCv] extends [void] // if there is no calc-callback…
-  ? {} //   → drop the property
-  : { calculated: TCv });
-export type ConfigValues3<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = ([
-  TCv
-] extends [void]
-  ? // TCv is void
-    {}
-  : [void] extends [TCv]
-  ? // TCv might be void
-    { calculated?: TCv; maybeCalcc: string }
-  : // TCv is present
-    { calculated: NonNullable<TCv> }) &
-  ([TEs] extends [void]
-    ? // TEs is void
-      {}
-    : [void] extends [TEs]
-    ? // TEs might be void
-      { external?: ExtValues<TEs>; maybeExtt: string }
-    : // TEs is present
-      { external: NonNullable<ExtValues<TEs>> }) & { form: UiValues<TFs> };
-
-// Works well
-export type ConfigValues5<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
-  form: UiValues<TFs>;
-} & ([TEs] extends [void] ? {} : { external: ExtValues<TEs> }) &
-  ([TCv] extends [void] ? {} : { calculated: TCv });
-export type ConfigValuesOFFICIAL<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt
-> = CalcValuesProp<TCv> &
-  ExternalValuesProp2<TEs> & {
-    form: UiValues<TFs>;
-  };
 export type ConfigValues<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt
-> = ConfigValues3<TFs, TEs, TCv>;
+> = ResolveProp<TCv, "calculated"> &
+  ResolveProp<ExtValues<TEs>, "external"> & { form: UiValues<TFs> };
 
 /** Validation-schema configuration for a single form-field */
 export type DefineFieldConfig<

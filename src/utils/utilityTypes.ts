@@ -63,3 +63,9 @@ export type ResolveKeys<T> = {
 export type Resolve<T> = Omit<T, ResolveKeys<T>>;
 export type ResolveFor<T, Expected> = [T] extends [Expected] ? T : never;
 export type ResolveTo<T, Out> = [T] extends [void] ? never : Out;
+
+export type ResolveProp<T, FieldName extends string> = [T] extends [void]
+  ? {}
+  : [void] extends [T]
+  ? { [k in FieldName]?: T }
+  : { [k in FieldName]: NonNullable<T> };

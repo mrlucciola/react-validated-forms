@@ -1,36 +1,11 @@
 import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
 import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { ResolveProp } from "@utils/utilityTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
-export type CalcValuesProp<TCv extends CalcValuesOpt> = [TCv] extends [void]
-  ? // TCv is void
-    {}
-  : [void] extends [TCv]
-  ? // TCv might be void
-    { calculated?: TCv }
-  : // TCv is present
-    { calculated: NonNullable<TCv> };
-
-export type ExternalValuesProp2<TEs extends ZObjOpt> = [TEs] extends [void]
-  ? // TEs is void
-    {}
-  : [void] extends [TEs]
-  ? // TEs might be void
-    { external?: ExtValues<TEs> }
-  : // TEs is present
-    { external: NonNullable<ExtValues<TEs>> };
-export type ExternalValuesProp<TEs extends ZObjOpt> = [TEs] extends [void]
-  ? // TEs is void
-    {}
-  : [void] extends [TEs]
-  ? // TEs might be void
-    { externalValues?: ExtValues<TEs> }
-  : // TEs is present
-    { externalValues: NonNullable<ExtValues<TEs>> };
-
-export type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
+type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
-} & ExternalValuesProp<TEs>;
+} & ResolveProp<ExtValues<TEs>, "externalValues">;
 
 export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = (
   values: CvCbParams<TFs, TEs>

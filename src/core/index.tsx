@@ -12,6 +12,8 @@ import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
 import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
 import type { ResolveFor, ResolveTo } from "@utils/utilityTypes";
+import useSetField from "@core/setters/setField";
+import useGetFieldProps from "@core/getters/useGetFieldProps";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -62,21 +64,19 @@ const useForm = <
 
   // @todo rename
   const appliedUiSchema = useBuildConfigSchema(config, configValues);
-  const validation: SchemaSpaReturn<TFs> = appliedUiSchema.safeParse(form);
-  const errors: SchemaParseErrors<TFs> | undefined = validation.error?.formErrors.fieldErrors;
-  const isValid = validation.success;
-
-  /** TO-DO
-  // ----------------- Getters (below) -----------------
-
 
   const setField = useSetField(setForm, config, configValues, markDirty);
 
+  // ----------------- Getters (below) -----------------
+  const validation: SchemaSpaReturn<TFs> = appliedUiSchema.safeParse(form);
+  const errors: SchemaParseErrors<TFs> | undefined = validation.error?.formErrors.fieldErrors;
+  const isValid = validation.success;
   const getFieldProps = useGetFieldProps(setField, form, errors, config, configValues);
-  */
+
   return {
-    form: form,
+    form,
     setForm,
+    setField,
     updateForm,
     markDirty,
     isDirty,
@@ -91,7 +91,8 @@ const useForm = <
     isValid,
 
     // Utils
-    // getFieldProps,
+    getFieldProps,
+
     /** Schema applied to form values.
      * @note Only for use within the form.
      * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
