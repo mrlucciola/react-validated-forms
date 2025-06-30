@@ -1,20 +1,26 @@
 import type { ConfigInternal } from "@utils/configTypes";
+import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
 import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { UiValues } from "@utils/valueTypes";
 
-/** @todo add description */
+/** @todo add description
+ * @todo Remove type-casts/type properly
+ */
 const getFieldConfig = <
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  Fc extends ConfigInternal<TFs, TEs, TCv>["fieldConfigs"],
-  FcKey extends keyof Fc
+  FcKeys extends keyof UiValues<TFs>,
+  FcKey extends keyof UiValues<TFs> = keyof UiValues<TFs>
 >(
-  fieldConfigs: Fc,
+  config: ConfigInternal<TFs, TEs, TCv, FcKeys>,
   fieldConfigKey: FcKey
-): Fc extends void ? undefined : NonNullable<Fc[FcKey]> => {
-  if (!fieldConfigs) return undefined as Fc extends void ? undefined : NonNullable<Fc[FcKey]>;
+): undefined | DefineFieldConfig<TFs, TEs, TCv, FcKey> => {
+  type FieldConfigKeys = keyof ConfigInternal<TFs, TEs, TCv>["fieldConfigs"];
+  const fieldConfigs = config.fieldConfigs;
+  if (!fieldConfigs || !fieldConfigs[fieldConfigKey as any]) return undefined;
 
-  return fieldConfigs[fieldConfigKey] as Fc extends void ? undefined : NonNullable<Fc[FcKey]>;
+  return fieldConfigs[fieldConfigKey as keyof ConfigInternal<TFs, TEs, TCv>["fieldConfigs"]];
 };
 
 export default getFieldConfig;

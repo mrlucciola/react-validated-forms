@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import type { z } from "zod";
+import { isDayjs } from "dayjs";
 // utils
-import { getValueFromEvent } from "@core/utils";
 import getFieldConfig from "./getFieldConfig";
 import useSetField from "../setters/setField";
 // interfaces
@@ -23,42 +23,60 @@ export type FieldProps<TFs extends ZObj, K extends keyof UiValues<TFs>> = {
   disabled?: boolean;
 };
 
-const useGetFieldProps = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
-  setField: ReturnType<typeof useSetField<TFs, TEs, TCv>>,
-  form: UiValues<TFs>,
-  errors: SchemaParseErrors<TFs> | undefined,
-  config: ConfigInternal<TFs, TEs, TCv>, // might need to use a new AnyCfgInstance
-  configValues: ConfigValues<TFs, TEs, TCv>
-) =>
-  useCallback(
-    <TKey extends keyof UiValues<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
-      fieldKey: TKey
-    ): FieldProps<TFs, TKey> => {
-      const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
-        const newFieldValue = getValueFromEvent(e, args) as TInValue;
-        setField(fieldKey, newFieldValue);
-      };
+const getValueFromEvent = (e: OnChangeEventUnionNew, args?: (boolean | unknown)[]) => {
+  // @note Handle event-type from `MuiDatePicker.onChange()`, or 'nullish' events. If `undefined`, convert to `null`.
+  if (e === null || e === undefined || isDayjs(e)) return e ?? null;
 
-      const registerOn = getFieldConfig(config.fieldConfigs, fieldKey)?.registerOn;
+  // @note Handle event-type from `MuiCheckBox.onChange()`.
+  if (args && args.length > 0 && typeof args[0] === "boolean") return args[0];
 
-      // @todo
-      const shouldDisplay =
-        // @ts-ignore
-        registerOn && configValues ? registerOn({ ...configValues, form }) : true;
+  return e.target?.value ?? null;
+};
 
+/**
+ * @todo annotate
+ * @todo memoize where possible
+ * @todo simplify implementation
+ * @todo implement `disabled`
+ */
+const useGetFieldProps =
+  <
+    TFs extends ZObj,
+    TEs extends ZObjOpt,
+    TCv extends CalcValuesOpt,
+    FcKeys extends keyof UiValues<TFs> = keyof UiValues<TFs>
+  >(
+    setField: ReturnType<typeof useSetField<TFs, TEs, TCv>>,
+    form: UiValues<TFs>,
+    errors: SchemaParseErrors<TFs> | undefined,
+    config: ConfigInternal<TFs, TEs, TCv, FcKeys>,
+    configValues: ConfigValues<TFs, TEs, TCv>
+  ) =>
+  <TKey extends keyof UiValues<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
+    fieldKey: TKey
+  ): FieldProps<TFs, TKey> => {
+    const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
+      const newFieldValue = getValueFromEvent(e, args) as TInValue;
+      setField(fieldKey, newFieldValue);
+    };
+
+    const fieldConfig = getFieldConfig(config, fieldKey);
+
+    const shouldDisplay = fieldConfig?.registerOn
+      ? fieldConfig.registerOn({ ...configValues, form })
+      : true;
+
+    /** @deprecated not yet configured in `FormConfig` */
+    const disabled = false; // fieldConfig?.disabled
+
+    return {
+      onChange,
+      errors: errors && errors[fieldKey]?.join(",\n"),
+      value: form[fieldKey] ?? null,
+      hidden: !shouldDisplay,
       /** @deprecated not yet configured in `FormConfig` */
-      const disabled = false;
-
-      return {
-        onChange,
-        errors: errors && errors[fieldKey]?.join(",\n"),
-        value: form[fieldKey] ?? null, // (form[fieldKey] ?? null) as TOutValue
-        hidden: !shouldDisplay,
-        /** @deprecated not yet configured in `FormConfig` */
-        disabled,
-      };
-    },
-    []
-  );
+      disabled,
+    };
+  };
 
 export default useGetFieldProps;

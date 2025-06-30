@@ -4,6 +4,8 @@ import getConfigValues from "@core/getters/getConfigValues";
 import useInitSchemas from "./hooks/useInitSchemas";
 import useInitStates from "@core/hooks/useInitStates";
 import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
+import useSetField from "@core/setters/setField";
+import useGetFieldProps from "@core/getters/useGetFieldProps";
 // interfaces
 import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ConfigInternal, CvCbDefinition } from "@utils/configTypes";
@@ -12,8 +14,6 @@ import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
 import type { FormConfigFieldsBase } from "@utils/fieldConfigTypes";
 import type { ResolveFor, ResolveTo } from "@utils/utilityTypes";
-import useSetField from "@core/setters/setField";
-import useGetFieldProps from "@core/getters/useGetFieldProps";
 
 /** ### Stateful form with validation, based on `zod`.
  *
