@@ -1,7 +1,7 @@
 import type { z } from "zod";
 //
 import type { Nullish, ResolveProp } from "@utils/utilityTypes";
-import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 export type ConfigValues<
@@ -16,7 +16,7 @@ export type DefineFieldConfig<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  FieldKey extends keyof UiValues<TFs>
+  FieldKey extends CfgFieldKeys<TFs>
 > = {
   /** ### Return `undefined` to abort.
    * @todo Rename to `fieldEffect` &

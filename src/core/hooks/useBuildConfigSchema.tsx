@@ -3,7 +3,7 @@ import { z } from "zod";
 // utils
 import { zAddRulesIssue } from "@utils/zod";
 // interfaces
-import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { DefineFieldConfig, ConfigValues } from "@utils/fieldConfigTypes";
@@ -14,7 +14,7 @@ type FieldKeyOf<
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
   TFc extends FieldConfigsOpt<TFs, TEs, TCv>
-> = keyof TFc & keyof UiValues<TFs>;
+> = keyof TFc & CfgFieldKeys<TFs>;
 
 // Helper types for odd one-off data structures used throughout the file
 type FieldCfgEntry<

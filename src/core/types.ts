@@ -10,19 +10,19 @@ import type { ZObj } from "@utils/rootTypes";
 //   /* ——— reactive state ——— */
 //   form: UiValues<TFs>;
 //   setForm: SetState<UiValues<TFs>>;
-//   setField: <K extends keyof UiValues<TFs>>(key: K, value: UiValues<TFs>[K] | null) => void;
+//   setField: <K extends CfgFieldKeys<TFs>>(key: K, value: UiValues<TFs>[K] | null) => void;
 
 //   /* ——— validation results ——— */
 //   validation: SchemaSpaReturn<TFs>;
 //   errors: SchemaParseErrors<TFs>;
 //   isValid: boolean;
 //   isDirty: boolean;
-//   dirtyFields: keyof UiValues<TFs>[];
+//   dirtyFields: CfgFieldKeys<TFs>[];
 
 //   /* ——— helpers ——— */
 //   resetToDefault: (defaults?: Nullish<UiValues<TFs>> | null, overwrite?: boolean) => void;
 
-//   getFieldProps: <K extends keyof UiValues<TFs>>() => FieldProps<TFs, K>;
+//   getFieldProps: <K extends CfgFieldKeys<TFs>>() => FieldProps<TFs, K>;
 
 //   /* ——— static artefacts ——— */
 //   schema: TFs; // official schema

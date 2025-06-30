@@ -1,5 +1,5 @@
+import type { CalcValues, CfgFieldKeys, ZObj } from "@utils/rootTypes";
 import type { CvCbDefinition, FieldConfigs } from "@utils/configPropTypes";
-import type { CalcValues, ZObj } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 /** Only for use in `useValidatedForm`
@@ -9,7 +9,7 @@ export const defineFormConfig = <
   TFs extends ZObj,
   TEs extends ZObj,
   TCv extends CalcValues,
-  FcKeys extends keyof UiValues<TFs>
+  FcKeys extends CfgFieldKeys<TFs>
 >(configInput: {
   schema: TFs;
   externalSchema?: TEs;

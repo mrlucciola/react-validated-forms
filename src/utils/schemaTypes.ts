@@ -4,6 +4,7 @@ import type dayjs from "dayjs";
 // local
 import type { ZObj, ZObjOpt } from "@utils/rootTypes";
 
+/** @deprecated change name to `OnChangeEventUnion` (from: `OnChangeEventUnionNew`); rescope to appropriate file */
 export type OnChangeEventUnionNew =
   | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }
   | (dayjs.Dayjs | null);

@@ -7,7 +7,7 @@ import useBuildConfigSchema from "@core/hooks/useBuildConfigSchema";
 import useSetField from "@core/setters/setField";
 import useGetFieldProps from "@core/getters/useGetFieldProps";
 // interfaces
-import type { CalcValues, CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValues, CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { SchemaSpaReturn } from "@core/types";
@@ -33,7 +33,7 @@ const useForm = <
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  FcKeys extends keyof UiValues<TFs>
+  FcKeys extends CfgFieldKeys<TFs>
 >(
   configDefinition: {
     schema: TFs;

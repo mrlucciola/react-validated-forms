@@ -3,7 +3,7 @@ import { isEqual } from "lodash";
 // utils
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
-import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { UiSchema } from "@utils/schemaTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { ConfigExternalInputs, ConfigInternal } from "@utils/configTypes";
@@ -25,7 +25,7 @@ const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcVa
   // Form state + setter (see `updateForm` for public setter for `form` state)
   const [form, setForm] = useState<UiValues<TFs>>(parsedDefaults);
   // References for 'dirty' values
-  type DirtyMapKeys = keyof UiValues<TFs>;
+  type DirtyMapKeys = CfgFieldKeys<TFs>;
   type DirtyMap = Record<DirtyMapKeys, boolean>;
   const dirtyMap = useRef<DirtyMap>({} as DirtyMap);
   const markDirty = useCallback(<K extends DirtyMapKeys>(key: K, v: UiValues<TFs>[K]) => {
@@ -33,7 +33,7 @@ const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcVa
   }, []);
   /** Public setter for `form` state. Maintains 'dirty'/'clean' state for form-fields. */
   const updateForm = useCallback(
-    <K extends keyof UiValues<TFs>>(
+    <K extends CfgFieldKeys<TFs>>(
       key: K,
       val: UiValues<TFs>[K] | ((prev: UiValues<TFs>[K]) => UiValues<TFs>[K])
     ) => {
@@ -59,7 +59,7 @@ const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcVa
 
       for (const k in parsedDefaults) {
         /** Merge only if user never touched that field */
-        if (!dirtyMap.current[k as keyof UiValues<TFs>]) {
+        if (!dirtyMap.current[k as CfgFieldKeys<TFs>]) {
           const defVal: UiValues<TFs>[typeof k] = parsedDefaults[k];
           if (!isEqual(merged[k], defVal)) {
             // @ts-ignore

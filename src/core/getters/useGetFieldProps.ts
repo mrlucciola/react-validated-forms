@@ -5,14 +5,14 @@ import getFieldConfig from "./getFieldConfig";
 import useSetField from "../setters/setField";
 // interfaces
 import type { Nullable } from "@utils/utilityTypes";
-import type { CalcValuesOpt, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { OnChangeEventUnionNew } from "@utils/schemaTypes";
+import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { ConfigValues } from "@utils/fieldConfigTypes";
+import type { OnChangeEventUnionNew } from "@utils/schemaTypes";
 import type { SchemaParseErrors } from "./interfaces";
 
-export type FieldProps<TFs extends ZObj, K extends keyof UiValues<TFs>> = {
+export type FieldProps<TFs extends ZObj, K extends CfgFieldKeys<TFs>> = {
   /** MUI-style onChange union handled in utils */
   onChange: (e: OnChangeEventUnionNew, ...rest: unknown[]) => void;
 
@@ -44,7 +44,7 @@ const useGetFieldProps =
     TFs extends ZObj,
     TEs extends ZObjOpt,
     TCv extends CalcValuesOpt,
-    FcKeys extends keyof UiValues<TFs> = keyof UiValues<TFs>
+    FcKeys extends CfgFieldKeys<TFs> = CfgFieldKeys<TFs>
   >(
     setField: ReturnType<typeof useSetField<TFs, TEs, TCv>>,
     form: UiValues<TFs>,
@@ -52,7 +52,7 @@ const useGetFieldProps =
     config: ConfigInternal<TFs, TEs, TCv, FcKeys>,
     configValues: ConfigValues<TFs, TEs, TCv>
   ) =>
-  <TKey extends keyof UiValues<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
+  <TKey extends CfgFieldKeys<TFs>, TInValue extends Nullable<z.input<TFs>>[TKey]>(
     fieldKey: TKey
   ): FieldProps<TFs, TKey> => {
     const onChange = (e: OnChangeEventUnionNew, ...args: (boolean | unknown)[]) => {
