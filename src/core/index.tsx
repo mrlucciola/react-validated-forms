@@ -51,10 +51,10 @@ const useForm = <
   // 2) `calcValuesCallback` defines 'calculated-values' type `TCv`, which is used in `fieldConfigs`;
   const config = configDefinition as ConfigInternal<TFs, TEs, TCv>;
 
-  const { evSchema, uiSchema } = useInitSchemas(config);
+  const schemas = useInitSchemas(configDefinition);
 
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates(config, uiSchema, externalInputs);
+    useInitStates(config, schemas, externalInputs);
 
   const configValues = getConfigValues(config, form, externalInputs);
 
@@ -89,14 +89,8 @@ const useForm = <
     // Utils
     getFieldProps,
 
-    /** Schema applied to form values.
-     * @note Only for use within the form.
-     * All fields have 'catch'/'default' schemas to avoid setting all form values to `undefined` when a single field is invalid.
-     * @note Previous names: `formSchema`, `userInputSchema`
-     */
-    uiSchema,
-    evSchema,
     appliedUiSchema,
+    ...schemas,
   } as const;
 };
 

@@ -29,7 +29,7 @@ const TestComponent: FC = () => {
           changeEvent: (values) => {
             values.calculated.hai;
             values.external.points;
-            const { calculated, form, external } = values;
+            const { form, external, calculated } = values;
             form.name;
             external.dtLogin;
             calculated.hai;
@@ -38,8 +38,8 @@ const TestComponent: FC = () => {
           },
         },
       },
-    },
-    { defaults: { date: dayjs(), name: "" }, externalValues: { points: null } }
+    }
+    // { defaults: { date: dayjs(), name: "" }, externalValues: { points: null } }
   );
   const {
     form,
@@ -56,19 +56,23 @@ const TestComponent: FC = () => {
     isValid,
 
     uiSchema,
-    evSchema,
+
     appliedUiSchema,
+    ...other
   } = formState;
 
   uiSchema.parse({}).date;
   uiSchema.parse({}).name;
   uiSchema.parse({}).num;
-  evSchema.parse({}).company; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
-  evSchema.parse({}).connections; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
+  other.evSchema;
+  other.evSchema.parse({}).company; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
+  other.evSchema.parse({}).connections; // `evSchema` SHOULD NOT BE PARTIAL IF `externalSchema` IS DEFINED
 
   form.name;
   configValues.form.date;
+  configValues.external;
   configValues.external.userId;
+  configValues.calculated;
   configValues.calculated.hai;
 
   return <div></div>;

@@ -1,15 +1,13 @@
 import type { z } from "zod";
 //
-import type { Nullish, ResolveProp } from "@utils/utilityTypes";
-import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
+import type { Nullish, ResolveFor, ResolveProp } from "@utils/utilityTypes";
+import type { CalcValues, CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
-export type ConfigValues<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt
-> = ResolveProp<TCv, "calculated"> &
-  ResolveProp<ExtValues<TEs>, "external"> & { form: UiValues<TFs> };
+export type ConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
+  form: UiValues<TFs>;
+} & ResolveProp<ResolveFor<TCv, CalcValues>, "calculated"> &
+  ResolveProp<ResolveFor<ExtValues<TEs>, UiValues<ZObj>>, "external">;
 
 /** Validation-schema configuration for a single form-field */
 export type DefineFieldConfig<

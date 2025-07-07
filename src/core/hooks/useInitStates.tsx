@@ -4,13 +4,13 @@ import { isEqual } from "lodash";
 import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { UiSchema } from "@utils/schemaTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { ConfigExternalInputs, ConfigInternal } from "@utils/configTypes";
+import type { InitSchemas } from "@core/hooks/interfaces";
 
 const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(
   _config: ConfigInternal<TFs, TEs, TCv>,
-  baseUiSchema: UiSchema<TFs>,
+  schemas: InitSchemas<TFs, TEs>,
   externalInputs: ConfigExternalInputs<TFs, TEs>
 ) => {
   const defaults = externalInputs?.defaults;
@@ -19,7 +19,7 @@ const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcVa
    * - BUT runs JSON.stringify every rerender;
    */
   const defaultsRef = useMemo(() => JSON.stringify(defaults ?? {}), [defaults]);
-  const parsedDefaults = useMemo(() => baseUiSchema.parse(defaults ?? {}), [defaultsRef]);
+  const parsedDefaults = useMemo(() => schemas.uiSchema.parse(defaults ?? {}), [defaultsRef]);
   const refFormDefaults = useRef(parsedDefaults);
 
   // Form state + setter (see `updateForm` for public setter for `form` state)
@@ -49,7 +49,7 @@ const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcVa
   );
 
   /** Utility: reset form-fields to the default values/initial form state */
-  const resetToDefault = useResetToDefault(baseUiSchema, setForm);
+  const resetToDefault = useResetToDefault(schemas.uiSchema, setForm);
 
   /** When `defaultValues` is updated (i.e. from request), set those fields on the `form` state */
   useEffect(() => {
