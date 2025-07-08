@@ -1,13 +1,6 @@
-import type { ChangeEvent } from "react";
 import type { z } from "zod";
-import type dayjs from "dayjs";
 // local
 import type { ZObj, ZObjOpt } from "@utils/rootTypes";
-
-/** @deprecated change name to `OnChangeEventUnion` (from: `OnChangeEventUnionNew`); rescope to appropriate file */
-export type OnChangeEventUnionNew =
-  | { target?: Partial<ChangeEvent<HTMLInputElement>["target"]> }
-  | (dayjs.Dayjs | null);
 
 /** Derive the `catch` implementation of a schema. Applies a `catch` if not already provided. */
 export type CatchFieldSchema<TField extends z.ZodTypeAny> = TField extends z.ZodCatch<infer _ICatch>

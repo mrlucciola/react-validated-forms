@@ -1,5 +1,5 @@
 import type { CalcValues, CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { CvCbDefinition, CvCbInternal, FieldConfigs } from "@utils/configPropTypes";
+import type { CvCbInternal, FieldConfigs } from "@utils/configPropTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
 /** This type represents the param `config` passed into `useForm`.

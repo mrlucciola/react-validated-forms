@@ -9,7 +9,7 @@ import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootType
 import type { UiValues } from "@utils/valueTypes";
 import type { ConfigInternal } from "@utils/configTypes";
 import type { ConfigValues } from "@utils/fieldConfigTypes";
-import type { OnChangeEventUnionNew } from "@utils/schemaTypes";
+import type { OnChangeEventUnionNew } from "@core/types";
 import type { SchemaParseErrors } from "./interfaces";
 
 export type FieldProps<TFs extends ZObj, K extends CfgFieldKeys<TFs>> = {

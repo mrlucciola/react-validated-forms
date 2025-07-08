@@ -5,7 +5,7 @@ import useResetToDefault from "../setters/useResetToDefault";
 // interfaces
 import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
 import type { UiValues } from "@utils/valueTypes";
-import type { ConfigExternalInputs, ConfigInternal } from "@utils/configTypes";
+import type { ConfigExternalInputs } from "@utils/configTypes";
 import type { InitSchemas } from "@core/hooks/interfaces";
 
 const useInitStates = <TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt>(

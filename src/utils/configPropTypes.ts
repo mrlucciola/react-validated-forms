@@ -3,7 +3,7 @@ import type { DefineFieldConfig } from "@utils/fieldConfigTypes";
 import type { ResolveProp } from "@utils/utilityTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 
-type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
+export type CvCbParams<TFs extends ZObj, TEs extends ZObjOpt> = {
   form: UiValues<TFs>;
 } & ResolveProp<ExtValues<TEs>, "externalValues">;
 
