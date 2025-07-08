@@ -13,8 +13,8 @@ export type CvCbDefinition<TFs extends ZObj, TEs extends ZObjOpt, TCv extends Ca
 
 export type CvCbInternal<
   TFs extends ZObj = ZObj,
-  TEs extends ZObj | void = ZObj | void,
-  TCv extends CalcValues | void = CalcValues
+  TEs extends ZObjOpt = ZObjOpt,
+  TCv extends CalcValuesOpt = CalcValues
 > = (values: { form: UiValues<TFs>; externalValues?: ExtValues<TEs> }) => TCv;
 
 export type FieldConfigs<

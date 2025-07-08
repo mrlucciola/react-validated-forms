@@ -80,7 +80,7 @@ const useBuildConfigSchema = <
   TFc extends FieldConfigsOpt<TFs, TEs, TCv>,
   C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
 >(
-  config: ConfigInternal<TFs, TEs, TCv>,
+  config: C,
   configValues: ConfigValues<TFs, TEs, TCv>
 ) => {
   // type TFc = C['fieldConfigs'];

@@ -7,7 +7,7 @@ import type { ExtValues, UiValues } from "@utils/valueTypes";
 export type ConfigValues<TFs extends ZObj, TEs extends ZObjOpt, TCv extends CalcValuesOpt> = {
   form: UiValues<TFs>;
 } & ResolveProp<ResolveFor<TCv, CalcValues>, "calculated"> &
-  ResolveProp<ResolveFor<ExtValues<TEs>, UiValues<ZObj>>, "external">;
+  ResolveProp<ResolveFor<ExtValues<TEs>, UiValues<ZObj>>, "external">; // @todo fix type: when undefined, this resolves to `{}` rather than `never` in `fieldConfig` callbacks
 
 /** Validation-schema configuration for a single form-field */
 export type DefineFieldConfig<

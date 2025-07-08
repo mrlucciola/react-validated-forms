@@ -8,12 +8,12 @@ import useSetField from "@core/setters/setField";
 import useGetFieldProps from "@core/getters/useGetFieldProps";
 // interfaces
 import type { CalcValues, CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootTypes";
-import type { ConfigInternal } from "@utils/configTypes";
+import type { ConfigDef, ConfigInternal } from "@utils/configTypes";
 import type { ExtValues, UiValues } from "@utils/valueTypes";
 import type { SchemaSpaReturn } from "@core/types";
 import type { SchemaParseErrors } from "@core/getters/interfaces";
 import type { ResolveFor, ResolveTo } from "@utils/utilityTypes";
-import type { CvCbDefinition, FieldConfigs } from "@utils/configPropTypes";
+import type { CvCbDefinition, CvCbInternal, FieldConfigs } from "@utils/configPropTypes";
 
 /** ### Stateful form with validation, based on `zod`.
  *
@@ -39,24 +39,30 @@ const useForm = <
     schema: TFs;
     externalSchema?: TEs;
     calcValuesCallback?: CvCbDefinition<TFs, TEs, TCv>;
-    fieldConfigs?: FieldConfigs<TFs, ResolveFor<TEs, ZObj>, ResolveFor<TCv, CalcValues>, FcKeys>;
+    fieldConfigs?: FieldConfigs<TFs, ResolveFor<TEs, ZObj>, ResolveFor<TCv, CalcValues>, FcKeys>; // @todo create definition-type `FieldConfigsDef`
   },
   externalInputs?: {
     defaults?: Partial<UiValues<TFs>>;
     externalValues?: ResolveTo<TEs, Partial<ExtValues<TEs>>>;
-  }
+  } // @todo create definition-type ExternalInputsDef
 ) => {
+  const _test: ConfigDef<TFs, TEs, TCv, FcKeys> = {
+    ...configDefinition,
+    calcValuesCallback: configDefinition.calcValuesCallback as CvCbInternal<TFs, TEs, TCv>, // @todo remove type coersion
+    fieldConfigs: configDefinition.fieldConfigs as FieldConfigs<TFs, TEs, TCv, FcKeys>, // @todo remove type coersion
+  };
   // Currently need this type-coersion to allow types in the definitions to be provided to other props within the same definition object (external-schema and calculated-values)
   // 1) `externalSchema` defines `TEs`, which is used in `calcValuesCallback` and `fieldConfigs`;
   // 2) `calcValuesCallback` defines 'calculated-values' type `TCv`, which is used in `fieldConfigs`;
-  const config = configDefinition as ConfigInternal<TFs, TEs, TCv>;
+  const config = configDefinition as ConfigInternal<TFs, TEs, TCv>; // @todo remove this variable, replace usage with configDef
+  const configDef = configDefinition as ConfigDef<TFs, TEs, TCv, FcKeys>; // @todo remove coersion
 
   const schemas = useInitSchemas(configDefinition);
 
   const { form, setForm, updateForm, markDirty, dirtyFields, isDirty, resetToDefault } =
-    useInitStates(config, schemas, externalInputs);
+    useInitStates(schemas, externalInputs);
 
-  const configValues = getConfigValues(config, form, externalInputs);
+  const configValues = getConfigValues(configDef, form, externalInputs);
 
   // @todo rename
   const appliedUiSchema = useBuildConfigSchema(config, configValues);
