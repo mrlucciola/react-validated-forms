@@ -23,10 +23,3 @@ export type FieldConfigs<
   TCv extends CalcValuesOpt,
   FcKeys extends CfgFieldKeys<TFs>
 > = { [FieldKey in FcKeys]: DefineFieldConfig<TFs, TEs, TCv, FieldKey> };
-
-export type FieldConfigsOpt<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  FcKeys extends CfgFieldKeys<TFs> = CfgFieldKeys<TFs>
-> = FieldConfigs<TFs, TEs, TCv, FcKeys> | void;

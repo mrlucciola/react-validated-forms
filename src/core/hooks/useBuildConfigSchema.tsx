@@ -7,25 +7,17 @@ import type { CalcValuesOpt, CfgFieldKeys, ZObj, ZObjOpt } from "@utils/rootType
 import type { ConfigInternal } from "@utils/configTypes";
 import type { UiValues } from "@utils/valueTypes";
 import type { DefineFieldConfig, ConfigValues } from "@utils/fieldConfigTypes";
-import type { FieldConfigsOpt } from "@utils/configPropTypes";
-
-type FieldKeyOf<
-  TFs extends ZObj,
-  TEs extends ZObjOpt,
-  TCv extends CalcValuesOpt,
-  TFc extends FieldConfigsOpt<TFs, TEs, TCv>
-> = keyof TFc & CfgFieldKeys<TFs>;
 
 // Helper types for odd one-off data structures used throughout the file
 type FieldCfgEntry<
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  TFc extends FieldConfigsOpt<TFs, TEs, TCv>,
-  FieldKey extends FieldKeyOf<TFs, TEs, TCv, TFc> = FieldKeyOf<TFs, TEs, TCv, TFc>
+  FcKeys extends CfgFieldKeys<TFs>,
+  FieldKey extends FcKeys = FcKeys
 > = [FieldKey, DefineFieldConfig<TFs, TEs, TCv, FieldKey>];
 
-/**
+/** For each field: Apply schema refinements defined in config to the baseSchema
  * @deprecated needs to be analyzed
  */
 const applyFieldConfigValidationRefinements =
@@ -33,12 +25,12 @@ const applyFieldConfigValidationRefinements =
     TFs extends ZObj = ZObj,
     TEs extends ZObjOpt = ZObjOpt,
     TCv extends CalcValuesOpt = CalcValuesOpt,
-    TFc extends FieldConfigsOpt<TFs, TEs, TCv> = FieldConfigsOpt<TFs, TEs, TCv>
+    FcKeys extends CfgFieldKeys<TFs> = CfgFieldKeys<TFs>
   >(
     configValues: ConfigValues<TFs, TEs, TCv>
   ) =>
-  <FieldKey extends FieldKeyOf<TFs, TEs, TCv, TFc> = FieldKeyOf<TFs, TEs, TCv, TFc>>(
-    fieldEntryTuple: FieldCfgEntry<TFs, TEs, TCv, TFc, FieldKey>
+  <FieldKey extends FcKeys>(
+    fieldEntryTuple: FieldCfgEntry<TFs, TEs, TCv, FcKeys, FieldKey>
   ): ((form: UiValues<TFs>, ctx: z.RefinementCtx) => void) => {
     const [fieldKey, fieldCfg] = fieldEntryTuple;
 
@@ -58,9 +50,6 @@ const applyFieldConfigValidationRefinements =
   };
 
 /**
- * For each field: Apply schema refinements defined in config to the baseSchema
- */
-/**
  * Iterates through each field in the form-schema (object-schema):
  * 1. Looks-up the field-schema
  * 2.  applies Modify baseSchema
@@ -77,14 +66,12 @@ const useBuildConfigSchema = <
   TFs extends ZObj,
   TEs extends ZObjOpt,
   TCv extends CalcValuesOpt,
-  TFc extends FieldConfigsOpt<TFs, TEs, TCv>,
-  C extends ConfigInternal<TFs, TEs, TCv> = ConfigInternal<TFs, TEs, TCv>
+  FcKeys extends CfgFieldKeys<TFs>,
+  C extends ConfigInternal<TFs, TEs, TCv, FcKeys> = ConfigInternal<TFs, TEs, TCv, FcKeys>
 >(
   config: C,
   configValues: ConfigValues<TFs, TEs, TCv>
 ) => {
-  // type TFc = C['fieldConfigs'];
-
   const baseSchema: TFs = config.schema;
   const fieldConfigs = config.fieldConfigs;
 
@@ -94,8 +81,8 @@ const useBuildConfigSchema = <
   /**
    * Array of field-configs that have `registerOn() and .rules() defined
    */
-  const configFieldsFiltered: FieldCfgEntry<TFs, TEs, TCv, TFc>[] = useMemo(() => {
-    const entries = Object.entries(fieldConfigs) as FieldCfgEntry<TFs, TEs, TCv, TFc>[];
+  const configFieldsFiltered: FieldCfgEntry<TFs, TEs, TCv, FcKeys>[] = useMemo(() => {
+    const entries = Object.entries(fieldConfigs) as FieldCfgEntry<TFs, TEs, TCv, FcKeys>[];
     return entries.filter(([_fieldKey, fieldCfg]) => !!fieldCfg.registerOn || !!fieldCfg.rules);
   }, []);
 
